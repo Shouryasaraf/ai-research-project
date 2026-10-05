@@ -1,0 +1,19 @@
+flush ruleset
+
+table inet vfw {
+    chain forward {
+        type filter hook forward priority filter; policy drop;
+
+        ct state invalid counter drop comment "drop invalid state"
+        ct state established,related counter accept comment "preserve established flows"
+
+        ip saddr 10.10.1.0/24 ip daddr 10.10.2.0/24 icmp type echo-request \
+            ct state new counter accept comment "allow controlled reachability test"
+
+        ip saddr 10.10.1.0/24 ip daddr 10.10.2.0/24 tcp dport 5201 \
+            ct state new counter accept comment "allow controlled iperf workload"
+
+        counter drop comment "default deny evidence"
+    }
+}
+

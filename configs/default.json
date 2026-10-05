@@ -1,0 +1,32 @@
+{
+  "placement": {
+    "max_security_risk": 0.65,
+    "minimum_cpu_fraction": 0.15,
+    "minimum_memory_fraction": 0.15,
+    "max_latency_ms": 100.0,
+    "weights": {
+      "capacity": 0.30,
+      "latency": 0.15,
+      "carbon": 0.20,
+      "security_risk": 0.25,
+      "uncertainty_headroom": 0.10
+    }
+  },
+  "uncertainty_gate": {
+    "overload_trigger_fraction": 0.80,
+    "max_commit_interval_width_fraction": 0.20
+  },
+  "adaptive_threshold": {
+    "base": 0.20,
+    "state_size_per_mb": 0.0005,
+    "active_flow_weight": 0.0002,
+    "uncertainty_weight": 0.30,
+    "recent_failure_weight": 0.10,
+    "sla_criticality_weight": 0.20,
+    "cooldown_penalty": 0.50,
+    "headroom_relief_weight": 0.10,
+    "minimum": 0.05,
+    "maximum": 2.00
+  }
+}
+

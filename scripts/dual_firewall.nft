@@ -1,0 +1,12 @@
+flush ruleset
+
+table inet vfw {
+    chain forward {
+        type filter hook forward priority filter; policy drop;
+        ct state invalid counter drop comment "drop invalid state"
+        ct state established,related counter accept comment "preserve established proxy flows"
+        tcp dport 9000 ct state new counter accept comment "allow controlled backend service"
+        counter drop comment "default deny"
+    }
+}
+
