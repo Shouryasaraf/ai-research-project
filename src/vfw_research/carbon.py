@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 
 
 @dataclass(frozen=True)
@@ -17,7 +18,8 @@ class CarbonObservation:
 def estimate_emissions_grams(
     *, average_power_watts: float, duration_seconds: float, intensity_gco2_per_kwh: float
 ) -> float:
-    if min(average_power_watts, duration_seconds, intensity_gco2_per_kwh) < 0:
+    if any(not math.isfinite(value) or value < 0 for value in
+           (average_power_watts, duration_seconds, intensity_gco2_per_kwh)):
         raise ValueError("carbon estimate inputs cannot be negative")
     return (average_power_watts / 1000) * (duration_seconds / 3600) * intensity_gco2_per_kwh
 
@@ -28,7 +30,7 @@ class CarbonTrace:
             raise ValueError("carbon trace requires observations")
         self._by_node: dict[str, list[CarbonObservation]] = {}
         for observation in observations:
-            if observation.intensity_gco2_per_kwh < 0:
+            if not math.isfinite(observation.intensity_gco2_per_kwh) or observation.intensity_gco2_per_kwh < 0:
                 raise ValueError("carbon intensity cannot be negative")
             self._by_node.setdefault(observation.node_id, []).append(observation)
         for values in self._by_node.values():
@@ -42,4 +44,3 @@ class CarbonTrace:
         if not eligible:
             raise LookupError("no carbon observation exists at or before requested time")
         return eligible[-1]
-

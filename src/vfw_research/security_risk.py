@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import math
 
 
 @dataclass(frozen=True)
@@ -24,7 +25,7 @@ class RiskWeights:
 
     def __post_init__(self) -> None:
         values = asdict(self)
-        if any(value < 0 for value in values.values()) or abs(sum(values.values()) - 1) > 1e-9:
+        if any(not math.isfinite(value) or value < 0 for value in values.values()) or abs(sum(values.values()) - 1) > 1e-9:
             raise ValueError("risk weights must be non-negative and sum to 1")
 
 
@@ -41,4 +42,3 @@ def calculate_risk(inputs: RiskInputs, weights: RiskWeights) -> RiskScore:
     weight_values = asdict(weights)
     contributions = {name: input_values[name] * weight_values[name] for name in input_values}
     return RiskScore(sum(contributions.values()), contributions)
-

@@ -1,0 +1,11 @@
+flush ruleset
+
+table inet vfw {
+    chain forward {
+        type filter hook forward priority filter; policy drop;
+        ct state invalid counter drop comment "drop invalid"
+        ct state established,related counter accept comment "established state only"
+        tcp dport 9000 tcp flags & (fin|syn|rst|ack) == syn ct state new counter accept comment "new SYN only"
+        counter drop comment "default deny"
+    }
+}

@@ -15,7 +15,8 @@ This repository is a software-only, publication-oriented NFV/SDN research protot
 - **Stage 8:** common baseline-policy interface, validated scenario loader, immutable result schema, paired synthetic experiment runner, and generated JSON/CSV/SVG summaries implemented. A 27-record controller-only pilot validates the pipeline; packet-path comparative experiments and publication results remain pending.
 - No comparative performance, carbon, migration, novelty, or publication result is claimed yet.
 
-The repository contains both a deterministic decision harness and a real kernel-enforced single-vFW smoke test. It does not yet demonstrate complete state-consistent warm migration or flow continuity; see `docs/state_migration.md` for the evidence levels.
+The repository contains a deterministic decision harness and real kernel-enforced vFW testbeds. It does not yet demonstrate complete state-consistent warm migration or general/quantified flow continuity; see `docs/state_migration.md` for the evidence levels.
+An additional isolated route lab has now shown one established TCP connection continuing through a target firewall after a guarded conntrack-state import and two-sided route change. This is a narrow functional result, not proof of seamless migration, loss bounds, or end-to-end controller integration.
 
 ## Seven locked functionalities
 
@@ -95,6 +96,15 @@ sudo bash scripts/dual_vfw_testbed.sh test-scaling
 ```
 
 It creates and cleans up only the project-labelled namespaces and test processes. Its reported `1 -> 2 -> 1` sequence is a controlled functional result, not a throughput benchmark.
+
+The separate same-flow route-transition and refusal tests are documented in `docs/route_migration_lab.md`:
+
+```bash
+sudo bash scripts/route_migration_lab.sh run
+sudo bash scripts/route_migration_lab.sh test-no-seen-reply
+sudo bash scripts/route_migration_lab.sh test-policy-mismatch
+sudo bash scripts/route_migration_lab.sh test-rollback
+```
 
 To repeat and preserve live success/fault/scaling smokes on Linux or WSL2 as root:
 

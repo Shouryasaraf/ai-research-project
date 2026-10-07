@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from enum import Enum
+import math
 from typing import Any
 
 
@@ -37,12 +38,17 @@ class Forecast:
     model_version: str
 
     def __post_init__(self) -> None:
+        if any(not math.isfinite(value) for value in
+               (self.point_mbps, self.lower_mbps, self.upper_mbps)):
+            raise ValueError("forecast values must be finite")
         if self.lower_mbps < 0 or self.point_mbps < 0 or self.upper_mbps < 0:
             raise ValueError("forecast values must be non-negative")
         if not self.lower_mbps <= self.point_mbps <= self.upper_mbps:
             raise ValueError("forecast must satisfy lower <= point <= upper")
         if self.horizon_seconds <= 0:
             raise ValueError("forecast horizon must be positive")
+        if not self.model_version.strip():
+            raise ValueError("forecast model version is required")
 
     def width_fraction(self, capacity_mbps: float) -> float:
         if capacity_mbps <= 0:
@@ -64,10 +70,20 @@ class NodeCandidate:
     allowed: bool = True
 
     def __post_init__(self) -> None:
+        if not self.node_id.strip():
+            raise ValueError("node_id is required")
+        if any(not math.isfinite(value) for value in (
+            self.capacity_mbps, self.current_load_mbps, self.available_cpu_fraction,
+            self.available_memory_fraction, self.latency_ms, self.carbon_gco2_per_kwh,
+            self.security_risk,
+        )):
+            raise ValueError("node candidate values must be finite")
         if self.capacity_mbps <= 0:
             raise ValueError("capacity_mbps must be positive")
         if self.current_load_mbps < 0:
             raise ValueError("current_load_mbps cannot be negative")
+        if self.latency_ms < 0 or self.carbon_gco2_per_kwh < 0:
+            raise ValueError("latency and carbon intensity cannot be negative")
         for name, value in (
             ("available_cpu_fraction", self.available_cpu_fraction),
             ("available_memory_fraction", self.available_memory_fraction),
@@ -91,7 +107,7 @@ class PlacementWeights:
 
     def __post_init__(self) -> None:
         values = asdict(self)
-        if any(value < 0 for value in values.values()):
+        if any(not math.isfinite(value) or value < 0 for value in values.values()):
             raise ValueError("placement weights cannot be negative")
         if abs(sum(values.values()) - 1.0) > 1e-9:
             raise ValueError("placement weights must sum to 1")
@@ -104,6 +120,16 @@ class PlacementPolicy:
     minimum_memory_fraction: float
     max_latency_ms: float
     weights: PlacementWeights
+
+    def __post_init__(self) -> None:
+        values = (
+            self.max_security_risk, self.minimum_cpu_fraction,
+            self.minimum_memory_fraction, self.max_latency_ms,
+        )
+        if any(not math.isfinite(value) for value in values):
+            raise ValueError("placement policy values must be finite")
+        if any(not 0 <= value <= 1 for value in values[:3]) or self.max_latency_ms <= 0:
+            raise ValueError("invalid placement policy bounds")
 
 
 @dataclass(frozen=True)
@@ -123,6 +149,10 @@ class BenefitTerms:
     uncertainty_penalty: float
     operational_overhead: float
 
+    def __post_init__(self) -> None:
+        if any(not math.isfinite(value) or value < 0 for value in asdict(self).values()):
+            raise ValueError("benefit terms must be finite and non-negative")
+
 
 @dataclass(frozen=True)
 class BenefitBreakdown:
@@ -140,6 +170,16 @@ class ThresholdContext:
     cooldown_active: bool
     target_headroom_fraction: float
 
+    def __post_init__(self) -> None:
+        values = (self.state_size_mb, self.uncertainty_fraction,
+                  self.sla_criticality, self.target_headroom_fraction)
+        if any(not math.isfinite(value) for value in values):
+            raise ValueError("threshold context values must be finite")
+        if self.state_size_mb < 0 or self.active_flows < 0 or self.recent_failures < 0:
+            raise ValueError("threshold context counts must be non-negative")
+        if any(not 0 <= value <= 1 for value in values[1:]):
+            raise ValueError("threshold context fractions must be in [0, 1]")
+
 
 @dataclass(frozen=True)
 class ThresholdPolicy:
@@ -153,6 +193,13 @@ class ThresholdPolicy:
     headroom_relief_weight: float
     minimum: float
     maximum: float
+
+    def __post_init__(self) -> None:
+        values = asdict(self)
+        if any(not math.isfinite(value) or value < 0 for value in values.values()):
+            raise ValueError("threshold policy values must be finite and non-negative")
+        if self.minimum > self.maximum:
+            raise ValueError("threshold minimum exceeds maximum")
 
 
 @dataclass(frozen=True)
@@ -169,6 +216,16 @@ class SecuritySnapshot:
     maximum_state_mismatch_fraction: float
     audit_available: bool
 
+    def __post_init__(self) -> None:
+        if not all(value.strip() for value in (
+            self.source_policy_hash, self.target_policy_hash, self.expected_policy_hash
+        )):
+            raise ValueError("policy hashes are required")
+        if any(not math.isfinite(value) or not 0 <= value <= 1 for value in (
+            self.state_mismatch_fraction, self.maximum_state_mismatch_fraction,
+        )):
+            raise ValueError("state mismatch fractions must be finite and in [0, 1]")
+
 
 @dataclass(frozen=True)
 class DecisionInput:
@@ -180,6 +237,10 @@ class DecisionInput:
     benefit_terms: BenefitTerms
     threshold_context: ThresholdContext
     telemetry_fresh: bool = True
+
+    def __post_init__(self) -> None:
+        if not math.isfinite(self.source_capacity_mbps) or self.source_capacity_mbps <= 0:
+            raise ValueError("source capacity must be finite and positive")
 
 
 @dataclass(frozen=True)

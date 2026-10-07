@@ -21,6 +21,7 @@ class KernelValidationTests(unittest.TestCase):
         result = MODULE.compare_entries(SOURCE, TARGET)
         self.assertTrue(result["supported_fields_match"])
         self.assertTrue(result["target_unreplied"])
+        self.assertFalse(result["ready_for_route_commit"])
         self.assertFalse(result["flow_continuity_validated"])
 
     def test_wrong_reply_tuple_is_rejected(self):
@@ -30,6 +31,10 @@ class KernelValidationTests(unittest.TestCase):
     def test_missing_assured_status_is_rejected(self):
         wrong = TARGET.replace("[ASSURED]", "")
         self.assertIn("assured", MODULE.compare_entries(SOURCE, wrong)["mismatched_fields"])
+
+    def test_seen_reply_target_is_ready_for_route_commit(self):
+        result = MODULE.compare_entries(SOURCE, SOURCE)
+        self.assertTrue(result["ready_for_route_commit"])
 
     def test_incomplete_entry_is_rejected(self):
         with self.assertRaises(ValueError):

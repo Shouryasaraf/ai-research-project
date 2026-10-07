@@ -46,6 +46,7 @@ def compare_entries(source_line: str, target_line: str) -> dict[str, object]:
         "mismatched_fields": mismatches,
         "source_unreplied": source["unreplied"],
         "target_unreplied": target["unreplied"],
+        "ready_for_route_commit": not mismatches and not target["unreplied"],
         "tcp_sequence_window_validated": False,
         "flow_continuity_validated": False,
     }
@@ -55,10 +56,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", required=True)
     parser.add_argument("--target", required=True)
+    parser.add_argument("--require-seen-reply", action="store_true",
+                        help="refuse route commit while the imported target tuple is UNREPLIED")
     args = parser.parse_args()
     result = compare_entries(args.source, args.target)
     print(json.dumps(result, sort_keys=True))
-    return 0 if result["supported_fields_match"] else 1
+    passed = (result["ready_for_route_commit"] if args.require_seen_reply
+              else result["supported_fields_match"])
+    return 0 if passed else 1
 
 
 if __name__ == "__main__":

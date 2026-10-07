@@ -21,6 +21,10 @@ The complete JSON configuration is hashed with canonical key ordering. Every run
 
 No external workload, carbon, vulnerability, anomaly or attack dataset has been incorporated yet. Before adding one, record its stable source, version/date, license or terms, acquisition checksum, fields used, time resolution, timezone, preprocessing, missing-data policy, label limitations and redistribution constraints. Network downloads must not be required for unit tests.
 
+The offline CSV adapter in `src/vfw_research/trace_adapter.py` enforces a minimal sidecar and strict UTC/unit/checksum/time-series validation; see `external_trace_contract.md`. It does not certify licensing or prove that any real trace has been evaluated.
+
+`dataset_candidate_screen.md` lists source-owner pages considered for future work. None has been adopted or downloaded.
+
 ## Synthetic forecast families
 
 `src/vfw_research/workloads.py` deterministically generates five one-minute traffic-rate families: steady, periodic bursts, gradual trend, a short flash crowd, and a step change confined to the held-out test segment. Each value is a synthetic Mbps rate and is never represented as measured packet traffic. The family, seed, length, trace SHA-256, split counts and runtime are saved by `vfw_research.forecast_evaluation`. The evaluation observes a real next value before updating the model's point state; it does not create labels from its own forecasts. The conformal radius stays fixed after calibration.

@@ -25,7 +25,18 @@ SCENARIOS = (
     "test-target-unhealthy",
     "test-unsafe-source-fallback",
     "test-scaling",
+    "route-run",
+    "route-no-seen-reply",
+    "route-policy-mismatch",
+    "route-rollback",
 )
+
+ROUTE_SCENARIOS = {
+    "route-run": "run",
+    "route-no-seen-reply": "test-no-seen-reply",
+    "route-policy-mismatch": "test-policy-mismatch",
+    "route-rollback": "test-rollback",
+}
 
 
 def parse_observations(output: str) -> dict[str, object]:
@@ -46,10 +57,21 @@ def parse_observations(output: str) -> dict[str, object]:
             "dual_vfw_integration_passed", "automatic_proxy_fallback_verified",
             "unsafe_commit_rejected", "unsafe_source_fallback_rejected",
             "new_flow_failed_closed", "live_scaling_smoke_passed",
+            "same_tcp_connection_survived_route_change",
+            "target_firewall_traversal_verified",
+            "unreplied_target_state_rejected_before_route_commit",
+            "route_policy_mismatch_rejected_before_commit",
+            "validated_source_flow_retained",
+            "same_tcp_connection_survived_route_rollback",
+            "target_policy_fault_injected",
         }:
             observations[key] = value == "true"
         elif key in {"fallback_recovery_ms", "new_flow_admission_ms",
-                     "source_application_flow_drain_ms"}:
+                     "source_application_flow_drain_ms",
+                     "target_established_accept_packets_after"}:
+            observations[key] = int(value)
+        elif key in {"source_established_accept_packets_before_rollback",
+                     "source_established_accept_packets_after_rollback"}:
             observations[key] = int(value)
     return observations
 
@@ -61,12 +83,17 @@ def run_batch(output_directory: Path, *, repeats: int, scenarios: tuple[str, ...
         raise PermissionError("run as root inside the isolated test environment")
     if repeats < 1 or any(scenario not in SCENARIOS for scenario in scenarios):
         raise ValueError("invalid repeat count or scenario")
-    script = SCRIPT_DIR / "dual_vfw_testbed.sh"
-    script_hash = hashlib.sha256(script.read_bytes()).hexdigest()
+    scripts = {
+        "dual": SCRIPT_DIR / "dual_vfw_testbed.sh",
+        "route": SCRIPT_DIR / "route_migration_lab.sh",
+    }
     output_directory.mkdir(parents=True, exist_ok=False)
     manifest = {
         "evidence_class": "isolated Linux namespace functional fault regression; not a benchmark",
-        "script_sha256": script_hash,
+        "script_sha256": {
+            name: hashlib.sha256(path.read_bytes()).hexdigest()
+            for name, path in scripts.items()
+        },
         "scenarios": list(scenarios),
         "repeats": repeats,
         "environment": {"kernel": platform.release(), "python": platform.python_version()},
@@ -76,15 +103,17 @@ def run_batch(output_directory: Path, *, repeats: int, scenarios: tuple[str, ...
     for scenario in scenarios:
         for repetition in range(repeats):
             started = datetime.now(timezone.utc).isoformat()
+            selected_script = scripts["route" if scenario in ROUTE_SCENARIOS else "dual"]
+            selected_command = ROUTE_SCENARIOS.get(scenario, scenario)
             timed_out = False
             try:
                 result = subprocess.run(
-                    ["bash", str(script), scenario], cwd=SCRIPT_DIR.parent,
+                    ["bash", str(selected_script), selected_command], cwd=SCRIPT_DIR.parent,
                     capture_output=True, text=True, timeout=45,
                 )
             except subprocess.TimeoutExpired as error:
                 timed_out = True
-                subprocess.run(["bash", str(script), "down"], capture_output=True, text=True,
+                subprocess.run(["bash", str(selected_script), "down"], capture_output=True, text=True,
                                timeout=10, check=False)
                 result = subprocess.CompletedProcess(
                     error.cmd, 124,
@@ -104,6 +133,10 @@ def run_batch(output_directory: Path, *, repeats: int, scenarios: tuple[str, ...
                 "test-target-unhealthy": "unsafe_commit_rejected",
                 "test-unsafe-source-fallback": "unsafe_source_fallback_rejected",
                 "test-scaling": "live_scaling_smoke_passed",
+                "route-run": "same_tcp_connection_survived_route_change",
+                "route-no-seen-reply": "unreplied_target_state_rejected_before_route_commit",
+                "route-policy-mismatch": "route_policy_mismatch_rejected_before_commit",
+                "route-rollback": "same_tcp_connection_survived_route_rollback",
             }[scenario]
             passed = result.returncode == 0 and observed.get(expected_key) is True and not leaked
             record = {
