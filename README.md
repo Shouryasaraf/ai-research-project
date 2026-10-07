@@ -9,7 +9,7 @@ This repository is a software-only, publication-oriented NFV/SDN research protot
 - **Stage 2:** Linux-namespace/nftables testbed implemented and smoke-verified on WSL2; see `docs/verification_log.md` for the evidence boundary.
 - **Stage 3:** scaling and flow-affinity controller cores are connected to the proxy testbed. Three isolated runs verified telemetry-driven activation and deactivation of a second nftables vFW path, plus pinned source and new target flows. Broader load, fairness and SLA evaluation remains pending.
 - **Stage 4:** migration state machine, reference state adapter, and kernel conntrack tuple insertion verified. A live guarded selector checks policy, target health, source-pinned conntrack state, and telemetry before admitting new target flows. Transferred-flow route transition and seamless flow continuity remain pending.
-- **Stage 5:** rolling-mean and EWMA split-conformal forecasters plus chronological synthetic-trace evaluation implemented; externally sourced research-trace evaluation remains pending.
+- **Stage 5:** rolling-mean and EWMA split-conformal forecasters plus chronological synthetic-trace evaluation implemented; one historical MAWI trace has been processed for a separate offline forecast pilot, not replayed through the vFW testbed.
 - **Stage 6:** carbon estimation, explainable risk scoring, constrained placement, and adaptive benefit core implemented; comparative experiments remain pending.
 - **Stage 7:** invariant validation and idempotent logical fallback implemented; the live proxy automatically restores the source for the next new flow after a target connect failure. Established target-flow recovery and proactive detection remain pending.
 - **Stage 8:** common baseline-policy interface, validated scenario loader, immutable result schema, paired synthetic experiment runner, and generated JSON/CSV/SVG summaries implemented. A 27-record controller-only pilot validates the pipeline; packet-path comparative experiments and publication results remain pending.
@@ -131,6 +131,16 @@ python -m vfw_research.forecast_batch --output-directory artifacts/raw/my-foreca
 ```
 
 This saves every family/seed record and a derived paired summary. It is not a final statistical result or real traffic measurement.
+
+For the separate historical MAWI forecast pilot, review the [MAWI research/privacy terms](https://mawi.nezu.wide.ad.jp/mawi/guideline.txt) and [exact capture page](https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2000/200012281400.html). Download the `.dump.gz` into ignored `artifacts/raw/`, then run:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m vfw_research.mawi_trace --pcap artifacts/raw/mawi-200012281400.dump.gz --source https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2000/200012281400.dump.gz --csv artifacts/raw/mawi-200012281400-1s.csv --provenance artifacts/raw/mawi-200012281400-1s.provenance.json
+python -m vfw_research.forecast_evaluation --trace-csv artifacts/raw/mawi-200012281400-1s.csv --provenance artifacts/raw/mawi-200012281400-1s.provenance.json --output artifacts/raw/mawi-200012281400-forecast.json
+```
+
+Outputs are exclusive-write and Git-ignored; use fresh names when repeating. This converts only packet-header lengths into a traffic-rate series. It does not replay traffic through the vFW or evaluate migration. See `docs/data_provenance.md` and `docs/verification_log.md` for the pilot's checksum, measured source counts, metrics and limits.
 
 ## Linux namespace packet-path test
 

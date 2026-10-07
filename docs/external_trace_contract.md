@@ -1,6 +1,6 @@
 # External Trace Import Contract
 
-No external dataset is currently bundled or claimed as evaluated. `vfw_research.trace_adapter.load_trace` provides an offline, strict import boundary for a trace the research team is authorized to use. It never downloads data.
+No external dataset is bundled. One MAWI historical traffic capture has been converted and evaluated locally as a forecast-only pilot. `vfw_research.trace_adapter.load_trace` provides an offline, strict import boundary; it never downloads data.
 
 The CSV must have exactly two columns, `timestamp_utc,value`, at a constant interval with explicit UTC ISO-8601 timestamps. Values must be finite and non-negative. A risk score must also be at most 1. The companion JSON provenance sidecar must contain:
 
@@ -25,4 +25,6 @@ After independently reviewing the dataset and making a compliant CSV and sidecar
 python -m vfw_research.forecast_evaluation --trace-csv path/to/traffic.csv --provenance path/to/traffic.provenance.json --output artifacts/raw/imported-forecast-001.json
 ```
 
-This uses chronological 60/20/20 train/calibration/test segments and a one-sample-ahead horizon at the declared sampling interval. The output retains source, license, version, retrieval timestamp, preprocessing, missing-data policy, and the exact CSV checksum. Carbon and risk traces are validated by the adapter but are not inputs to this traffic forecaster.
+This uses chronological 60/20/20 train/calibration/test segments and a one-sample-ahead horizon at the declared sampling interval. The output retains source, terms, version, retrieval timestamp, preprocessing, missing-data policy, and the exact CSV checksum. Carbon and risk traces are validated by the adapter but are not inputs to this traffic forecaster.
+
+For a locally downloaded, authorized MAWI classic-pcap `.dump.gz`, run `python -m vfw_research.mawi_trace --pcap artifacts/raw/capture.dump.gz --source https://mawi.nezu.wide.ad.jp/mawi/path/capture.dump.gz --csv artifacts/raw/capture-1s.csv --provenance artifacts/raw/capture-1s.provenance.json`. The converter reads packet headers only and rejects malformed/out-of-order captures; its synthetic pcap unit tests do not require a download. Never commit or redistribute the raw capture. For this historical pilot, normalized interval width is intentionally null because a research-comparable vFW base capacity was not established.

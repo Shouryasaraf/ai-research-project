@@ -21,7 +21,7 @@ from .trace_adapter import ImportedTrace, TraceKind, load_trace
 
 def evaluate_family(family: WorkloadFamily, *, seed: int, length: int = 240) -> dict:
     values = generate_workload(family, seed=seed, length=length)
-    result = _evaluate_values(values, sampling_interval_seconds=60)
+    result = _evaluate_values(values, sampling_interval_seconds=60, base_capacity_mbps=100.0)
     return {
         **result,
         "evidence_class": "synthetic held-out one-step forecast evaluation",
@@ -54,7 +54,8 @@ def evaluate_imported_trace(trace: ImportedTrace) -> dict:
     }
 
 
-def _evaluate_values(values: tuple[float, ...], *, sampling_interval_seconds: int) -> dict:
+def _evaluate_values(values: tuple[float, ...], *, sampling_interval_seconds: int,
+                     base_capacity_mbps: float | None = None) -> dict:
     split = time_ordered_split(list(values))
     trace_bytes = json.dumps(values, separators=(",", ":")).encode("utf-8")
     results = {}
@@ -69,8 +70,11 @@ def _evaluate_values(values: tuple[float, ...], *, sampling_interval_seconds: in
         results[name] = {
             **asdict(metrics),
             "absolute_coverage_error": abs(metrics.interval_coverage - 0.9),
-            "mean_interval_width_fraction_of_base_capacity": metrics.mean_interval_width / 100.0,
-            "model_version": model.predict(60).model_version,
+            "mean_interval_width_fraction_of_base_capacity": (
+                metrics.mean_interval_width / base_capacity_mbps
+                if base_capacity_mbps is not None else None
+            ),
+            "model_version": model.predict(sampling_interval_seconds).model_version,
         }
     return {
         "sampling_interval_seconds": sampling_interval_seconds,
@@ -83,6 +87,7 @@ def _evaluate_values(values: tuple[float, ...], *, sampling_interval_seconds: in
         },
         "evaluation_rule": "one-step forecast, observe true next value, then update point state; radius fixed from calibration",
         "nominal_coverage": 0.9,
+        "normalization_capacity_mbps": base_capacity_mbps,
         "environment": {"python": platform.python_version(), "platform": platform.platform()},
         "models": results,
     }

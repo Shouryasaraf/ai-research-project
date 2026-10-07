@@ -78,3 +78,6 @@ class TraceAdapterTests(unittest.TestCase):
             self.assertIn("authenticity not independently verified", result["evidence_class"])
             self.assertEqual(result["source_provenance"]["csv_sha256"],
                              hashlib.sha256(csv_path.read_bytes()).hexdigest())
+            self.assertIsNone(result["normalization_capacity_mbps"])
+            self.assertIsNone(result["models"]["ewma_conformal"][
+                "mean_interval_width_fraction_of_base_capacity"])

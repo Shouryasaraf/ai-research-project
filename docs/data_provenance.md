@@ -19,11 +19,11 @@ The complete JSON configuration is hashed with canonical key ordering. Every run
 
 ## External data
 
-No external workload, carbon, vulnerability, anomaly or attack dataset has been incorporated yet. Before adding one, record its stable source, version/date, license or terms, acquisition checksum, fields used, time resolution, timezone, preprocessing, missing-data policy, label limitations and redistribution constraints. Network downloads must not be required for unit tests.
+One historical [MAWI samplepoint-B capture dated 2000-12-28](https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2000/200012281400.html) has been incorporated as an **offline traffic-forecast pilot only**. No external carbon, vulnerability, anomaly, or attack dataset has been incorporated. Network downloads are not required for unit tests.
 
 The offline CSV adapter in `src/vfw_research/trace_adapter.py` enforces a minimal sidecar and strict UTC/unit/checksum/time-series validation; see `external_trace_contract.md`. It does not certify licensing or prove that any real trace has been evaluated.
 
-`dataset_candidate_screen.md` lists source-owner pages considered for future work. None has been adopted or downloaded.
+`vfw_research.mawi_trace` streams the compressed classic pcap, reads only packet-record headers, and sums the original-length field into one-second UTC Mbps bins. It does not inspect or export addresses or payload. Raw capture, derived CSV, provenance sidecar, and result JSON are local and Git-ignored under `artifacts/raw/`. The exact source URL, SHA-256 checksums, packet count, byte count, retrieval time, preprocessing, and limitations are in the sidecar and verification log. The packet count and original-length byte count match the official capture page exactly. The [MAWI privacy guidelines](https://mawi.nezu.wide.ad.jp/mawi/guideline.txt) restrict use to research and prohibit privacy-invasive actions; raw data is not redistributed here. The [MAWI FAQ](https://mawi.nezu.wide.ad.jp/mawi/faq.html) notes capture loss and timestamp limitations. This is historical backbone traffic, not vFW demand telemetry, and has no migration, attack, carbon, or SLA labels.
 
 ## Synthetic forecast families
 

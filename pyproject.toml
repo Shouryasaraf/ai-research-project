@@ -17,6 +17,7 @@ vfw-smoke = "vfw_research.demo:main"
 vfw-experiment = "vfw_research.experiment_runner:main"
 vfw-forecast-eval = "vfw_research.forecast_evaluation:main"
 vfw-forecast-batch = "vfw_research.forecast_batch:main"
+vfw-mawi-trace = "vfw_research.mawi_trace:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

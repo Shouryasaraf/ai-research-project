@@ -12,16 +12,16 @@
 - A rolling-mean split-conformal forecasting baseline preserves chronological splits and reports accuracy separately from interval calibration.
 - Carbon estimates preserve explicit units and provenance; node-risk scores expose every weighted contribution.
 - The reference state adapter validates flow-record digests but remains emulated metadata.
-- Live source conntrack discovery and target tuple insertion are smoke-verified. The imported entry is initially unreplied; complete TCP continuity and route transition remain unverified.
-- The fallback core restores a prior configuration object and measures logical recovery; real route/path restoration remains a testbed requirement.
+- Live source conntrack discovery and target tuple insertion are smoke-verified. An isolated route lab has also shown short same-socket continuity after copying `ASSURED,SEEN_REPLY` state and separately shown controlled rollback after reverse-state refresh; full TCP sequence/window equivalence and broader reliability remain unverified.
+- The fallback core restores a prior configuration object; one isolated route lab has shown controlled path rollback, but automatic target-host-crash recovery and a recovery-time distribution remain unverified.
 - Dual-vFW smoke testing verifies proxy flow affinity and new-flow fallback to the source path. Transparent SDN steering and recovery of established flows on a failed target remain unverified.
 
 ## Not yet verified
 
 - Docker/container launch and cleanup.
 - Mininet/Containernet or Open vSwitch topology.
-- actual flow pinning, migration downtime, packet loss, or state continuity.
-- trained/calibrated forecasting on a research workload trace.
+- transparent flow pinning, migration downtime, packet loss, or general state continuity beyond the short isolated same-socket observations.
+- representative multi-trace forecasting and trace-driven live migration decisions; one historical MAWI forecast-only pilot has been run.
 - real-world carbon or attack-risk data ingestion.
 - baseline/ablation experiments or statistical conclusions.
 
