@@ -1,6 +1,7 @@
 import unittest
 
 from vfw_research.forecasting import (
+    AdaptiveEwmaResidualForecaster,
     EwmaConformalForecaster,
     RollingMeanConformalForecaster,
     evaluate_one_step,
@@ -43,6 +44,16 @@ class ForecastingTests(unittest.TestCase):
         self.assertGreater(after.point_mbps, before.point_mbps)
         self.assertEqual(after.upper_mbps - after.point_mbps, before.upper_mbps - before.point_mbps)
 
+    def test_adaptive_residual_radius_uses_observed_error_after_prediction(self):
+        model = AdaptiveEwmaResidualForecaster(smoothing=0.5, alpha=0.1, residual_window=5)
+        model.fit((10, 10, 10), (10, 10, 10, 10, 10))
+        before = model.predict(1)
+        self.assertEqual(before.upper_mbps, 10)
+        model.observe(30)
+        after = model.predict(1)
+        self.assertGreater(after.upper_mbps - after.point_mbps, 0)
+        self.assertEqual(before.model_version, after.model_version)
+
     def test_synthetic_trace_is_seeded_and_shift_is_held_out(self):
         first = generate_workload(WorkloadFamily.SHIFT, seed=5)
         second = generate_workload(WorkloadFamily.SHIFT, seed=5)
@@ -53,7 +64,9 @@ class ForecastingTests(unittest.TestCase):
     def test_forecast_evaluation_records_held_out_calibration_metrics(self):
         result = evaluate_family(WorkloadFamily.PERIODIC, seed=9)
         self.assertEqual(result["split_counts"], {"train": 144, "calibration": 48, "test": 48})
-        self.assertEqual(set(result["models"]), {"rolling_mean_conformal", "ewma_conformal"})
+        self.assertEqual(set(result["models"]), {
+            "rolling_mean_conformal", "ewma_conformal", "adaptive_ewma_residual_exploratory"
+        })
         for metrics in result["models"].values():
             self.assertTrue(0 <= metrics["interval_coverage"] <= 1)
             self.assertGreaterEqual(metrics["mae"], 0)

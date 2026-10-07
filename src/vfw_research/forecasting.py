@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 from statistics import fmean
+from typing import Protocol
 
 from .models import Forecast
 
@@ -137,6 +138,61 @@ class EwmaConformalForecaster:
         self._update(actual_mbps)
 
 
+class AdaptiveEwmaResidualForecaster(EwmaConformalForecaster):
+    """Exploratory EWMA with a rolling, observed-error interval radius.
+
+    This is causal but does not inherit finite-sample conformal coverage under
+    serial dependence or distribution shift. No test residual enters a forecast
+    before its corresponding actual observation is revealed.
+    """
+
+    def __init__(self, smoothing: float = 0.4, alpha: float = 0.1,
+                 residual_window: int = 30) -> None:
+        super().__init__(smoothing=smoothing, alpha=alpha)
+        if residual_window < 2:
+            raise ValueError("residual_window must be at least two")
+        self.residual_window = residual_window
+        self._residuals: list[float] = []
+
+    def _refresh_radius(self) -> None:
+        count = len(self._residuals)
+        probability = min(1.0, math.ceil((count + 1) * (1 - self.alpha)) / count)
+        self._radius = _higher_quantile(self._residuals, probability)
+
+    def fit(self, train: tuple[float, ...], calibration: tuple[float, ...]) -> None:
+        if not train or not calibration:
+            raise ValueError("training and calibration data are required")
+        self._level = None
+        self._radius = None
+        self._residuals = []
+        for actual in train:
+            self._update(actual)
+        for actual in calibration:
+            assert self._level is not None
+            self._residuals.append(abs(actual - self._level))
+            self._residuals = self._residuals[-self.residual_window:]
+            self._update(actual)
+        self._refresh_radius()
+
+    def predict(self, horizon_seconds: int) -> Forecast:
+        forecast = super().predict(horizon_seconds)
+        return Forecast(
+            forecast.point_mbps, forecast.lower_mbps, forecast.upper_mbps,
+            horizon_seconds,
+            f"adaptive-ewma-residual-s{self.smoothing:g}-a{self.alpha:g}-w{self.residual_window}",
+        )
+
+    def observe(self, actual_mbps: float) -> None:
+        if self._level is None or self._radius is None:
+            raise RuntimeError("fit the forecaster before observation")
+        if not math.isfinite(actual_mbps) or actual_mbps < 0:
+            raise ValueError("traffic observation must be finite and non-negative")
+        self._residuals.append(abs(actual_mbps - self._level))
+        self._residuals = self._residuals[-self.residual_window:]
+        self._refresh_radius()
+        self._update(actual_mbps)
+
+
 @dataclass(frozen=True)
 class ForecastMetrics:
     mae: float
@@ -145,8 +201,13 @@ class ForecastMetrics:
     mean_interval_width: float
 
 
+class OnlineForecaster(Protocol):
+    def predict(self, horizon_seconds: int) -> Forecast: ...
+    def observe(self, actual_mbps: float) -> None: ...
+
+
 def evaluate_one_step(
-    model: RollingMeanConformalForecaster,
+    model: OnlineForecaster,
     test: tuple[float, ...],
     *,
     horizon_seconds: int,

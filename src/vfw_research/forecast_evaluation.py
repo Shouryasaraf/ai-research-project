@@ -10,6 +10,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from .forecasting import (
+    AdaptiveEwmaResidualForecaster,
     EwmaConformalForecaster,
     RollingMeanConformalForecaster,
     evaluate_one_step,
@@ -62,6 +63,9 @@ def _evaluate_values(values: tuple[float, ...], *, sampling_interval_seconds: in
     for name, model in (
         ("rolling_mean_conformal", RollingMeanConformalForecaster(window=5, alpha=0.1)),
         ("ewma_conformal", EwmaConformalForecaster(smoothing=0.4, alpha=0.1)),
+        ("adaptive_ewma_residual_exploratory", AdaptiveEwmaResidualForecaster(
+            smoothing=0.4, alpha=0.1, residual_window=30
+        )),
     ):
         model.fit(split.train, split.calibration)
         metrics = evaluate_one_step(
@@ -69,6 +73,11 @@ def _evaluate_values(values: tuple[float, ...], *, sampling_interval_seconds: in
         )
         results[name] = {
             **asdict(metrics),
+            "evaluation_status": (
+                "exploratory adaptive method; same development traces examined"
+                if name == "adaptive_ewma_residual_exploratory"
+                else "fixed baseline"
+            ),
             "absolute_coverage_error": abs(metrics.interval_coverage - 0.9),
             "mean_interval_width_fraction_of_base_capacity": (
                 metrics.mean_interval_width / base_capacity_mbps

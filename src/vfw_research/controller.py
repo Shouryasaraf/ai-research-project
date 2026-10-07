@@ -71,8 +71,12 @@ def decide(
         )
     if width_fraction > max_commit_interval_width_fraction:
         return ControllerDecision(
-            action=GateAction.PREWARM,
-            reason="overload is plausible but forecast interval is too wide to commit",
+            action=GateAction.WAIT if decision_input.target_warm else GateAction.PREWARM,
+            reason=(
+                "target is warm; wait for lower uncertainty before commit"
+                if decision_input.target_warm
+                else "overload is plausible; prewarm target while uncertainty is high"
+            ),
             **common,
         )
     if not decision_input.target_warm:

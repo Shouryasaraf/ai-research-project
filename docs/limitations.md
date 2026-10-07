@@ -21,7 +21,7 @@
 - Docker/container launch and cleanup.
 - Mininet/Containernet or Open vSwitch topology.
 - transparent flow pinning, migration downtime, packet loss, or general state continuity beyond the short isolated same-socket observations.
-- representative multi-trace forecasting and trace-driven live migration decisions; one historical MAWI forecast-only pilot has been run.
+- representative multi-trace forecasting and trace-derived live migration decisions; one historical MAWI forecast and **offline independent-decision** pilot has been run, but no trace-derived traffic was replayed through the firewall path.
 - real-world carbon or attack-risk data ingestion.
 - baseline/ablation experiments or statistical conclusions.
 

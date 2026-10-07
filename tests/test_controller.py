@@ -47,10 +47,12 @@ class ControllerTests(unittest.TestCase):
         self.assertEqual(decision.action, GateAction.FALLBACK)
         self.assertIn("target_policy_mismatch", decision.invariant_violations)
 
-    def test_wide_uncertainty_prewarms_without_commit(self):
+    def test_wide_uncertainty_waits_if_warm_and_prewarms_if_cold(self):
         wide = Forecast(75, 30, 95, 60, "wide")
         decision = self.run_decision(replace(self.input, forecast=wide))
-        self.assertEqual(decision.action, GateAction.PREWARM)
+        self.assertEqual(decision.action, GateAction.WAIT)
+        cold = self.run_decision(replace(self.input, forecast=wide, target_warm=False))
+        self.assertEqual(cold.action, GateAction.PREWARM)
 
     def test_unsynchronized_target_requests_sync(self):
         decision = self.run_decision(replace(self.input, state_synchronized=False))
@@ -64,4 +66,3 @@ class ControllerTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

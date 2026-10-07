@@ -142,6 +142,14 @@ python -m vfw_research.forecast_evaluation --trace-csv artifacts/raw/mawi-200012
 
 Outputs are exclusive-write and Git-ignored; use fresh names when repeating. This converts only packet-header lengths into a traffic-rate series. It does not replay traffic through the vFW or evaluate migration. See `docs/data_provenance.md` and `docs/verification_log.md` for the pilot's checksum, measured source counts, metrics and limits.
 
+The [exploratory trace-driven decision pilot](docs/trace_driven_decision_pilot.md) passes the held-out MAWI rate series through each controller policy using modeled non-traffic inputs:
+
+```powershell
+python -m vfw_research.trace_decision_eval --trace-csv artifacts/raw/mawi-200012281400-1s.csv --provenance artifacts/raw/mawi-200012281400-1s.provenance.json --scenario configs/scenarios/synthetic_small.json --output artifacts/raw/mawi-decisions-new-run.json
+```
+
+It records independent decisions only; `COMMIT` in this output is a controller decision, not an executed migration. The fixed scenario uncertainty limit produced `WAIT` on every held-out opportunity for the already-warm full policy, so this pilot does **not** show a migration benefit.
+
 ## Linux namespace packet-path test
 
 The initial real networking gate intentionally uses transparent Linux primitives before container packaging. See `docs/testbed.md`:
