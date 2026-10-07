@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -32,6 +32,7 @@ class ExperimentRecord:
     measured_metrics: dict[str, float]
     modeled_metrics: dict[str, float]
     notes: tuple[str, ...] = ()
+    decision: dict[str, Any] = field(default_factory=dict)
 
     def validate(self) -> None:
         for name, value in (
@@ -52,6 +53,14 @@ class ExperimentRecord:
         ):
             if any(not math.isfinite(value) for value in metrics.values()):
                 raise ValueError(f"{group_name} contains a non-finite value")
+        overlap = set(self.measured_metrics) & set(self.modeled_metrics)
+        if overlap:
+            raise ValueError(
+                "measured_metrics and modeled_metrics must use distinct names: "
+                + ", ".join(sorted(overlap))
+            )
+        if self.decision and not str(self.decision.get("action", "")).strip():
+            raise ValueError("decision.action is required when a decision is recorded")
 
 
 def configuration_digest(configuration: dict[str, Any]) -> str:
@@ -67,4 +76,3 @@ def write_immutable_record(directory: Path, record: ExperimentRecord) -> Path:
         json.dump(asdict(record), handle, indent=2, sort_keys=True)
         handle.write("\n")
     return path
-

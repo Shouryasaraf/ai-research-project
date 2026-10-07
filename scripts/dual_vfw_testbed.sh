@@ -10,6 +10,50 @@ namespace_exists() {
     ip netns list | awk '{print $1}' | grep -Fxq "$1"
 }
 
+policy_digest() {
+    local namespace="$1"
+    ip netns exec "$namespace" nft -j list table inet vfw | python3 -c '
+import hashlib
+import json
+import sys
+
+def normalized(value):
+    if isinstance(value, dict):
+        return {
+            key: normalized(child)
+            for key, child in value.items()
+            if key not in {"handle", "packets", "bytes"}
+        }
+    if isinstance(value, list):
+        return [normalized(child) for child in value]
+    return value
+
+payload = json.dumps(normalized(json.load(sys.stdin)), sort_keys=True, separators=(",", ":"))
+print(hashlib.sha256(payload.encode("utf-8")).hexdigest())
+'
+}
+
+validate_precommit() {
+    local source_digest target_digest target_pid
+    source_digest="$(policy_digest vfwlab2-fw-source)"
+    target_digest="$(policy_digest vfwlab2-fw-target)"
+    target_pid="$(cat /tmp/vfwlab2-target.pid)"
+    if [[ "$source_digest" != "$target_digest" ]]; then
+        echo "error: source and target normalized nftables policies differ" >&2
+        echo "source_policy_digest=$source_digest" >&2
+        echo "target_policy_digest=$target_digest" >&2
+        exit 8
+    fi
+    if ! kill -0 "$target_pid" 2>/dev/null; then
+        echo "error: target backend is unhealthy before commit" >&2
+        exit 9
+    fi
+    echo "source_policy_digest=$source_digest"
+    echo "target_policy_digest=$target_digest"
+    echo "precommit_policy_equivalence_verified=true"
+    echo "precommit_target_health_verified=true"
+}
+
 stop_processes() {
     local pid_file pid
     for pid_file in "${PID_FILES[@]}"; do
@@ -122,15 +166,22 @@ up() {
 }
 
 test_pinning() {
+    local commit_start_ns new_flow_end_ns drain_end_ns new_flow_admission_ms source_drain_ms
     ip netns exec vfwlab2-client \
         python3 "$SCRIPT_DIR/flow_client.py" 10.20.0.1 --delay 2 before after \
         >/tmp/vfwlab2-old.out 2>&1 &
     echo "$!" >/tmp/vfwlab2-old-client.pid
     sleep 1
+    validate_precommit
+    commit_start_ns="$(date +%s%N)"
     printf 'target\n' >"$CONTROL_FILE"
     ip netns exec vfwlab2-client \
         python3 "$SCRIPT_DIR/flow_client.py" 10.20.0.1 new >/tmp/vfwlab2-new.out 2>&1
+    new_flow_end_ns="$(date +%s%N)"
     wait "$(cat /tmp/vfwlab2-old-client.pid)"
+    drain_end_ns="$(date +%s%N)"
+    new_flow_admission_ms="$(( (new_flow_end_ns - commit_start_ns) / 1000000 ))"
+    source_drain_ms="$(( (drain_end_ns - commit_start_ns) / 1000000 ))"
 
     OLD_OUTPUT="$(cat /tmp/vfwlab2-old.out)"
     NEW_OUTPUT="$(cat /tmp/vfwlab2-new.out)"
@@ -147,8 +198,15 @@ test_pinning() {
 
     echo "established_flow=$OLD_OUTPUT"
     echo "new_flow=$NEW_OUTPUT"
+    echo "new_flow_admission_ms=$new_flow_admission_ms"
+    echo "source_application_flow_drain_ms=$source_drain_ms"
+    echo "source_application_flow_drained=true"
     echo "proxy_flow_pinning_verified=true"
     echo "transparent_sdn_steering_verified=false"
+    echo "--- live source network telemetry ---"
+    python3 "$SCRIPT_DIR/collect_network_telemetry.py" vfwlab2-fw-source
+    echo "--- live target network telemetry ---"
+    python3 "$SCRIPT_DIR/collect_network_telemetry.py" vfwlab2-fw-target
     echo "--- source firewall counters ---"
     ip netns exec vfwlab2-fw-source nft list chain inet vfw forward
     echo "--- target firewall counters ---"
@@ -196,6 +254,25 @@ run_all() {
     echo "dual_vfw_integration_passed=true"
 }
 
+run_policy_mismatch_test() {
+    trap 'down >/dev/null' EXIT
+    up
+    ip netns exec vfwlab2-fw-target \
+        nft insert rule inet vfw forward tcp dport 9999 accept comment \
+        '"controlled policy mismatch"'
+    if (validate_precommit); then
+        echo "error: mismatched target policy was accepted" >&2
+        exit 10
+    fi
+    if [[ "$(cat "$CONTROL_FILE")" != "source" ]]; then
+        echo "error: active backend changed despite failed validation" >&2
+        exit 11
+    fi
+    echo "injected_failure=target_policy_mismatch"
+    echo "unsafe_commit_rejected=true"
+    echo "validated_source_retained=true"
+}
+
 if [[ "$(id -u)" -ne 0 ]]; then
     echo "error: run as root inside the isolated WSL test environment" >&2
     exit 2
@@ -204,7 +281,8 @@ fi
 case "${1:-}" in
     up) up ;;
     test) test_pinning ;;
+    test-policy-mismatch) run_policy_mismatch_test ;;
     down) down ;;
     run) run_all ;;
-    *) echo "usage: $0 {run|up|test|down}" >&2; exit 64 ;;
+    *) echo "usage: $0 {run|up|test|test-policy-mismatch|down}" >&2; exit 64 ;;
 esac

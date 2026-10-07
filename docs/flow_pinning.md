@@ -18,6 +18,7 @@ Run:
 
 ```bash
 sudo bash scripts/dual_vfw_testbed.sh run
+sudo bash scripts/dual_vfw_testbed.sh test-policy-mismatch
 ```
 
 The supervised `run` command keeps all local services alive in one WSL invocation and always executes cleanup on exit. The separate `up`, `test`, and `down` commands are retained for interactive Linux debugging, but should not be split across independent `wsl.exe` invocations because WSL may terminate background processes when an invocation ends.
@@ -25,3 +26,7 @@ The supervised `run` command keeps all local services alive in one WSL invocatio
 This verifies application-proxy flow affinity across two real stateful software-firewall paths. It is not transparent SDN/Open vSwitch steering, not kernel connection-state migration, and not evidence that an existing TCP connection can move from source to target without disruption.
 
 The fallback check verifies restoration for newly opened flows after target failure. It does not verify recovery of an established flow that was already using the failed target.
+
+Before changing new-flow selection to the target, the script calculates normalized SHA-256 digests of the loaded source and target nftables policies, ignoring runtime handles and counters, and checks target-backend liveness. A mismatch or unhealthy target refuses the selection change. This is pre-commit policy/health validation; it is not conntrack-state equivalence.
+
+The controlled mismatch command inserts an extra target-only allow rule, requires pre-commit validation to fail, and confirms that the source remains selected. It does not send traffic to TCP/9999 or outside the isolated namespace topology.

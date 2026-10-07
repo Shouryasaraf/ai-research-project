@@ -12,7 +12,7 @@ This repository is a software-only, publication-oriented NFV/SDN research protot
 - **Stage 5:** transparent rolling-mean split-conformal forecasting baseline implemented; research-trace training/calibration remains pending.
 - **Stage 6:** carbon estimation, explainable risk scoring, constrained placement, and adaptive benefit core implemented; comparative experiments remain pending.
 - **Stage 7:** invariant validation and idempotent logical fallback implemented; controlled target failure and new-flow source-path restoration smoke-verified, while established-flow recovery remains pending.
-- **Stage 8:** common baseline-policy interface and immutable result schema implemented; repeated comparative experiments and publication figures remain pending.
+- **Stage 8:** common baseline-policy interface, validated scenario loader, immutable result schema, paired synthetic experiment runner, and generated JSON/CSV/SVG summaries implemented. A 27-record controller-only pilot validates the pipeline; packet-path comparative experiments and publication results remain pending.
 - No comparative performance, carbon, migration, novelty, or publication result is claimed yet.
 
 The repository contains both a deterministic decision harness and a real kernel-enforced single-vFW smoke test. It does not yet demonstrate complete state-consistent warm migration or flow continuity; see `docs/state_migration.md` for the evidence levels.
@@ -65,6 +65,26 @@ That absolute path is development evidence only; scripts and source code do not 
 8. Run identical seeded baselines, ablations, sensitivity studies, and statistical analysis.
 
 See `docs/` for the precise gates and research definitions.
+
+## Run the synthetic evaluation-pipeline smoke test
+
+This checks experiment plumbing only. It does **not** benchmark the network or establish a research result.
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m vfw_research.experiment_runner plan configs/scenarios/synthetic_small.json
+python -m vfw_research.experiment_runner run configs/scenarios/synthetic_small.json --output-root artifacts --batch-id my-pilot-001
+```
+
+The command creates 27 immutable raw records (three paired seeds across nine policies), then derives a JSON summary, CSV table, and SVG action chart. Batch IDs cannot be reused, preventing silent overwrite. Raw and generated artifacts are ignored by Git; the scenario, schemas, code, and tests are tracked.
+
+To rebuild outputs independently from existing raw records:
+
+```powershell
+python -m vfw_research.experiment_runner summarize artifacts/raw/my-pilot-001 artifacts/processed/my-pilot-001-rebuilt
+```
+
+See `docs/data_provenance.md` and `docs/completion_gap_matrix.md` for the evidence boundary and remaining publication work.
 
 ## Linux namespace packet-path test
 

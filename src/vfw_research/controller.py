@@ -33,7 +33,10 @@ def decide(
     selected = placement.ranked[0] if placement.ranked else None
     benefit = calculate_benefit(decision_input.benefit_terms)
     threshold = adaptive_threshold(decision_input.threshold_context, threshold_policy)
-    violations = validate_security_invariants(decision_input.invariants)
+    violations = list(validate_security_invariants(decision_input.invariants))
+    if not decision_input.telemetry_fresh:
+        violations.append("telemetry_stale")
+    violations_tuple = tuple(violations)
     forecast = decision_input.forecast
     upper_utilization = forecast.upper_mbps / decision_input.source_capacity_mbps
     point_utilization = forecast.point_mbps / decision_input.source_capacity_mbps
@@ -43,15 +46,15 @@ def decide(
         "selected_node_id": selected.node_id if selected else None,
         "net_benefit": benefit.net_benefit,
         "adaptive_threshold": threshold,
-        "invariant_violations": violations,
+        "invariant_violations": violations_tuple,
         "placement_components": selected.components if selected else {},
         "model_version": forecast.model_version,
     }
 
-    if violations:
+    if violations_tuple:
         return ControllerDecision(
             action=GateAction.FALLBACK,
-            reason="security invariant validation failed",
+            reason="security invariant or telemetry-freshness validation failed",
             **common,
         )
     if selected is None:
@@ -101,4 +104,3 @@ def decide(
         reason="forecast, readiness, benefit, placement, and security gates passed",
         **common,
     )
-

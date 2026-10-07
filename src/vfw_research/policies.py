@@ -56,7 +56,10 @@ def _simple_decision(
 ) -> ControllerDecision:
     placement = evaluate_placement(run.candidates, run.decision_input.forecast, run.placement_policy)
     selected = placement.ranked[0] if placement.ranked else None
-    violations = validate_security_invariants(run.decision_input.invariants)
+    violations = list(validate_security_invariants(run.decision_input.invariants))
+    if not run.decision_input.telemetry_fresh:
+        violations.append("telemetry_stale")
+    violations_tuple = tuple(violations)
     signal = (
         run.decision_input.forecast.point_mbps / run.decision_input.source_capacity_mbps
         if use_prediction
@@ -65,9 +68,9 @@ def _simple_decision(
     benefit = calculate_benefit(run.decision_input.benefit_terms).net_benefit
     action = GateAction.WAIT
     reason = f"{variant.value}: trigger not reached"
-    if violations:
+    if violations_tuple:
         action = GateAction.FALLBACK
-        reason = f"{variant.value}: security invariant failure"
+        reason = f"{variant.value}: security invariant or telemetry freshness failure"
     elif selected is None:
         reason = f"{variant.value}: no feasible candidate"
     elif signal >= run.overload_trigger_fraction:
@@ -79,7 +82,7 @@ def _simple_decision(
         selected.node_id if selected else None,
         benefit,
         0.0,
-        violations,
+        violations_tuple,
         selected.components if selected else {},
         run.decision_input.forecast.model_version,
     )
@@ -155,4 +158,3 @@ def run_policy(variant: PolicyVariant, run: PolicyRunInput) -> PolicyOutcome:
 
 def run_all_policies(run: PolicyRunInput) -> tuple[PolicyOutcome, ...]:
     return tuple(run_policy(variant, run) for variant in PolicyVariant)
-

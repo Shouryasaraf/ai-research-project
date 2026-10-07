@@ -23,6 +23,7 @@ bash "$SCRIPT_DIR/testbed.sh" up >/dev/null
 ip netns delete "$TARGET_NS" 2>/dev/null || true
 ip netns add "$TARGET_NS"
 ip -n "$TARGET_NS" link set lo up
+ip netns exec "$TARGET_NS" nft -f "$SCRIPT_DIR/firewall.nft"
 
 ip netns exec vfwlab-server iperf3 -s -D --pidfile /tmp/vfwlab-iperf3.pid
 ip netns exec vfwlab-client \
@@ -57,7 +58,14 @@ if [[ "$TARGET_ENTRY" != *"ESTABLISHED"* ]]; then
     exit 4
 fi
 
+ip netns exec vfwlab-source nft -j list table inet vfw \
+    | python3 -c 'import json,sys; data=json.load(sys.stdin); assert any("table" in x for x in data["nftables"])'
+ip netns exec "$TARGET_NS" nft -j list table inet vfw \
+    | python3 -c 'import json,sys; data=json.load(sys.stdin); assert any("table" in x for x in data["nftables"])'
+python3 "$SCRIPT_DIR/validate_conntrack.py" --source "$SOURCE_ENTRY" --target "$TARGET_ENTRY"
+
 echo "source_entry=$SOURCE_ENTRY"
 echo "target_entry=$TARGET_ENTRY"
 echo "kernel_conntrack_tuple_inserted=true"
+echo "supported_kernel_tuple_fields_validated=true"
 echo "seamless_flow_continuity_verified=false"

@@ -179,6 +179,7 @@ class DecisionInput:
     invariants: SecuritySnapshot
     benefit_terms: BenefitTerms
     threshold_context: ThresholdContext
+    telemetry_fresh: bool = True
 
 
 @dataclass(frozen=True)
@@ -203,4 +204,3 @@ class ControllerDecision:
             "placement_components": self.placement_components,
             "model_version": self.model_version,
         }
-

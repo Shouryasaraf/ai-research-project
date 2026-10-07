@@ -14,6 +14,7 @@ dev = ["pytest>=8,<9", "ruff>=0.8,<1"]
 
 [project.scripts]
 vfw-smoke = "vfw_research.demo:main"
+vfw-experiment = "vfw_research.experiment_runner:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -28,4 +29,3 @@ addopts = "-q"
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-

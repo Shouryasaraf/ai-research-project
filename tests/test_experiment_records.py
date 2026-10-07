@@ -44,7 +44,18 @@ class ExperimentRecordTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 write_immutable_record(output, self.build_record())
 
+    def test_measured_and_modeled_metric_names_cannot_overlap(self):
+        record = self.build_record()
+        invalid = ExperimentRecord(
+            **{
+                **record.__dict__,
+                "measured_metrics": {"same": 1.0},
+                "modeled_metrics": {"same": 2.0},
+            }
+        )
+        with self.assertRaises(ValueError):
+            invalid.validate()
+
 
 if __name__ == "__main__":
     unittest.main()
-

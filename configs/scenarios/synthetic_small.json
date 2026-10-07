@@ -1,0 +1,115 @@
+{
+  "scenario_id": "synthetic-small-overload",
+  "synthetic_inputs": true,
+  "seeds": [7, 11, 19],
+  "source_capacity_mbps": 100.0,
+  "current_utilization": 0.85,
+  "forecast": {
+    "point_mbps": 90.0,
+    "lower_mbps": 84.0,
+    "upper_mbps": 96.0,
+    "horizon_seconds": 60,
+    "model_version": "synthetic-fixture-v1",
+    "jitter_fraction": 0.02
+  },
+  "target_warm": true,
+  "state_synchronized": true,
+  "telemetry_fresh": true,
+  "invariants": {
+    "source_policy_hash": "policy-v1",
+    "target_policy_hash": "policy-v1",
+    "expected_policy_hash": "policy-v1",
+    "traffic_path_enforced": true,
+    "default_deny_enabled": true,
+    "target_allowed": true,
+    "target_healthy": true,
+    "capacity_sufficient": true,
+    "state_mismatch_fraction": 0.0,
+    "maximum_state_mismatch_fraction": 0.01,
+    "audit_available": true
+  },
+  "benefit_terms": {
+    "operational_benefit": 0.8,
+    "carbon_benefit": 0.1,
+    "risk_reduction_benefit": 0.1,
+    "migration_cost": 0.1,
+    "disruption_penalty": 0.05,
+    "uncertainty_penalty": 0.05,
+    "operational_overhead": 0.05
+  },
+  "threshold_context": {
+    "state_size_mb": 1.0,
+    "active_flows": 20,
+    "uncertainty_fraction": 0.12,
+    "recent_failures": 0,
+    "sla_criticality": 0.5,
+    "cooldown_active": false,
+    "target_headroom_fraction": 0.5
+  },
+  "candidates": [
+    {
+      "node_id": "node-green",
+      "capacity_mbps": 240.0,
+      "current_load_mbps": 20.0,
+      "available_cpu_fraction": 0.8,
+      "available_memory_fraction": 0.8,
+      "latency_ms": 14.0,
+      "carbon_gco2_per_kwh": 90.0,
+      "security_risk": 0.18,
+      "healthy": true,
+      "allowed": true
+    },
+    {
+      "node_id": "node-low-latency",
+      "capacity_mbps": 260.0,
+      "current_load_mbps": 25.0,
+      "available_cpu_fraction": 0.75,
+      "available_memory_fraction": 0.75,
+      "latency_ms": 6.0,
+      "carbon_gco2_per_kwh": 340.0,
+      "security_risk": 0.12,
+      "healthy": true,
+      "allowed": true
+    },
+    {
+      "node_id": "node-quarantined",
+      "capacity_mbps": 500.0,
+      "current_load_mbps": 5.0,
+      "available_cpu_fraction": 0.95,
+      "available_memory_fraction": 0.95,
+      "latency_ms": 3.0,
+      "carbon_gco2_per_kwh": 40.0,
+      "security_risk": 0.9,
+      "healthy": true,
+      "allowed": false
+    }
+  ],
+  "placement_policy": {
+    "max_security_risk": 0.65,
+    "minimum_cpu_fraction": 0.15,
+    "minimum_memory_fraction": 0.15,
+    "max_latency_ms": 100.0,
+    "weights": {
+      "capacity": 0.3,
+      "latency": 0.15,
+      "carbon": 0.2,
+      "security_risk": 0.25,
+      "uncertainty_headroom": 0.1
+    }
+  },
+  "threshold_policy": {
+    "base": 0.2,
+    "state_size_per_mb": 0.0005,
+    "active_flow_weight": 0.0002,
+    "uncertainty_weight": 0.3,
+    "recent_failure_weight": 0.1,
+    "sla_criticality_weight": 0.2,
+    "cooldown_penalty": 0.5,
+    "headroom_relief_weight": 0.1,
+    "minimum": 0.05,
+    "maximum": 2.0
+  },
+  "overload_trigger_fraction": 0.8,
+  "max_commit_interval_width_fraction": 0.2,
+  "fixed_threshold": 0.25
+}
