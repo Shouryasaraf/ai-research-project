@@ -17,6 +17,8 @@ The optional `test-trace-payload` mode uses the first two held-out rates from an
 sudo bash scripts/route_migration_lab.sh test-trace-payload artifacts/raw/mawi-200012281400-1s.csv artifacts/raw/mawi-200012281400-1s.provenance.json
 ```
 
+For an immutable, cleanup-checked three-trial functional batch, run `sudo python3 scripts/live_fault_batch.py --output-directory artifacts/raw/my-trace-route-batch --repeats 3 --scenarios route-trace-payload --trace-csv artifacts/raw/mawi-200012281400-1s.csv --provenance artifacts/raw/mawi-200012281400-1s.provenance.json`. The optional trace scenario is not part of the batch runner's default scenario set because it needs a separately acquired local trace.
+
 The two negative scenarios refuse to change either route and require the source flow to finish: one imports a tuple without `SEEN_REPLY`, producing an `UNREPLIED` target entry; the other inserts an extra target-only allow rule. The latter is controlled policy fault injection inside the isolated testbed, not attack traffic against any external host.
 
 The controlled `test-rollback` scenario uses one client socket for `before`, `after`, and `again`. After `after` traverses the target, the harness reads the target conntrack entry, refreshes the source tuple with `ASSURED,SEEN_REPLY`, verifies supported state fields, and confirms the source still has the approved policy. It then empties the target forward chain, leaving its default-drop policy in force, and restores both routes to source before `again`. A pass requires all three responses and a rise in source established-accept packets. Without the reverse refresh, a developmental run timed out on `again`; that failed run is recorded in `verification_log.md`.
