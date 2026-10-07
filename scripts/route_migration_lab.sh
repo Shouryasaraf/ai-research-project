@@ -112,16 +112,27 @@ else:
 test_route() {
     local mode="${1:-with-seen-reply}"
     if [[ "$mode" != "with-seen-reply" && "$mode" != "without-seen-reply" && \
-          "$mode" != "policy-mismatch" && "$mode" != "rollback" ]]; then
+          "$mode" != "policy-mismatch" && "$mode" != "rollback" && \
+          "$mode" != "trace-payload" ]]; then
         echo "error: invalid route test mode" >&2; exit 64
+    fi
+    if [[ "$mode" == "trace-payload" && ( $# -ne 3 || ! -f "$2" || ! -f "$3" ) ]]; then
+        echo "error: trace-payload requires existing CSV and provenance paths" >&2; exit 64
     fi
     trap 'down >/dev/null' EXIT
     up
     local messages=(before after)
     if [[ "$mode" == "rollback" ]]; then messages+=(again); fi
-    ip netns exec vfwlab3-client \
-        python3 "$SCRIPT_DIR/flow_client.py" 10.50.5.2 --delay 3 "${messages[@]}" \
-        >/tmp/vfwlab3-client.out 2>/tmp/vfwlab3-client.err &
+    if [[ "$mode" == "trace-payload" ]]; then
+        ip netns exec vfwlab3-client \
+            python3 "$SCRIPT_DIR/trace_payload_client.py" 10.50.5.2 \
+            --trace-csv "$2" --provenance "$3" --delay 3 \
+            >/tmp/vfwlab3-client.out 2>/tmp/vfwlab3-client.err &
+    else
+        ip netns exec vfwlab3-client \
+            python3 "$SCRIPT_DIR/flow_client.py" 10.50.5.2 --delay 3 "${messages[@]}" \
+            >/tmp/vfwlab3-client.out 2>/tmp/vfwlab3-client.err &
+    fi
     echo "$!" >/tmp/vfwlab3-client.pid
     sleep 1
     local source_entry sport target_entry before after client_output status
@@ -255,7 +266,16 @@ test_route() {
     echo "client_output=$client_output"
     echo "target_established_accept_packets_before=$before"
     echo "target_established_accept_packets_after=$after"
-    if [[ "$client_output" != $'server:before\nserver:after' ]]; then
+    if [[ "$mode" == "trace-payload" ]]; then
+        printf '%s\n' "$client_output" | python3 -c '
+import json,sys
+rows=[json.loads(line) for line in sys.stdin if line.strip()]
+assert len(rows)==2 and [row["sample_index"] for row in rows]==[0,1]
+assert all(row["response_verified"] and row["scaled_payload_bytes"]>0 for row in rows)
+assert rows[0]["trace_csv_sha256"]==rows[1]["trace_csv_sha256"]
+' || { echo "error: trace-derived client evidence invalid" >&2; exit 4; }
+        echo "trace_derived_payload_verified=true"
+    elif [[ "$client_output" != $'server:before\nserver:after' ]]; then
         echo "error: same TCP flow did not finish across route change" >&2; exit 4
     fi
     if (( after <= before )); then
@@ -272,7 +292,8 @@ case "${1:-}" in
     test-no-seen-reply) test_route without-seen-reply ;;
     test-policy-mismatch) test_route policy-mismatch ;;
     test-rollback) test_route rollback ;;
+    test-trace-payload) test_route trace-payload "${2:-}" "${3:-}" ;;
     up) up ;;
     down) down ;;
-    *) echo "usage: $0 {run|test-no-seen-reply|test-policy-mismatch|test-rollback|up|down}" >&2; exit 64 ;;
+    *) echo "usage: $0 {run|test-no-seen-reply|test-policy-mismatch|test-rollback|test-trace-payload CSV PROVENANCE|up|down}" >&2; exit 64 ;;
 esac
