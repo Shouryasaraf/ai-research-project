@@ -3,7 +3,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from vfw_research.analysis import build_summary, read_records, write_summary
+from vfw_research.analysis import (
+    build_paired_decision_contrasts,
+    build_summary,
+    read_records,
+    write_summary,
+)
 from vfw_research.experiment_runner import run_experiment
 from vfw_research.policies import PolicyVariant
 from vfw_research.scenarios import load_scenario
@@ -56,6 +61,8 @@ class ExperimentRunnerTests(unittest.TestCase):
             self.assertEqual(summary["completed_records"], 27)
             self.assertEqual(len(summary["policies"]), len(PolicyVariant))
             self.assertIn("not a network benchmark", summary["evidence_class"])
+            self.assertEqual(len(summary["paired_decision_contrasts"]), len(PolicyVariant) - 1)
+            self.assertTrue(all(item["paired_runs"] == 3 for item in summary["paired_decision_contrasts"]))
             rebuilt = build_summary(read_records(raw))
             self.assertEqual(
                 [item["policy_id"] for item in rebuilt["policies"]],
@@ -63,6 +70,15 @@ class ExperimentRunnerTests(unittest.TestCase):
             )
             with self.assertRaises(FileExistsError):
                 write_summary(raw, output)
+
+    def test_paired_contrast_rejects_missing_or_duplicate_policy_seed(self):
+        scenario = load_scenario(SCENARIO)
+        with tempfile.TemporaryDirectory() as directory:
+            records = read_records(run_experiment(scenario, output_root=Path(directory), batch_id="pairs"))
+            with self.assertRaisesRegex(ValueError, "incomplete policy pair"):
+                build_paired_decision_contrasts(records[1:])
+            with self.assertRaisesRegex(ValueError, "duplicate paired record"):
+                build_paired_decision_contrasts(records + [records[0]])
 
 
 if __name__ == "__main__":

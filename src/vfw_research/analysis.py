@@ -10,6 +10,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Iterable
 
+from .policies import PolicyVariant
+
 
 def _bootstrap_mean_ci(values: list[float], *, seed: int = 20261006) -> tuple[float, float]:
     if not values:
@@ -43,6 +45,7 @@ def read_records(directory: Path) -> list[dict]:
 
 
 def build_summary(records: Iterable[dict]) -> dict:
+    records = list(records)
     grouped: dict[str, list[dict]] = defaultdict(list)
     for record in records:
         grouped[str(record["policy_id"])].append(record)
@@ -70,7 +73,56 @@ def build_summary(records: Iterable[dict]) -> dict:
         "evidence_class": "synthetic controller experiment; not a network benchmark",
         "completed_records": sum(item["completed_runs"] for item in policies),
         "policies": policies,
+        "paired_decision_contrasts": build_paired_decision_contrasts(records),
     }
+
+
+def build_paired_decision_contrasts(records: Iterable[dict]) -> list[dict]:
+    """Pair decision indicators by identical scenario and seed, never by row order.
+
+    These contrasts describe controller actions, not application performance or
+    causal migration benefit. Incomplete or duplicated pairs are an error.
+    """
+    grouped: dict[tuple[str, int, str], dict] = {}
+    policies: set[str] = set()
+    pair_keys: set[tuple[str, int]] = set()
+    for row in records:
+        key = (str(row["scenario_id"]), int(row["seed"]), str(row["policy_id"]))
+        if key in grouped:
+            raise ValueError(f"duplicate paired record: {key}")
+        grouped[key] = row
+        policies.add(key[2])
+        pair_keys.add(key[:2])
+    full_id = PolicyVariant.FULL.value
+    if full_id not in policies:
+        return []
+    contrasts = []
+    for baseline_id in sorted(policies - {full_id}):
+        differences: list[float] = []
+        disagreements = 0
+        for scenario_id, seed in sorted(pair_keys):
+            full = grouped.get((scenario_id, seed, full_id))
+            baseline = grouped.get((scenario_id, seed, baseline_id))
+            if full is None or baseline is None:
+                raise ValueError(
+                    f"incomplete policy pair for {scenario_id}, seed={seed}, {baseline_id}"
+                )
+            full_commit = full["decision"]["action"] == "COMMIT"
+            baseline_commit = baseline["decision"]["action"] == "COMMIT"
+            differences.append(float(full_commit) - float(baseline_commit))
+            disagreements += full_commit != baseline_commit
+        low, high = _bootstrap_mean_ci(differences)
+        contrasts.append(
+            {
+                "baseline_policy_id": baseline_id,
+                "paired_runs": len(differences),
+                "decision_disagreements": disagreements,
+                "commit_rate_difference_full_minus_baseline": statistics.fmean(differences),
+                "paired_bootstrap_ci95": [low, high],
+                "interpretation": "synthetic decision contrast only; not a QoS or migration benefit",
+            }
+        )
+    return contrasts
 
 
 def _write_svg(path: Path, policies: list[dict]) -> None:

@@ -85,6 +85,58 @@ class RollingMeanConformalForecaster:
         self._history.append(actual_mbps)
 
 
+class EwmaConformalForecaster:
+    """Exponentially weighted one-step point forecast with split-conformal radius."""
+
+    def __init__(self, smoothing: float = 0.4, alpha: float = 0.1) -> None:
+        if not 0 < smoothing <= 1 or not 0 < alpha < 1:
+            raise ValueError("smoothing and alpha must be in (0, 1]")
+        self.smoothing = smoothing
+        self.alpha = alpha
+        self._level: float | None = None
+        self._radius: float | None = None
+
+    def _update(self, actual_mbps: float) -> None:
+        if not math.isfinite(actual_mbps) or actual_mbps < 0:
+            raise ValueError("traffic observation must be finite and non-negative")
+        self._level = (
+            actual_mbps
+            if self._level is None
+            else self.smoothing * actual_mbps + (1 - self.smoothing) * self._level
+        )
+
+    def fit(self, train: tuple[float, ...], calibration: tuple[float, ...]) -> None:
+        if not train or not calibration:
+            raise ValueError("training and calibration data are required")
+        self._level = None
+        self._radius = None
+        for actual in train:
+            self._update(actual)
+        residuals = []
+        for actual in calibration:
+            assert self._level is not None
+            residuals.append(abs(actual - self._level))
+            self._update(actual)
+        probability = min(
+            1.0, math.ceil((len(residuals) + 1) * (1 - self.alpha)) / len(residuals)
+        )
+        self._radius = _higher_quantile(residuals, probability)
+
+    def predict(self, horizon_seconds: int) -> Forecast:
+        if self._level is None or self._radius is None:
+            raise RuntimeError("fit the forecaster before prediction")
+        return Forecast(
+            self._level,
+            max(0.0, self._level - self._radius),
+            self._level + self._radius,
+            horizon_seconds,
+            f"ewma-conformal-s{self.smoothing:g}-a{self.alpha:g}",
+        )
+
+    def observe(self, actual_mbps: float) -> None:
+        self._update(actual_mbps)
+
+
 @dataclass(frozen=True)
 class ForecastMetrics:
     mae: float
@@ -119,4 +171,3 @@ def evaluate_one_step(
         covered / len(test),
         fmean(widths),
     )
-

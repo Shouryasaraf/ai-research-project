@@ -123,3 +123,52 @@ This validates controller-side freshness enforcement. Live telemetry collection 
 These remain isolated functional checks. The copied conntrack flow and the dual-vFW proxy flow are different topologies. There is no verified single operation that copies state, validates it, commits a route, and preserves that same TCP flow.
 
 The live network telemetry JSON now has a matching controller-side `NetworkTelemetrySnapshot` parser that checks schema version, provenance, firewall-table presence, non-negative interface counters and monotonic freshness. `python -m unittest discover -s tests -q` passed 51 tests after this addition; `compileall` passed for source, tests and scripts. Feeding these snapshots into migration decisions and immutable run records remains pending.
+
+## 2026-10-07 — Combined source-pinned pre-commit gate
+
+- `scripts/guarded_selection.py` now reads normalized nftables policies, target process health, live source/target conntrack entries and live network telemetry before atomically changing the proxy's new-flow selector.
+- The passing dual-vFW run reported `allowed=true`, matching policy digests, source-pinned established flow, and a new target flow. The one smoke run observed 495 ms from guarded decision start to completion of the first new target response, 1086 ms until the delayed source application flow completed, and 85 ms for new-flow fallback after target failure. These values include command and scheduling overhead and are not performance conclusions.
+- Target-only policy mismatch reported `policy_mismatch`; clearing source conntrack reported `source_flow_not_pinned_or_state_mismatch`; stopping the target before commit reported `target_unhealthy`. All three refused the selector change and retained source.
+- The final Python regression passed 56 tests; `compileall` and `git diff --check` passed. Isolated WSL tests left no project namespaces.
+
+The guarded flow remains on the source. This does not demonstrate transferring that TCP flow to the target, transparent routing, complete TCP state equivalence or a publication-grade migration result.
+
+## 2026-10-07 — Synthetic chronological forecasting pipeline
+
+- Added deterministic steady, periodic-burst, trend, flash-crowd and held-out-shift rate generators.
+- Added an EWMA split-conformal comparator to the existing rolling-mean split-conformal baseline.
+- `python -m unittest discover -s tests -q`: 59 tests passed.
+- The `held_out_shift`, seed 7 pilot produced 144 training, 48 calibration and 48 held-out one-minute observations. The rolling-mean model had MAE 4.22 Mbps and 85.4% interval coverage; EWMA had MAE 3.71 Mbps and the same 85.4% coverage. Both are below the nominal 90% coverage in this one synthetic shift trial.
+
+These are generated traffic-rate calculations only. They do not establish general calibration, superiority, or network-level improvement. More seeds, trace families, and real workload provenance remain required.
+
+## 2026-10-07 — Live two-path scaling smoke
+
+The dual-vFW proxy now publishes live active-flow counts and uses the `FlowDirector` least-utilized assignment when both paths are active. A supervised scaling test consumed those counts through `ScalingManager` with two sustained observations, activated the target backend and nftables firewall, admitted a new target flow through the guarded selector, preserved the older source flows, drained all active flows, then deactivated the target firewall and backend. A new flow succeeded on the source after scale-in.
+
+Three consecutive isolated WSL runs reported the same functional state sequence, `1 -> 2 -> 1` active vFW paths, with two source flows before scale-out and concurrent counts of source 2/target 1 after scale-out. Each run cleaned up its namespaces. This verifies the two-path activation/deactivation mechanism under a controlled three-flow fixture. It does not establish performance at larger scale, fairness under broad workload distributions, or production multi-host orchestration.
+
+## 2026-10-07 — Automatic new-flow fallback
+
+The proxy now detects a failed connection to the selected target backend, atomically restores source selection, retries that new flow on the source, and increments a fallback counter in its live metrics. In one isolated dual-vFW run the target process was stopped without the test script changing the selector. The next client received `source:fallback`, the selector became `source`, and the observed interval from failure injection to response was 57 ms. The older source flow had already completed. This does not show recovery of an established target flow, proactive failure detection, or a recovery-time distribution.
+
+## 2026-10-07 — Approved-policy and fail-closed fallback gate
+
+- The guarded selector now requires both firewall rulesets to match the explicitly approved four-rule, default-deny `inet vfw` forward chain, not merely each other. A unit fault with two identical allow-all policies is rejected.
+- An isolated dual-vFW run passed target admission under the stronger gate and automatically restored a new flow to source after target-backend failure.
+- A separate isolated fault stopped the target backend and removed source nftables rules after target selection. The next new flow failed, and the selector did not move to the unvalidated source (`unsafe_source_fallback_rejected=true`, `new_flow_failed_closed=true`). This is a single functional fault observation, not a recovery benchmark or proof against policy time-of-check/time-of-use races.
+- The Python regression passed 63 tests at this checkpoint.
+
+## 2026-10-07 — Paired synthetic decision and forecast pilot
+
+- The synthetic experiment summary now pairs policies by scenario and seed, rejects incomplete/duplicate pairs, and reports full-minus-baseline commit-rate differences. These are controller decision contrasts, not QoS, packet loss, or causal benefit.
+- A 50-record synthetic forecast pilot used five fixed workload families and seeds 0–9 (240 one-minute samples per record, chronological splits). The mean held-out coverage in the shifted family was 0.842 for rolling mean and 0.835 for EWMA against nominal 0.9, exposing a calibration limitation under this shift. Other family values and individual run hashes are in ignored local `artifacts/raw/forecast-batch-20261007-pilot/`.
+- The complete Python regression passed 65 tests. No external workload data or publication claim is implied.
+
+## 2026-10-07 — Repeated isolated fault-regression batch
+
+`scripts/live_fault_batch.py` ran six declared dual-vFW scenarios twice each under Ubuntu WSL2 root, saving an exclusive-write JSON record with stdout, stderr, exit status, selected observations and post-run namespace leak check for every trial. All 12 functional trials passed, with no `vfwlab` namespaces remaining after any trial. The two observed new-flow fallback intervals in the normal scenario were 76 ms and 64 ms; process launch and scheduling are uncontrolled, so these are not a recovery-time distribution or benchmark. The recorded batch is local and Git-ignored at `artifacts/raw/live-fault-batch-20261007-pilot/`.
+
+The Python suite reached 66 tests. One run briefly failed on a Windows/OneDrive atomic-file-replace permission error, then passed unchanged on immediate rerun; a bounded retry was added to the proxy's atomic metrics/selector file replacement. The bounded retry itself still needs a final regression pass.
+
+Final checkpoint regression: the bounded-retry change passed 66 tests. Exact original-tuple matching was then added to the pre-commit source-flow check, including a nearby-address negative test; 67 tests passed. One further isolated dual-vFW run passed guarded target admission and automatic new-flow fallback. Python compilation, Bash syntax, and `git diff --check` passed before the final tuple-matching edit; the remaining checks must be repeated at checkpoint.

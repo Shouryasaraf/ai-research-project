@@ -1,10 +1,13 @@
 import unittest
 
 from vfw_research.forecasting import (
+    EwmaConformalForecaster,
     RollingMeanConformalForecaster,
     evaluate_one_step,
     time_ordered_split,
 )
+from vfw_research.forecast_evaluation import evaluate_family
+from vfw_research.workloads import WorkloadFamily, generate_workload
 
 
 class ForecastingTests(unittest.TestCase):
@@ -31,7 +34,31 @@ class ForecastingTests(unittest.TestCase):
         self.assertTrue(0 <= metrics.interval_coverage <= 1)
         self.assertGreaterEqual(metrics.mean_interval_width, 0)
 
+    def test_ewma_uses_chronological_calibration_and_observations(self):
+        model = EwmaConformalForecaster(smoothing=0.5, alpha=0.1)
+        model.fit((10, 10, 10), (10, 12, 10, 12, 10))
+        before = model.predict(60)
+        model.observe(30)
+        after = model.predict(60)
+        self.assertGreater(after.point_mbps, before.point_mbps)
+        self.assertEqual(after.upper_mbps - after.point_mbps, before.upper_mbps - before.point_mbps)
+
+    def test_synthetic_trace_is_seeded_and_shift_is_held_out(self):
+        first = generate_workload(WorkloadFamily.SHIFT, seed=5)
+        second = generate_workload(WorkloadFamily.SHIFT, seed=5)
+        self.assertEqual(first, second)
+        split = time_ordered_split(list(first))
+        self.assertGreater(sum(split.test) / len(split.test), sum(split.train) / len(split.train) + 30)
+
+    def test_forecast_evaluation_records_held_out_calibration_metrics(self):
+        result = evaluate_family(WorkloadFamily.PERIODIC, seed=9)
+        self.assertEqual(result["split_counts"], {"train": 144, "calibration": 48, "test": 48})
+        self.assertEqual(set(result["models"]), {"rolling_mean_conformal", "ewma_conformal"})
+        for metrics in result["models"].values():
+            self.assertTrue(0 <= metrics["interval_coverage"] <= 1)
+            self.assertGreaterEqual(metrics["mae"], 0)
+            self.assertGreaterEqual(metrics["absolute_coverage_error"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -18,10 +18,12 @@ The script automatically deletes the exact temporary namespaces and test process
 
 ## Level 2 — Policy and state validation before route commit
 
-Partially implemented across two isolated tests: the dual-vFW path compares normalized nftables policy and target health before changing new-flow selection, while the separate conntrack smoke test copies and compares a supported kernel tuple. The two checks are not yet combined into one atomic pre-commit gate for the same traffic flow. State mismatch fault injection, TCP-level validation, and safe route commit remain pending.
+The dual-vFW proxy now makes one guarded decision before admitting new target flows: it checks normalized source/target nftables policy and an explicit approved default-deny rule shape, target process health, live source conntrack evidence for the flow that will remain pinned, absence of that flow on the target, and fresh, schema-valid telemetry from both firewall namespaces. The selector changes only if every check passes. Controlled policy mismatch, missing source conntrack state, and stopped target tests keep the source selected. This validates the source-pinned strategy for the proxy topology; no existing flow is transferred to the target.
+
+The separate conntrack smoke test copies and compares a supported kernel tuple. Combining that copied tuple with a real route change for the same end-to-end flow, TCP-level state validation, and safe route rollback remain pending. Thus the full Level 2 migration gate is not complete.
 
 ## Level 3 — Flow-pinned warm transition
 
-Proxy-based source pinning and target admission have been smoke-verified, including completion of one delayed source application flow. Repeated flow-level statistics, packet capture, full source retirement, and route-level rollback remain pending. The proxy test uses different backend addresses and cannot be treated as proof that a copied conntrack entry preserves its flow.
+Proxy-based source pinning and guarded target admission have been smoke-verified, including completion of one delayed source application flow. Repeated flow-level statistics, packet capture, full source retirement, and route-level rollback remain pending. The proxy test uses different backend addresses and cannot be treated as proof that a copied conntrack entry preserves its flow.
 
-Only Level 3 may be described as verified state-consistent warm migration with flow pinning.
+Only after all Level 3 acceptance checks pass may the project describe the result as verified state-consistent warm migration with flow pinning; that gate has not passed yet.

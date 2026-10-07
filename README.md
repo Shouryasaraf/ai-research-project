@@ -7,11 +7,11 @@ This repository is a software-only, publication-oriented NFV/SDN research protot
 - **Stage 0:** specification artifacts drafted and traceability established.
 - **Stage 1:** deterministic controller core implemented with standard-library tests.
 - **Stage 2:** Linux-namespace/nftables testbed implemented and smoke-verified on WSL2; see `docs/verification_log.md` for the evidence boundary.
-- **Stage 3:** scaling and flow-affinity controller cores implemented; real multi-vFW integration remains pending.
-- **Stage 4:** migration state machine, digest-verified reference state adapter, and kernel conntrack tuple insertion verified; route transition and seamless flow continuity remain pending.
-- **Stage 5:** transparent rolling-mean split-conformal forecasting baseline implemented; research-trace training/calibration remains pending.
+- **Stage 3:** scaling and flow-affinity controller cores are connected to the proxy testbed. Three isolated runs verified telemetry-driven activation and deactivation of a second nftables vFW path, plus pinned source and new target flows. Broader load, fairness and SLA evaluation remains pending.
+- **Stage 4:** migration state machine, reference state adapter, and kernel conntrack tuple insertion verified. A live guarded selector checks policy, target health, source-pinned conntrack state, and telemetry before admitting new target flows. Transferred-flow route transition and seamless flow continuity remain pending.
+- **Stage 5:** rolling-mean and EWMA split-conformal forecasters plus chronological synthetic-trace evaluation implemented; externally sourced research-trace evaluation remains pending.
 - **Stage 6:** carbon estimation, explainable risk scoring, constrained placement, and adaptive benefit core implemented; comparative experiments remain pending.
-- **Stage 7:** invariant validation and idempotent logical fallback implemented; controlled target failure and new-flow source-path restoration smoke-verified, while established-flow recovery remains pending.
+- **Stage 7:** invariant validation and idempotent logical fallback implemented; the live proxy automatically restores the source for the next new flow after a target connect failure. Established target-flow recovery and proactive detection remain pending.
 - **Stage 8:** common baseline-policy interface, validated scenario loader, immutable result schema, paired synthetic experiment runner, and generated JSON/CSV/SVG summaries implemented. A 27-record controller-only pilot validates the pipeline; packet-path comparative experiments and publication results remain pending.
 - No comparative performance, carbon, migration, novelty, or publication result is claimed yet.
 
@@ -78,6 +78,8 @@ python -m vfw_research.experiment_runner run configs/scenarios/synthetic_small.j
 
 The command creates 27 immutable raw records (three paired seeds across nine policies), then derives a JSON summary, CSV table, and SVG action chart. Batch IDs cannot be reused, preventing silent overwrite. Raw and generated artifacts are ignored by Git; the scenario, schemas, code, and tests are tracked.
 
+The JSON summary also reports seed-paired differences in **decision rates** between the full controller and each baseline. Those differences are not QoS or migration-benefit measurements.
+
 To rebuild outputs independently from existing raw records:
 
 ```powershell
@@ -85,6 +87,40 @@ python -m vfw_research.experiment_runner summarize artifacts/raw/my-pilot-001 ar
 ```
 
 See `docs/data_provenance.md` and `docs/completion_gap_matrix.md` for the evidence boundary and remaining publication work.
+
+On Ubuntu/WSL2, the supervised live scaling smoke test is:
+
+```bash
+sudo bash scripts/dual_vfw_testbed.sh test-scaling
+```
+
+It creates and cleans up only the project-labelled namespaces and test processes. Its reported `1 -> 2 -> 1` sequence is a controlled functional result, not a throughput benchmark.
+
+To repeat and preserve live success/fault/scaling smokes on Linux or WSL2 as root:
+
+```bash
+sudo python3 scripts/live_fault_batch.py --output-directory artifacts/raw/my-live-batch --repeats 2
+```
+
+Each trial writes its output, status and post-run namespace cleanup check to an immutable JSON file. This is functional regression evidence, not a statistically powered performance study.
+
+## Reproduce a synthetic held-out forecast evaluation
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m vfw_research.forecast_evaluation --family held_out_shift --seed 7 --output artifacts/raw/forecast-held-out-shift-seed7.json
+```
+
+This creates one exclusive-write JSON record with a chronological 144/48/48 train/calibration/test split, trace digest, MAE, RMSE, interval coverage and width for each model. Choose a new output filename for each run. The trace is synthetic; this command does not produce a network or publication comparison.
+
+For a descriptive multi-seed synthetic pilot:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m vfw_research.forecast_batch --output-directory artifacts/raw/my-forecast-pilot --seeds 0 1 2 3 4 5 6 7 8 9
+```
+
+This saves every family/seed record and a derived paired summary. It is not a final statistical result or real traffic measurement.
 
 ## Linux namespace packet-path test
 

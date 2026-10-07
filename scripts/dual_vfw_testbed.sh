@@ -10,48 +10,17 @@ namespace_exists() {
     ip netns list | awk '{print $1}' | grep -Fxq "$1"
 }
 
-policy_digest() {
-    local namespace="$1"
-    ip netns exec "$namespace" nft -j list table inet vfw | python3 -c '
-import hashlib
-import json
-import sys
-
-def normalized(value):
-    if isinstance(value, dict):
-        return {
-            key: normalized(child)
-            for key, child in value.items()
-            if key not in {"handle", "packets", "bytes"}
-        }
-    if isinstance(value, list):
-        return [normalized(child) for child in value]
-    return value
-
-payload = json.dumps(normalized(json.load(sys.stdin)), sort_keys=True, separators=(",", ":"))
-print(hashlib.sha256(payload.encode("utf-8")).hexdigest())
-'
+commit_target_if_valid() {
+    python3 "$SCRIPT_DIR/guarded_selection.py" \
+        --control-file "$CONTROL_FILE" --target-pid-file /tmp/vfwlab2-target.pid
 }
 
-validate_precommit() {
-    local source_digest target_digest target_pid
-    source_digest="$(policy_digest vfwlab2-fw-source)"
-    target_digest="$(policy_digest vfwlab2-fw-target)"
-    target_pid="$(cat /tmp/vfwlab2-target.pid)"
-    if [[ "$source_digest" != "$target_digest" ]]; then
-        echo "error: source and target normalized nftables policies differ" >&2
-        echo "source_policy_digest=$source_digest" >&2
-        echo "target_policy_digest=$target_digest" >&2
-        exit 8
-    fi
-    if ! kill -0 "$target_pid" 2>/dev/null; then
-        echo "error: target backend is unhealthy before commit" >&2
-        exit 9
-    fi
-    echo "source_policy_digest=$source_digest"
-    echo "target_policy_digest=$target_digest"
-    echo "precommit_policy_equivalence_verified=true"
-    echo "precommit_target_health_verified=true"
+start_old_flow() {
+    ip netns exec vfwlab2-client \
+        python3 "$SCRIPT_DIR/flow_client.py" 10.20.0.1 --delay 2 before after \
+        >/tmp/vfwlab2-old.out 2>&1 &
+    echo "$!" >/tmp/vfwlab2-old-client.pid
+    sleep 1
 }
 
 stop_processes() {
@@ -79,7 +48,7 @@ down() {
     for interface in v2c v2d0 v2dc v2ds v2sfi v2sfo v2ss v2dt v2tfi v2tfo v2ts; do
         ip link delete "$interface" 2>/dev/null || true
     done
-    rm -f -- "$CONTROL_FILE" /tmp/vfwlab2-old.out /tmp/vfwlab2-new.out
+    rm -f -- "$CONTROL_FILE" /tmp/vfwlab2-proxy-metrics.json /tmp/vfwlab2-old.out /tmp/vfwlab2-new.out
     echo "dual_testbed_down=true"
 }
 
@@ -151,6 +120,7 @@ up() {
     ip netns exec vfwlab2-director \
         python3 "$SCRIPT_DIR/flow_service.py" proxy --listen 10.20.0.1 \
         --control-file "$CONTROL_FILE" --source-backend 10.31.0.2 --target-backend 10.32.0.2 \
+        --metrics-file /tmp/vfwlab2-proxy-metrics.json \
         >/tmp/vfwlab2-proxy.log 2>&1 &
     echo "$!" >/tmp/vfwlab2-proxy.pid
     sleep 0.5
@@ -167,14 +137,9 @@ up() {
 
 test_pinning() {
     local commit_start_ns new_flow_end_ns drain_end_ns new_flow_admission_ms source_drain_ms
-    ip netns exec vfwlab2-client \
-        python3 "$SCRIPT_DIR/flow_client.py" 10.20.0.1 --delay 2 before after \
-        >/tmp/vfwlab2-old.out 2>&1 &
-    echo "$!" >/tmp/vfwlab2-old-client.pid
-    sleep 1
-    validate_precommit
+    start_old_flow
     commit_start_ns="$(date +%s%N)"
-    printf 'target\n' >"$CONTROL_FILE"
+    commit_target_if_valid
     ip netns exec vfwlab2-client \
         python3 "$SCRIPT_DIR/flow_client.py" 10.20.0.1 new >/tmp/vfwlab2-new.out 2>&1
     new_flow_end_ns="$(date +%s%N)"
@@ -222,7 +187,7 @@ test_fallback() {
     wait "$target_pid" 2>/dev/null || true
 
     if ! kill -0 "$target_pid" 2>/dev/null; then
-        printf 'source\n' >"$CONTROL_FILE"
+        echo "target_failure_detected_by_test=true"
     else
         echo "error: injected target failure was not detected" >&2
         exit 6
@@ -237,12 +202,17 @@ test_fallback() {
         echo "$FALLBACK_OUTPUT" >&2
         exit 7
     fi
+    if [[ "$(cat "$CONTROL_FILE")" != "source" ]]; then
+        echo "error: proxy did not restore source selection automatically" >&2
+        exit 8
+    fi
     end_ns="$(date +%s%N)"
     recovery_ms="$(( (end_ns - start_ns) / 1000000 ))"
     echo "injected_failure=target_backend_stopped"
     echo "fallback_flow=$FALLBACK_OUTPUT"
     echo "fallback_recovery_ms=$recovery_ms"
     echo "new_flow_route_fallback_verified=true"
+    echo "automatic_proxy_fallback_verified=true"
     echo "established_target_flow_recovery_verified=false"
 }
 
@@ -257,10 +227,11 @@ run_all() {
 run_policy_mismatch_test() {
     trap 'down >/dev/null' EXIT
     up
+    start_old_flow
     ip netns exec vfwlab2-fw-target \
         nft insert rule inet vfw forward tcp dport 9999 accept comment \
         '"controlled policy mismatch"'
-    if (validate_precommit); then
+    if commit_target_if_valid; then
         echo "error: mismatched target policy was accepted" >&2
         exit 10
     fi
@@ -273,6 +244,72 @@ run_policy_mismatch_test() {
     echo "validated_source_retained=true"
 }
 
+run_state_mismatch_test() {
+    trap 'down >/dev/null' EXIT
+    up
+    start_old_flow
+    ip netns exec vfwlab2-fw-source conntrack -F >/dev/null
+    if commit_target_if_valid; then
+        echo "error: missing source flow state was accepted" >&2
+        exit 12
+    fi
+    if [[ "$(cat "$CONTROL_FILE")" != "source" ]]; then
+        echo "error: active backend changed despite missing source flow state" >&2
+        exit 13
+    fi
+    echo "injected_failure=source_conntrack_state_missing"
+    echo "unsafe_commit_rejected=true"
+    echo "validated_source_retained=true"
+}
+
+run_target_unhealthy_test() {
+    trap 'down >/dev/null' EXIT
+    up
+    start_old_flow
+    kill "$(cat /tmp/vfwlab2-target.pid)"
+    sleep 0.1
+    if commit_target_if_valid; then
+        echo "error: unhealthy target was accepted" >&2
+        exit 14
+    fi
+    if [[ "$(cat "$CONTROL_FILE")" != "source" ]]; then
+        echo "error: active backend changed despite unhealthy target" >&2
+        exit 15
+    fi
+    echo "injected_failure=target_backend_stopped_before_commit"
+    echo "unsafe_commit_rejected=true"
+    echo "validated_source_retained=true"
+}
+
+run_unsafe_source_fallback_test() {
+    trap 'down >/dev/null' EXIT
+    up
+    start_old_flow
+    commit_target_if_valid >/dev/null
+    kill "$(cat /tmp/vfwlab2-target.pid)"
+    ip netns exec vfwlab2-fw-source nft flush ruleset
+    if ip netns exec vfwlab2-client \
+        python3 "$SCRIPT_DIR/flow_client.py" 10.20.0.1 unsafe \
+        >/tmp/vfwlab2-unsafe.out 2>&1; then
+        echo "error: unsafe source policy was used for fallback" >&2
+        exit 16
+    fi
+    if [[ "$(cat "$CONTROL_FILE")" != "target" ]]; then
+        echo "error: selector changed to unvalidated source" >&2
+        exit 17
+    fi
+    echo "injected_failure=target_stopped_and_source_policy_removed"
+    echo "unsafe_source_fallback_rejected=true"
+    echo "new_flow_failed_closed=true"
+}
+
+run_scaling_test() {
+    trap 'down >/dev/null' EXIT
+    up
+    python3 "$SCRIPT_DIR/live_scaling_smoke.py"
+    echo "live_scaling_smoke_passed=true"
+}
+
 if [[ "$(id -u)" -ne 0 ]]; then
     echo "error: run as root inside the isolated WSL test environment" >&2
     exit 2
@@ -282,7 +319,11 @@ case "${1:-}" in
     up) up ;;
     test) test_pinning ;;
     test-policy-mismatch) run_policy_mismatch_test ;;
+    test-state-mismatch) run_state_mismatch_test ;;
+    test-target-unhealthy) run_target_unhealthy_test ;;
+    test-unsafe-source-fallback) run_unsafe_source_fallback_test ;;
+    test-scaling) run_scaling_test ;;
     down) down ;;
     run) run_all ;;
-    *) echo "usage: $0 {run|up|test|test-policy-mismatch|down}" >&2; exit 64 ;;
+    *) echo "usage: $0 {run|up|test|test-policy-mismatch|test-state-mismatch|test-target-unhealthy|test-unsafe-source-fallback|test-scaling|down}" >&2; exit 64 ;;
 esac

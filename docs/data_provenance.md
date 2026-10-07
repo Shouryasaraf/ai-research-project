@@ -20,3 +20,9 @@ The complete JSON configuration is hashed with canonical key ordering. Every run
 ## External data
 
 No external workload, carbon, vulnerability, anomaly or attack dataset has been incorporated yet. Before adding one, record its stable source, version/date, license or terms, acquisition checksum, fields used, time resolution, timezone, preprocessing, missing-data policy, label limitations and redistribution constraints. Network downloads must not be required for unit tests.
+
+## Synthetic forecast families
+
+`src/vfw_research/workloads.py` deterministically generates five one-minute traffic-rate families: steady, periodic bursts, gradual trend, a short flash crowd, and a step change confined to the held-out test segment. Each value is a synthetic Mbps rate and is never represented as measured packet traffic. The family, seed, length, trace SHA-256, split counts and runtime are saved by `vfw_research.forecast_evaluation`. The evaluation observes a real next value before updating the model's point state; it does not create labels from its own forecasts. The conformal radius stays fixed after calibration.
+
+`vfw_research.forecast_batch` writes separate exclusive-write records for every declared family/seed pair and a derived summary. The 2026-10-07 pilot used all five families and seeds 0–9 (50 records, 240 observations each). It is a descriptive synthetic pilot, not a confirmatory comparison or a real workload trace.
