@@ -23,6 +23,15 @@ class ArtifactTests(unittest.TestCase):
                                                                  for node in ("client", "server")}}}
             (trial / "record.json").write_text(json.dumps(record))
             self.assertEqual(sum(p.suffix == ".pcap" for p in artifact.collect(root, [trial], True)), 2)
+            record["scope"] = "three persistent TCP echo flows; isolated paired endpoint capture control"
+            (trial / "record.json").write_text(json.dumps(record))
+            self.assertEqual(sum(p.suffix == ".pcap" for p in artifact.collect(root, [trial], True)), 2)
+            record = {"evidence_class": "single-host namespace live pilot; modeled carbon/risk; coarse TCP state copy",
+                      "source": {"kind": "seeded synthetic demand"}, "status": "completed",
+                      "packet_observation": {"capture_sha256": {node: hashlib.sha256(b"synthetic fixture").hexdigest()
+                                                                for node in ("client", "server")}}}
+            (trial / "record.json").write_text(json.dumps(record))
+            self.assertEqual(sum(p.suffix == ".pcap" for p in artifact.collect(root, [trial], True)), 2)
             (trial / "client.pcap").write_bytes(b"altered")
             with self.assertRaisesRegex(ValueError, "hash"):
                 artifact.collect(root, [trial], True)

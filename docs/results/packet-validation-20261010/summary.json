@@ -1,0 +1,48 @@
+{
+  "scope": "isolated capture-method controls; not a migration or production-loss benchmark",
+  "source_snapshot_verified": true,
+  "repetitions": 2,
+  "trials": [
+    {
+      "trial": "r0-forced_drop",
+      "mode": "forced_drop",
+      "requests": 381,
+      "forward_missing": 12,
+      "forward_sent": 792,
+      "reverse_missing": 0,
+      "reverse_sent": 393,
+      "raw_sha256": "706d84792cefae53ffbe2ed3cd2db03243a7d51345a66c9d1f573e82ee56cd81"
+    },
+    {
+      "trial": "r0-ordinary",
+      "mode": "ordinary",
+      "requests": 480,
+      "forward_missing": 0,
+      "forward_sent": 978,
+      "reverse_missing": 0,
+      "reverse_sent": 492,
+      "raw_sha256": "d01b9655965c506e8a3e5b126ef2f91c8c86f494717ddcbf70d74d58ae8f8dc1"
+    },
+    {
+      "trial": "r1-forced_drop",
+      "mode": "forced_drop",
+      "requests": 384,
+      "forward_missing": 12,
+      "forward_sent": 798,
+      "reverse_missing": 0,
+      "reverse_sent": 396,
+      "raw_sha256": "28c427c8b7c87702914a5afa17a76d21cc28878117988fa974c4c13e92fadbed"
+    },
+    {
+      "trial": "r1-ordinary",
+      "mode": "ordinary",
+      "requests": 480,
+      "forward_missing": 0,
+      "forward_sent": 978,
+      "reverse_missing": 0,
+      "reverse_sent": 492,
+      "raw_sha256": "aec45c54cefbbb40d4bf27e5a7d433a6f5257eb8d196751a0c638277b70c1da6"
+    }
+  ],
+  "interpretation": "ordinary observations had no matched endpoint deficits; deliberate forwarding drops were detected; TCP application requests may recover through retransmission"
+}

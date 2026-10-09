@@ -73,6 +73,23 @@ class LiveAnalysisTests(unittest.TestCase):
         self.assertIsNone(metrics["packet_loss_fraction"])
         self.assertIsNone(metrics["migration_interruption_seconds"])
 
+    def test_captured_packet_deficits_remain_separate_from_application_failures(self):
+        row = fixture()
+        row["packet_observation"] = {"comparison_valid": True, "directions": [
+            {"missing_receiver_instances": 0, "sent_packet_instances": 100,
+             "observed_packet_deficit_fraction": 0.0},
+            {"missing_receiver_instances": 8, "sent_packet_instances": 80,
+             "observed_packet_deficit_fraction": .1}]}
+        metrics = trial_metrics(row)
+        self.assertEqual(metrics["observed_reverse_missing_instances"], 8)
+        self.assertEqual(metrics["observed_reverse_packet_deficit_fraction"], .1)
+        self.assertIsNone(metrics["packet_loss_fraction"])
+        report = render_report(summarize([row]))
+        self.assertIn("8/80", report)
+        row["packet_observation"]["comparison_valid"] = False
+        with self.assertRaisesRegex(ValueError, "invalid endpoint capture"):
+            trial_metrics(row)
+
     def test_pair_integrity_and_single_pair_uncertainty(self):
         full, baseline = fixture(), fixture("static_no_migration")
         summary = summarize([full, baseline])

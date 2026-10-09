@@ -62,6 +62,7 @@ def main() -> int:
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--trace-csv", type=Path)
     parser.add_argument("--provenance", type=Path)
+    parser.add_argument("--capture", action="store_true", help="paired endpoint captures for isolated generated traffic")
     args = parser.parse_args()
     if len(args.seeds) != len(set(args.seeds)) or len(args.policies) != len(set(args.policies)):
         parser.error("duplicate seeds/policies")
@@ -71,7 +72,8 @@ def main() -> int:
         parser.error("trace CSV and provenance must be supplied together")
     manifest = {"phase": "exploratory_pilot", "code_sha256": code_digest(),
                 "seeds": args.seeds, "policies": args.policies, "steps": args.steps,
-                "flows": args.flows, "family": args.family, "policy_order": "seeded shuffle per repetition",
+                "flows": args.flows, "family": args.family, "capture": args.capture,
+                "policy_order": "seeded shuffle per repetition",
                 "trace_sha256": hashlib.sha256(args.trace_csv.read_bytes()).hexdigest() if args.trace_csv else None,
                 "provenance_sha256": hashlib.sha256(args.provenance.read_bytes()).hexdigest() if args.provenance else None}
     path = args.output / "manifest.json"
@@ -107,6 +109,8 @@ def main() -> int:
                        "--family", args.family]
             if args.trace_csv:
                 command.extend(["--trace-csv", str(args.trace_csv.resolve()), "--provenance", str(args.provenance.resolve())])
+            if args.capture:
+                command.append("--capture")
             process = subprocess.Popen(command, start_new_session=True)
             try:
                 code = process.wait(timeout=args.steps + 60)

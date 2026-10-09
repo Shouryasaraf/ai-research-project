@@ -130,7 +130,8 @@ def workload(seed: int, steps: int, csv: Path | None, provenance: Path | None, f
 
 
 def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, flows: int,
-              trace_csv: Path | None = None, provenance: Path | None = None, family: str = "step") -> dict:
+              trace_csv: Path | None = None, provenance: Path | None = None, family: str = "step",
+              capture: bool = False) -> dict:
     if os.geteuid() != 0 or not 6 <= steps <= 120 or not 1 <= flows <= 16:
         raise ValueError("requires Linux root, 6..120 steps and 1..16 flows")
     train, calibration, rates, source = workload(seed, steps, trace_csv, provenance, family)
@@ -163,6 +164,7 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
     record["scenario_sha256"] = hashlib.sha256(json.dumps(scenario.payload, sort_keys=True).encode()).hexdigest()
     script = ROOT / "scripts/route_migration_lab.sh"
     process = None
+    recorder = None
     watchdog = None
     owns_lab = False
     active, synced = "source", False
@@ -179,6 +181,10 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
             command("ip", "netns", "exec", f"vfwlab3-{node}", "tc", "qdisc", "add", "dev", "output0",
                     "root", "tbf", "rate", rate, "burst", "16kb", "latency", "200ms")
         record["network"].append(network_snapshot())
+        if capture:
+            from endpoint_capture import EndpointCapture
+            recorder = EndpointCapture(output)
+            recorder.start()
         process = subprocess.Popen(["ip", "netns", "exec", "vfwlab3-client", "python3",
             str(ROOT / "scripts/paced_traffic.py"), str((output / "traffic-plan.json").resolve())],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -241,6 +247,12 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
         if process.returncode or "traffic_events" not in record:
             raise RuntimeError(f"traffic worker failed: {process.returncode}: {stderr}")
         record["network"].append(network_snapshot())
+        if recorder is not None:
+            time.sleep(2)
+            recorder.stop()
+            record["packet_observation"] = recorder.analyze()
+            if not record["packet_observation"]["comparison_valid"]:
+                raise ValueError("paired endpoint capture invalid")
         record["status"] = "completed"
     except Exception as error:
         record["status"] = "failed"
@@ -251,6 +263,12 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
         if process is not None and process.poll() is None:
             process.kill()
             process.communicate(timeout=5)
+        if recorder is not None and "packet_observation" not in record:
+            recorder.stop()
+            try:
+                record["packet_observation"] = recorder.analyze()
+            except Exception as error:
+                record["capture_error"] = str(error)
         # Clean up only when this run reached setup (not on an existing-lab collision).
         if owns_lab:
             subprocess.run(["bash", str(script), "down"], capture_output=True, timeout=15, check=False)
@@ -277,11 +295,13 @@ def main() -> int:
     parser.add_argument("--family", choices=["step", "steady", "bursts", "trend", "flash"], default="step")
     parser.add_argument("--trace-csv", type=Path)
     parser.add_argument("--provenance", type=Path)
+    parser.add_argument("--capture", action="store_true", help="capture generated lab TCP at both endpoints")
     args = parser.parse_args()
     with open("/tmp/vfwlab-research.lock", "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         result = run_trial(args.output, PolicyVariant(args.policy), seed=args.seed, steps=args.steps,
-                           flows=args.flows, trace_csv=args.trace_csv, provenance=args.provenance, family=args.family)
+                           flows=args.flows, trace_csv=args.trace_csv, provenance=args.provenance, family=args.family,
+                           capture=args.capture)
     print(json.dumps({"status": result["status"], "output": str(args.output), "error": result.get("error")}))
     return 0 if result["status"] == "completed" else 1
 

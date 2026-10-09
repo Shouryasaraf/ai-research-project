@@ -1,5 +1,19 @@
 # Verification Log
 
+## 2026-10-10 — Paired captured migration pilot
+
+- Single-seed captured development pilot (`live-captured-pair-20261010-v1`) completed both policies and is retained separately. After a written three-seed protocol, `live-captured-pair-20261010-v2` completed all six declared policy/seed trials with no residual namespaces.
+- Each trial had one route commit, zero request failures, zero capture-kernel drops, and a valid paired endpoint comparison. Every trial had eight missing reverse packet instances; forward matched deficits were zero. These are bounded observed packet-instance deficits, not exact service downtime or a production loss probability.
+- Generated analysis verified raw record identities, exact executed-source archive fingerprint, endpoint capture hashes and recomputed packet matching. Full mean goodput was 1.093041 Mbps versus 1.160598 Mbps reactive; the descriptive paired difference was -0.067557 Mbps (three synthetic seeds). This is negative development evidence, not a confirmatory superiority test.
+- Windows bundled Python and Ubuntu WSL Python 3.14.4: 121 unit tests passed each. `ip netns list` was empty afterward.
+
+## 2026-10-10 — Endpoint capture method controls
+
+- Two ordinary and two deliberate-drop trials in `packet-validation-20261010-v1` completed with no residual lab namespaces or capture-kernel drops. The generated report verifies all endpoint PCAP hashes, recomputes matching, and checks the exact executed-source archive.
+- Ordinary trials: 0/978 missing forward packet instances each. Forced-drop trials: 12/792 and 12/798 missing forward instances. Reverse deficits were zero. All application requests eventually completed, so request failure alone would not reveal the deliberate wire-level loss.
+- The experiment validates a narrow capture method, not migration packet loss, exact downtime, or production behavior.
+- Windows bundled Python and Ubuntu WSL Python 3.14.4: 120 unit tests passed each. `ip netns list` was empty after the control batch and final Linux suite.
+
 ## 2026-10-09 — Predictive proxy lifecycle witness
 
 - `lifecycle-20261009-v1` through `v6`: all completed with no residual lab namespaces. In each run the recorded actions were PREWARM, pinned-state SYNC checkpoint, and guarded COMMIT; active paths were 1→2→1. Runs `v4`–`v6` include verified exact source snapshots; `v1`–`v3` have code fingerprints only.

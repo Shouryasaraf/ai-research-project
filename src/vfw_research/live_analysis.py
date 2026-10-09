@@ -8,6 +8,7 @@ import math
 import statistics
 import hashlib
 from pathlib import Path
+import zipfile
 
 from .analysis import _bootstrap_mean_ci
 
@@ -45,6 +46,10 @@ def trial_metrics(record: dict) -> dict:
     if elapsed <= 0 or not events:
         raise ValueError("invalid traffic observation interval")
     completed = [event for event in events if event["success"]]
+    observation = record.get("packet_observation")
+    if observation is not None and not observation.get("comparison_valid"):
+        raise ValueError("invalid endpoint capture cannot support outcome metrics")
+    directions = observation["directions"] if observation is not None else None
     latencies = [event["rtt_ms"] for event in completed]
     gaps = []
     for flow in sorted({event["flow_id"] for event in events}):
@@ -64,6 +69,14 @@ def trial_metrics(record: dict) -> dict:
         "controller_cpu_seconds": record["controller_cpu_seconds"],
         "controller_maxrss_kib": record["controller_maxrss_kib"],
         "packet_loss_fraction": None,
+        "observed_forward_packet_deficit_fraction": (directions[0]["observed_packet_deficit_fraction"]
+                                                     if directions else None),
+        "observed_reverse_packet_deficit_fraction": (directions[1]["observed_packet_deficit_fraction"]
+                                                     if directions else None),
+        "observed_forward_missing_instances": directions[0]["missing_receiver_instances"] if directions else None,
+        "observed_forward_sent_instances": directions[0]["sent_packet_instances"] if directions else None,
+        "observed_reverse_missing_instances": directions[1]["missing_receiver_instances"] if directions else None,
+        "observed_reverse_sent_instances": directions[1]["sent_packet_instances"] if directions else None,
         "observed_output_queue_drops": qdisc_drop_delta(record),
         "migration_interruption_seconds": None,
     }
@@ -105,9 +118,11 @@ def summarize(records: list[dict]) -> dict:
                        "goodput_difference_full_minus_baseline_mbps": statistics.fmean(differences),
                        "descriptive_paired_bootstrap_ci95": list(_bootstrap_mean_ci(differences))
                        if len(shared) > 1 else None})
+    has_capture = any(row.get("packet_observation") is not None for row in records)
     return {"evidence_class": "descriptive single-host live pilot; application-level measurements",
             "policies": policies, "paired_goodput": paired, "trials": metrics,
-            "limitations": ["No packet capture: packet loss is unmeasured.",
+            "limitations": ["Observed packet-instance deficits are between two lab capture points, not a universal loss rate."
+                            if has_capture else "No packet capture: packet loss is unmeasured.",
                             "Response gaps include intentional pacing and are not downtime.",
                             "One alternate target cannot isolate placement-quality effects.",
                             "Carbon/risk are modeled and not physical observations."]}
@@ -125,6 +140,24 @@ def write_summary(batch: Path, output: Path) -> dict:
         raise ValueError("incomplete or unexpected batch records; do not summarize as a complete batch")
     if any(row["code_sha256"] != manifest["code_sha256"] for row in records):
         raise ValueError("record code digest differs from batch manifest")
+    if manifest.get("capture"):
+        from .recovery_report import verify_capture
+        archive_path = batch / "executed-source.zip"
+        digest = hashlib.sha256()
+        with zipfile.ZipFile(archive_path) as archive:
+            if archive.testzip() is not None:
+                raise ValueError("executed source archive damaged")
+            for name in archive.namelist():
+                digest.update(name.encode())
+                digest.update(archive.read(name))
+        if digest.hexdigest() != manifest["code_sha256"]:
+            raise ValueError("executed source archive does not match batch fingerprint")
+        for path, record in zip(paths, records):
+            if "packet_observation" not in record:
+                raise ValueError("captured batch record lacks packet observation")
+            observation = verify_capture(path.parent, record["packet_observation"])
+            if not observation["comparison_valid"]:
+                raise ValueError("captured batch has invalid paired observation")
     summary = summarize(records)
     summary["provenance"] = {"manifest": manifest,
         "raw_record_sha256": {str(path.relative_to(batch)): hashlib.sha256(path.read_bytes()).hexdigest()
@@ -154,6 +187,18 @@ def render_report(summary: dict) -> str:
     for pair in summary["paired_goodput"]:
         lines.append(f'- Versus {pair["baseline"]}: {pair["goodput_difference_full_minus_baseline_mbps"]:.6f} Mbps '
                      f'(n={pair["paired_trials"]}; interval={pair["descriptive_paired_bootstrap_ci95"]}).')
+    if any(row["observed_forward_packet_deficit_fraction"] is not None for row in summary["trials"]):
+        lines.extend(["", "## Captured endpoint packet-instance deficits", "",
+                      "| Policy / seed | Forward missing/sent | Reverse missing/sent |",
+                      "|---|---:|---:|"])
+        for row in summary["trials"]:
+            forward = row["observed_forward_packet_deficit_fraction"]
+            reverse = row["observed_reverse_packet_deficit_fraction"]
+            lines.append(f'| {row["policy"]} / {row["seed"]} | '
+                         f'{row["observed_forward_missing_instances"]}/{row["observed_forward_sent_instances"]} | '
+                         f'{row["observed_reverse_missing_instances"]}/{row["observed_reverse_sent_instances"]} |'
+                         if forward is not None and reverse is not None
+                         else f'| {row["policy"]} / {row["seed"]} | unmeasured | unmeasured |')
     lines.extend(["", "## Limits", "", *["- " + item for item in summary["limitations"]],
                   "- RTT summarizes successful requests only; failures must be read alongside it.",
                   "- Repeated external-trace trials reuse one trace segment and are not independent workloads.", ""])

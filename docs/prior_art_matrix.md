@@ -1,6 +1,6 @@
 # Working Prior-Art Matrix
 
-Checked 2026-10-07 against primary publisher, author-hosted, or original-preprint pages. “Overlap” identifies subject matter already published; “unknown” means the full mechanism has not yet been established from an abstract. This is not an exhaustive survey or a proof of novelty.
+Checked through 2026-10-10 against primary publisher, author-hosted, or original-preprint pages. “Overlap” identifies subject matter already published; “unknown” means the full mechanism has not yet been established from an abstract. This is not an exhaustive survey or a proof of novelty.
 
 | Primary work | Verified overlap | Implication for this project | Evidence page |
 |---|---|---|---|
@@ -10,6 +10,10 @@ Checked 2026-10-07 against primary publisher, author-hosted, or original-preprin
 | *Moving Target Defense for Virtual Network Functions* (NOMS 2020) | Security-motivated VNF state migration for co-residency attacks. | Security-risk-driven migration and state transfer are existing ideas. | [IEEE publisher record](https://ieeexplore.ieee.org/document/9110334/) |
 | *Let the State Follow Its Flows: An SDN-Based Flow Handover Protocol to Support State Migration* (NetSoft 2018) | Flow handover to support network-function state migration. | Flow handover/flow pinning should be treated as prior art; exact packet/state guarantees need full-text comparison. | [IEEE publisher record](https://ieeexplore.ieee.org/document/8460007) |
 | Yang, Chen, Yen, *Joint Carbon-Latency Optimization for Online Service Function Chain Deployment* (GLOBECOM 2025) | Time-varying carbon intensity, time-series forecasting, online SFC deployment. | Forecast-informed carbon-aware placement is already studied. | [University publication record](https://scholar.nycu.edu.tw/en/publications/joint-carbon-latency-optimization-for-online-service-function-cha/) |
+| Patowary, Barua, Sukapuram, *Correctness of Flow Migration Across Network Function Instances* (2024 preprint) | Defines and proves a Weak-O stateful flow-migration criterion without buffering or dropping under its model. | Our coarse conntrack route transition cannot claim comparable correctness or no-drop guarantees. | [Original full text](https://arxiv.org/html/2404.07701v1) |
+| Shang, Liu, Yang, *Online Service Function Chain Placement for Cost-Effectiveness and Network Congestion Control* (online 2020) | Online placement and routing under demand changes, migration cost and prediction errors. | Prediction-error-aware migration cost is not a new concept; compare the exact decision rule. | [Author manuscript](https://par.nsf.gov/servlets/purl/10208243) and [publisher record](https://ieeexplore.ieee.org/document/9248649/) |
+| Peretz, Shenzis, Hay, *Moving Target Defense for Virtual Network Functions* (NOMS 2020) | Active/passive security-motivated VNF state migration and switch-over. | Do not claim that attack-aware state movement itself is new. | [Author-hosted full text](https://deepness-lab.org/wp-content/uploads/2023/06/201585_1.pdf) |
+| Mahyoub et al., *Scalable Security and Migration-Aware SFC Provisioning in LEO Satellite Networks* (2026 preprint) | Joint security risk and migration-cost optimization in a multi-slice satellite setting. | Joint security/migration optimization is prior work even though the setting differs. | [Original full text](https://arxiv.org/html/2607.00471v1) |
 
 ## Working positioning, not a novelty claim
 

@@ -1,5 +1,5 @@
 {
-  "checked_date": "2026-10-08",
+  "checked_date": "2026-10-10",
   "status": "partial primary-source review; no exhaustive novelty claim",
   "papers": [
     {
@@ -55,6 +55,60 @@
       "evaluation": "Trace-driven simulation on ISP topologies, as stated in abstract.",
       "project_difference": "Our modeled scores do not establish physical emissions savings.",
       "remaining_review": "Publisher metadata and detailed energy/migration model comparison."
+    },
+    {
+      "key": "patowary2024correctness",
+      "title": "Correctness of Flow Migration Across Network Function Instances",
+      "authors": ["Ranjan Patowary", "Gautam Barua", "Radhika Sukapuram"],
+      "year": 2024,
+      "venue": "arXiv preprint; later Computer Communications version requires final citation check",
+      "url": "https://arxiv.org/html/2404.07701v1",
+      "review_scope": "primary full-text HTML abstract, mechanism and correctness sections",
+      "overlap": "Defines Weak-O correctness and a stateful flow-migration algorithm that does not buffer or drop packets under its assumptions.",
+      "evaluation": "Reports comparable TCP goodput for tested path-delay and bandwidth relationships.",
+      "project_difference": "Our coarse conntrack copying has no corresponding Weak-O or no-drop proof; source pinning is a separate conservative mode.",
+      "remaining_review": "Detailed assumption and experimental topology comparison; citation chain."
+    },
+    {
+      "key": "shang2020online",
+      "title": "Online Service Function Chain Placement for Cost-Effectiveness and Network Congestion Control",
+      "authors": ["Xiaojun Shang", "Zhenhua Liu", "Yuanyuan Yang"],
+      "year": 2020,
+      "venue": "IEEE Transactions on Computers, online 2020; volume 71 issue 1 in 2022",
+      "doi": "10.1109/TC.2020.3035991",
+      "url": "https://par.nsf.gov/servlets/purl/10208243",
+      "review_scope": "primary author manuscript metadata/abstract and publisher abstract",
+      "overlap": "Joint VNF placement/routing under fluctuating demand, migration cost and prediction errors.",
+      "evaluation": "Simulation comparison with online candidate-path selection, according to the publisher abstract.",
+      "project_difference": "Prediction error and migration cost are prior art; any claim must concern the specific tested uncertainty and invariant control loop.",
+      "remaining_review": "Read full method and compare prediction-error handling quantitatively."
+    },
+    {
+      "key": "peretz2020mtd",
+      "title": "Moving Target Defense for Virtual Network Functions",
+      "authors": ["Reuven Peretz", "Shlomo Shenzis", "David Hay"],
+      "year": 2020,
+      "venue": "IEEE/IFIP NOMS",
+      "doi": "10.1109/NOMS47738.2020.9110334",
+      "url": "https://deepness-lab.org/wp-content/uploads/2023/06/201585_1.pdf",
+      "review_scope": "primary author-hosted full manuscript introduction and active/passive migration design",
+      "overlap": "Security-motivated VNF state migration with active/passive replicas and switch-over for moving-target defense.",
+      "evaluation": "Experimental VNF-defense and migration comparisons are reported in the manuscript.",
+      "project_difference": "Risk-aware state movement itself is established; our testable question is whether traffic uncertainty and hard invariants improve a firewall controller under declared conditions.",
+      "remaining_review": "Detailed state consistency and threat-model comparison."
+    },
+    {
+      "key": "mahyoub2026securitymigration",
+      "title": "Scalable Security and Migration-Aware SFC Provisioning in LEO Satellite Networks",
+      "authors": ["Mohammed Mahyoub", "Wael Jaafar", "Sami Muhaidat", "Halim Yanikomeroglu"],
+      "year": 2026,
+      "venue": "arXiv preprint",
+      "url": "https://arxiv.org/html/2607.00471v1",
+      "review_scope": "primary full-text HTML abstract, introduction and formulation summary",
+      "overlap": "Joint optimization of security co-location risk and migration cost for SFC placement.",
+      "evaluation": "LEO constellation simulations, according to the preprint.",
+      "project_difference": "A different satellite multi-slice setting, but it narrows any broad claim to jointly consider security risk and migration.",
+      "remaining_review": "Full objective/constraint comparison and independent reviewer screening."
     }
   ]
 }

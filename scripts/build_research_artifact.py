@@ -7,6 +7,10 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_SUFFIXES = {".py", ".sh", ".nft", ".json", ".md", ".bib", ".toml", ".yml", ".csv"}
+ATTESTED_CAPTURE_SCOPES = {
+    "three persistent TCP echo flows; coarse state only; supervised fault detection",
+    "three persistent TCP echo flows; isolated paired endpoint capture control",
+}
 
 
 def collect(root: Path, evidence: list[Path], include_lab_captures: bool = False) -> list[Path]:
@@ -35,8 +39,12 @@ def collect(root: Path, evidence: list[Path], include_lab_captures: bool = False
                 observation = record.get("packet_observation")
                 if not observation:
                     continue
-                if record.get("scope") != "three persistent TCP echo flows; coarse state only; supervised fault detection":
-                    raise ValueError("capture is not attested as the synthetic recovery lab")
+                isolated_live = (record.get("evidence_class") ==
+                    "single-host namespace live pilot; modeled carbon/risk; coarse TCP state copy"
+                    and record.get("source", {}).get("kind") == "seeded synthetic demand"
+                    and record.get("status") == "completed")
+                if record.get("scope") not in ATTESTED_CAPTURE_SCOPES and not isolated_live:
+                    raise ValueError("capture is not attested as an isolated synthetic lab")
                 for node in ("client", "server"):
                     capture = record_path.parent / f"{node}.pcap"
                     if hashlib.sha256(capture.read_bytes()).hexdigest() != observation["capture_sha256"][node]:
