@@ -1,0 +1,141 @@
+{
+  "evidence_class": "descriptive single-host live pilot; application-level measurements",
+  "policies": [
+    {
+      "policy": "full_proposed_controller",
+      "completed": 1,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 0.9771702142901341,
+          "median": 0.9771702142901341,
+          "sample_standard_deviation": null
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0,
+          "sample_standard_deviation": null
+        },
+        "rtt_p95_ms": {
+          "mean": 1.2143510000157676,
+          "median": 1.2143510000157676,
+          "sample_standard_deviation": null
+        },
+        "route_commits": {
+          "mean": 1.0,
+          "median": 1,
+          "sample_standard_deviation": null
+        }
+      }
+    },
+    {
+      "policy": "reactive_threshold",
+      "completed": 1,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 1.0051891034682954,
+          "median": 1.0051891034682954,
+          "sample_standard_deviation": null
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0,
+          "sample_standard_deviation": null
+        },
+        "rtt_p95_ms": {
+          "mean": 0.7274919999815666,
+          "median": 0.7274919999815666,
+          "sample_standard_deviation": null
+        },
+        "route_commits": {
+          "mean": 1.0,
+          "median": 1,
+          "sample_standard_deviation": null
+        }
+      }
+    }
+  ],
+  "paired_goodput": [
+    {
+      "baseline": "reactive_threshold",
+      "paired_trials": 1,
+      "excluded_or_missing_pairs": 0,
+      "goodput_difference_full_minus_baseline_mbps": -0.02801888917816131,
+      "descriptive_paired_bootstrap_ci95": null
+    }
+  ],
+  "trials": [
+    {
+      "policy": "full_proposed_controller",
+      "seed": 31,
+      "goodput_mbps": 0.9771702142901341,
+      "requests": 691,
+      "successful_requests": 691,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.49696600001425395,
+      "rtt_p95_ms": 1.2143510000157676,
+      "rtt_p99_ms": 78.71385300001066,
+      "maximum_success_gap_seconds_including_pacing": 0.34641193699999917,
+      "route_commits": 1,
+      "state_sync_seconds": 0.09346495500000174,
+      "state_snapshot_serialized_bytes": 919,
+      "controller_cpu_seconds": 0.07723203400000003,
+      "controller_maxrss_kib": 25300,
+      "packet_loss_fraction": null,
+      "observed_output_queue_drops": 0,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "reactive_threshold",
+      "seed": 31,
+      "goodput_mbps": 1.0051891034682954,
+      "requests": 708,
+      "successful_requests": 708,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.4062129999908848,
+      "rtt_p95_ms": 0.7274919999815666,
+      "rtt_p99_ms": 0.8754579999958878,
+      "maximum_success_gap_seconds_including_pacing": 0.2731878419999987,
+      "route_commits": 1,
+      "state_sync_seconds": 0.04167782000000386,
+      "state_snapshot_serialized_bytes": 464,
+      "controller_cpu_seconds": 0.064144054,
+      "controller_maxrss_kib": 25528,
+      "packet_loss_fraction": null,
+      "observed_output_queue_drops": 0,
+      "migration_interruption_seconds": null
+    }
+  ],
+  "limitations": [
+    "No packet capture: packet loss is unmeasured.",
+    "Response gaps include intentional pacing and are not downtime.",
+    "One alternate target cannot isolate placement-quality effects.",
+    "Carbon/risk are modeled and not physical observations."
+  ],
+  "provenance": {
+    "manifest": {
+      "phase": "exploratory_pilot",
+      "code_sha256": "13f8367ad7ed8b61dc45e6f0eefa23e3ff7e2026002f53b4bd293d27af53fd32",
+      "seeds": [
+        31
+      ],
+      "policies": [
+        "full_proposed_controller",
+        "reactive_threshold"
+      ],
+      "steps": 12,
+      "flows": 3,
+      "family": "trend",
+      "policy_order": "seeded shuffle per repetition",
+      "trace_sha256": null,
+      "provenance_sha256": null
+    },
+    "raw_record_sha256": {
+      "s31-full_proposed_controller\\record.json": "20674c1a787de30531d34994d330488ddbc461729f6f996e7781293ffc6e0d76",
+      "s31-reactive_threshold\\record.json": "588ef3d7b24c33f3869a1d6017afb349953371ee0036c8589f316e960abcf878"
+    }
+  }
+}

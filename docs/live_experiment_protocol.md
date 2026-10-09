@@ -1,0 +1,14 @@
+# Sustained live pilot protocol, version 1
+
+Frozen before the paired batch on 2026-10-08. This is a development pilot; it is excluded from any future confirmatory claim. The code/config digest in each batch fixes the executed implementation.
+
+- Environment: one Linux/WSL host, six isolated namespaces, default-deny nftables, three persistent TCP echo flows. Source traffic is shaped to 1 Mbps and target to 3 Mbps using `tc tbf`, burst 16 KB and latency 200 ms. All policies receive the identical seeded demand schedule and topology.
+- Workload: 12 one-second intervals; first three intervals near 0.65 Mbps and the remaining intervals near 1.4 Mbps, with uniform +/-0.025 Mbps jitter. Seeds 7, 11, 19 are a practical three-repetition functional pilot, not a powered statistical study. A separate external-trace run uses train-only normalization and the first 12 held-out MAWI rates.
+- Policies: all nine existing variants; order shuffled deterministically within each seed. Each trial recreates and cleans up the topology. The target starts warm. Full control can synchronize and then commit; the cold variant changes routes without importing conntrack entries. Existing TCP connections are never reconnected to hide a failed migration.
+- Observations: completed-request goodput, per-request echo RTT, failed requests and disrupted flows, kernel interface/qdisc counters, controller CPU/max RSS, decision time, copied tuple count and serialized tuple text bytes. Serialized text size is not netlink transfer bandwidth. Packet loss and exact migration interruption remain null without packet capture; response gaps include intentional pacing.
+- Causality: the controller observes the completed interval's measured application goodput, updates its forecast, then decides for subsequent traffic. It never reads future offered rates. Capacity shaping can censor demand; this is an explicit validity threat.
+- All safety checks apply to every live policy. Carbon/risk ablations remove their modeled benefit credits and placement weights. A single alternate target cannot identify carbon/risk placement advantages; those require separate candidate-choice experiments.
+- Analysis: report every completed/failed trial and each paired goodput difference. Bootstrap intervals are descriptive with three seeds, no significance or superiority claim. No failed attempt is silently removed. A code/config/trace change requires a new batch. Existing incomplete directories are preserved.
+- Stopping: stop the batch on an infrastructure exception, timeout, missing record or cleanup failure. Application errors from a completed workload remain outcomes, including cold-migration disruption. No optional early stop on favorable performance.
+
+Commands are in `docs/artifact_reproduction.md`. A later confirmatory protocol must select independent data, repetitions justified by pilot variance, primary comparisons and practical effect margins before viewing those results.

@@ -2,6 +2,21 @@
 
 This matrix was refreshed from the repository on 2026-10-08. “Implemented” means code exists; “verified” is used only when the listed evidence was actually observed.
 
+## Latest evidence update (supersedes pending items below where stated)
+
+2026-10-09 lifecycle update: six isolated functional proxy trials passed and the raw-record validator generated `results/lifecycle-20261009-snapshotted/`. The later three verify exact executed-source snapshots; the first three retain code fingerprints only. They connect observed flow occupancy, a modeled demand mapping, scaling, forecast/benefit decisions, prewarm, pinned-state checkpoint, guarded new-flow admission, draining, and scale-in. They do not demonstrate transparent conntrack transfer, measured bandwidth forecasting, or complete production lifecycle recovery. Windows and Linux suites each pass 118 tests. The older table below remains a historical gap snapshot where superseded by this update.
+
+2026-10-09 recovery/capture update: supervised migration-process exit now has repeated active-flow failback evidence when target state survives. Target-state loss is explicitly contained with flow disruption. Six final captured probes passed and their raw capture hashes and endpoint packet deficits were independently recomputed by the analysis code. All failed earlier attempts remain in the generated all-attempt report (`results/recovery-20261009/`). These results narrow the recovery and packet-measurement gaps; they do not establish general crash recovery, full TCP-state equivalence or exact service downtime.
+
+Further completion pass: 107 unit tests pass on Windows and Linux. Durable route intent/readback is now integrated into the sustained runner; six process-interruption probes verify conservative containment and empty-state restoration, not active-flow recovery. Eight paired workload-shape trials and two journal/ownership integration smokes completed. A 2,187-record modeled grid audits hard constraints and fixed/adaptive decision sensitivity. New batches archive exact source/config snapshots. A manuscript draft, claim ledger and allowlisted local artifact exporter are implemented. Exact packet loss, active-flow crash recovery, independent confirmation and complete novelty review remain open.
+
+- 92 unit tests pass. Added strict live-batch completeness/code-fingerprint validation and negative-result report tests.
+- The sustained runner connects measured application goodput, EWMA conformal forecasts, the nine-policy interface, supported conntrack validation and actual bidirectional route changes. The target starts warm; prewarming/scaling are not exercised by this runner.
+- All 27 synthetic paired live trials completed with zero residual lab namespaces. Application errors in the cold baseline are retained as outcomes, not mislabeled infrastructure failures. Generated tables and paired descriptive intervals are in `results/live-paired-20261008-pilot/`.
+- Batch manifests, shuffled policy order, matching-code resume, exclusive records, watchdogs and raw-record checksums are implemented. The reproduction guide is `artifact_reproduction.md`.
+- The full controller was slower than reactive control on the synthetic demand step; this is not a positive superiority result. Carbon/risk ablations use one alternate target and cannot isolate placement quality.
+- Remaining gates include deeper TCP-state validation, atomic/restart-safe route recovery, packet-level loss/interruption measurement, unified scaling-plus-migration lifecycle, multi-candidate carbon/risk studies, parameter sensitivity, broader independent traces, confirmatory protocol/results and independent novelty review. These are not closed by this pilot.
+
 | Requirement | Current component/evidence | Missing implementation | Missing experiment | Acceptance gate | Paper artifact |
 |---|---|---|---|---|---|
 | Reproducible non-privileged pipeline | 84 unit tests; scenario validation; nine-policy paired runner; immutable records; JSON/CSV/SVG regeneration; CI workflow | Cross-platform task wrapper and dependency lock if dependencies are added | CI must run on GitHub after push | Gate A partial | Artifact appendix and environment manifest |

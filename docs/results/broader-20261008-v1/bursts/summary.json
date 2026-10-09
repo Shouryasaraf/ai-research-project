@@ -1,0 +1,141 @@
+{
+  "evidence_class": "descriptive single-host live pilot; application-level measurements",
+  "policies": [
+    {
+      "policy": "full_proposed_controller",
+      "completed": 1,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 0.9302198932004366,
+          "median": 0.9302198932004366,
+          "sample_standard_deviation": null
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0,
+          "sample_standard_deviation": null
+        },
+        "rtt_p95_ms": {
+          "mean": 77.05127699999537,
+          "median": 77.05127699999537,
+          "sample_standard_deviation": null
+        },
+        "route_commits": {
+          "mean": 1.0,
+          "median": 1,
+          "sample_standard_deviation": null
+        }
+      }
+    },
+    {
+      "policy": "reactive_threshold",
+      "completed": 1,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 0.9591921910402857,
+          "median": 0.9591921910402857,
+          "sample_standard_deviation": null
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0,
+          "sample_standard_deviation": null
+        },
+        "rtt_p95_ms": {
+          "mean": 76.66391099999714,
+          "median": 76.66391099999714,
+          "sample_standard_deviation": null
+        },
+        "route_commits": {
+          "mean": 1.0,
+          "median": 1,
+          "sample_standard_deviation": null
+        }
+      }
+    }
+  ],
+  "paired_goodput": [
+    {
+      "baseline": "reactive_threshold",
+      "paired_trials": 1,
+      "excluded_or_missing_pairs": 0,
+      "goodput_difference_full_minus_baseline_mbps": -0.028972297839849115,
+      "descriptive_paired_bootstrap_ci95": null
+    }
+  ],
+  "trials": [
+    {
+      "policy": "full_proposed_controller",
+      "seed": 31,
+      "goodput_mbps": 0.9302198932004366,
+      "requests": 672,
+      "successful_requests": 672,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.49921499999072694,
+      "rtt_p95_ms": 77.05127699999537,
+      "rtt_p99_ms": 81.21459199999492,
+      "maximum_success_gap_seconds_including_pacing": 0.10454805999999905,
+      "route_commits": 1,
+      "state_sync_seconds": 0.10808688900000618,
+      "state_snapshot_serialized_bytes": 910,
+      "controller_cpu_seconds": 0.08115351800000001,
+      "controller_maxrss_kib": 25292,
+      "packet_loss_fraction": null,
+      "observed_output_queue_drops": 0,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "reactive_threshold",
+      "seed": 31,
+      "goodput_mbps": 0.9591921910402857,
+      "requests": 687,
+      "successful_requests": 687,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.4952100000110704,
+      "rtt_p95_ms": 76.66391099999714,
+      "rtt_p99_ms": 81.07485300000405,
+      "maximum_success_gap_seconds_including_pacing": 0.368735731000001,
+      "route_commits": 1,
+      "state_sync_seconds": 0.09670416699999862,
+      "state_snapshot_serialized_bytes": 455,
+      "controller_cpu_seconds": 0.08290961899999999,
+      "controller_maxrss_kib": 25560,
+      "packet_loss_fraction": null,
+      "observed_output_queue_drops": 0,
+      "migration_interruption_seconds": null
+    }
+  ],
+  "limitations": [
+    "No packet capture: packet loss is unmeasured.",
+    "Response gaps include intentional pacing and are not downtime.",
+    "One alternate target cannot isolate placement-quality effects.",
+    "Carbon/risk are modeled and not physical observations."
+  ],
+  "provenance": {
+    "manifest": {
+      "phase": "exploratory_pilot",
+      "code_sha256": "13f8367ad7ed8b61dc45e6f0eefa23e3ff7e2026002f53b4bd293d27af53fd32",
+      "seeds": [
+        31
+      ],
+      "policies": [
+        "full_proposed_controller",
+        "reactive_threshold"
+      ],
+      "steps": 12,
+      "flows": 3,
+      "family": "bursts",
+      "policy_order": "seeded shuffle per repetition",
+      "trace_sha256": null,
+      "provenance_sha256": null
+    },
+    "raw_record_sha256": {
+      "s31-full_proposed_controller\\record.json": "94fbf6bbeba2a9340a1ff3092780ba1c8bf1d2c76695fdded20af25318f09dd8",
+      "s31-reactive_threshold\\record.json": "9e3561e6c14fb938845316d15709059ac00aa5b33f43a0650e17e61bdd32db48"
+    }
+  }
+}

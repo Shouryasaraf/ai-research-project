@@ -1,0 +1,413 @@
+{
+  "evidence_class": "descriptive single-host live pilot; application-level measurements",
+  "policies": [
+    {
+      "policy": "cold_migration",
+      "completed": 3,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 0.839446275834706,
+          "median": 0.8394377087342
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "rtt_p95_ms": {
+          "mean": 0.7297010000056522,
+          "median": 0.7228390000193485
+        },
+        "route_commits": {
+          "mean": 0.0,
+          "median": 0
+        }
+      }
+    },
+    {
+      "policy": "full_proposed_controller",
+      "completed": 3,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 0.839678483108282,
+          "median": 0.8396991143408211
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "rtt_p95_ms": {
+          "mean": 0.6605250000030575,
+          "median": 0.6675010000094517
+        },
+        "route_commits": {
+          "mean": 0.0,
+          "median": 0
+        }
+      }
+    },
+    {
+      "policy": "reactive_threshold",
+      "completed": 3,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 0.8399749200761194,
+          "median": 0.83993664281707
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "rtt_p95_ms": {
+          "mean": 0.6531336666692292,
+          "median": 0.6046080000032816
+        },
+        "route_commits": {
+          "mean": 1.0,
+          "median": 1
+        }
+      }
+    },
+    {
+      "policy": "static_no_migration",
+      "completed": 3,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 0.8397766617526502,
+          "median": 0.8395238275376473
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "rtt_p95_ms": {
+          "mean": 0.6848356666608879,
+          "median": 0.7074950000003355
+        },
+        "route_commits": {
+          "mean": 0.0,
+          "median": 0
+        }
+      }
+    }
+  ],
+  "paired_goodput": [
+    {
+      "baseline": "cold_migration",
+      "paired_trials": 3,
+      "excluded_or_missing_pairs": 0,
+      "goodput_difference_full_minus_baseline_mbps": 0.00023220727357597948,
+      "descriptive_paired_bootstrap_ci95": [
+        -0.00041534764668027524,
+        0.0008108111186034828
+      ]
+    },
+    {
+      "baseline": "reactive_threshold",
+      "paired_trials": 3,
+      "excluded_or_missing_pairs": 0,
+      "goodput_difference_full_minus_baseline_mbps": -0.0002964369678373213,
+      "descriptive_paired_bootstrap_ci95": [
+        -0.0012911920819660416,
+        0.0003118770357334322
+      ]
+    },
+    {
+      "baseline": "static_no_migration",
+      "paired_trials": 3,
+      "excluded_or_missing_pairs": 0,
+      "goodput_difference_full_minus_baseline_mbps": -9.817864436830377e-05,
+      "descriptive_paired_bootstrap_ci95": [
+        -0.0003595411290475692,
+        0.00017528680317380196
+      ]
+    }
+  ],
+  "trials": [
+    {
+      "policy": "cold_migration",
+      "seed": 11,
+      "goodput_mbps": 0.8393979559920164,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.42626000001178,
+      "rtt_p95_ms": 0.7809239999971851,
+      "rtt_p99_ms": 1.1516719999917768,
+      "maximum_success_gap_seconds_including_pacing": 0.05261921700000016,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.03929486900000001,
+      "controller_maxrss_kib": 25068,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "full_proposed_controller",
+      "seed": 11,
+      "goodput_mbps": 0.8396991143408211,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.37921700000254077,
+      "rtt_p95_ms": 0.6675010000094517,
+      "rtt_p99_ms": 0.8740239999980304,
+      "maximum_success_gap_seconds_including_pacing": 0.052274574999998435,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.033682877,
+      "controller_maxrss_kib": 25260,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "reactive_threshold",
+      "seed": 11,
+      "goodput_mbps": 0.8396091101981005,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.44151500000566557,
+      "rtt_p95_ms": 0.7747620000060351,
+      "rtt_p99_ms": 0.9920979999975543,
+      "maximum_success_gap_seconds_including_pacing": 0.051595145999996816,
+      "route_commits": 1,
+      "state_sync_seconds": 0.059781900000004384,
+      "state_snapshot_serialized_bytes": 464,
+      "controller_cpu_seconds": 0.043199230000000005,
+      "controller_maxrss_kib": 25132,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "static_no_migration",
+      "seed": 11,
+      "goodput_mbps": 0.8395238275376473,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.38169000001175846,
+      "rtt_p95_ms": 0.718828999993093,
+      "rtt_p99_ms": 0.9287989999933188,
+      "maximum_success_gap_seconds_including_pacing": 0.05166986300000076,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.03642042000000001,
+      "controller_maxrss_kib": 25336,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "cold_migration",
+      "seed": 19,
+      "goodput_mbps": 0.8395031627779016,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.4051360000119075,
+      "rtt_p95_ms": 0.7228390000193485,
+      "rtt_p99_ms": 1.0300730000096792,
+      "maximum_success_gap_seconds_including_pacing": 0.05141963299999475,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.035244247000000006,
+      "controller_maxrss_kib": 24600,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "full_proposed_controller",
+      "seed": 19,
+      "goodput_mbps": 0.8390878151312213,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.4215090000059263,
+      "rtt_p95_ms": 0.8014379999963239,
+      "rtt_p99_ms": 1.131254000000581,
+      "maximum_success_gap_seconds_including_pacing": 0.051583225000001676,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.040305042999999985,
+      "controller_maxrss_kib": 25168,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "reactive_threshold",
+      "seed": 19,
+      "goodput_mbps": 0.8403790072131874,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.33305200000199875,
+      "rtt_p95_ms": 0.6046080000032816,
+      "rtt_p99_ms": 0.8201100000064798,
+      "maximum_success_gap_seconds_including_pacing": 0.051094048999999586,
+      "route_commits": 1,
+      "state_sync_seconds": 0.053594840000016575,
+      "state_snapshot_serialized_bytes": 464,
+      "controller_cpu_seconds": 0.03860891500000002,
+      "controller_maxrss_kib": 24940,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "static_no_migration",
+      "seed": 19,
+      "goodput_mbps": 0.8394473562602689,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.3587409999852298,
+      "rtt_p95_ms": 0.7074950000003355,
+      "rtt_p99_ms": 1.124435999997786,
+      "maximum_success_gap_seconds_including_pacing": 0.0516360089999921,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.036806142000000014,
+      "controller_maxrss_kib": 25328,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "cold_migration",
+      "seed": 7,
+      "goodput_mbps": 0.8394377087342,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.33746799999967436,
+      "rtt_p95_ms": 0.6853400000004228,
+      "rtt_p99_ms": 1.0565840000005267,
+      "maximum_success_gap_seconds_including_pacing": 0.05293619300000074,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.024654643000000004,
+      "controller_maxrss_kib": 25196,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "full_proposed_controller",
+      "seed": 7,
+      "goodput_mbps": 0.8402485198528035,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.25618000000093843,
+      "rtt_p95_ms": 0.5126360000033969,
+      "rtt_p99_ms": 0.9437570000017104,
+      "maximum_success_gap_seconds_including_pacing": 0.05157938799999329,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.02292022199999999,
+      "controller_maxrss_kib": 25196,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "reactive_threshold",
+      "seed": 7,
+      "goodput_mbps": 0.83993664281707,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.2848810000060098,
+      "rtt_p95_ms": 0.580030999998371,
+      "rtt_p99_ms": 0.8215880000008724,
+      "maximum_success_gap_seconds_including_pacing": 0.0516250989999989,
+      "route_commits": 1,
+      "state_sync_seconds": 0.0479669780000016,
+      "state_snapshot_serialized_bytes": 464,
+      "controller_cpu_seconds": 0.028267132,
+      "controller_maxrss_kib": 25304,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "static_no_migration",
+      "seed": 7,
+      "goodput_mbps": 0.8403588014600346,
+      "requests": 717,
+      "successful_requests": 717,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.2978520000027629,
+      "rtt_p95_ms": 0.6281829999892352,
+      "rtt_p99_ms": 0.8395570000061525,
+      "maximum_success_gap_seconds_including_pacing": 0.05260907999999631,
+      "route_commits": 0,
+      "state_sync_seconds": 0,
+      "state_snapshot_serialized_bytes": 0,
+      "controller_cpu_seconds": 0.027593224,
+      "controller_maxrss_kib": 25344,
+      "packet_loss_fraction": null,
+      "migration_interruption_seconds": null
+    }
+  ],
+  "limitations": [
+    "No packet capture: packet loss is unmeasured.",
+    "Response gaps include intentional pacing and are not downtime.",
+    "One alternate target cannot isolate placement-quality effects.",
+    "Carbon/risk are modeled and not physical observations."
+  ],
+  "provenance": {
+    "manifest": {
+      "phase": "exploratory_pilot",
+      "code_sha256": "07adf90f6e818288bab4403cc48473f938dfc0a0241a393701b27758fd510401",
+      "seeds": [
+        7,
+        11,
+        19
+      ],
+      "policies": [
+        "full_proposed_controller",
+        "reactive_threshold",
+        "static_no_migration",
+        "cold_migration"
+      ],
+      "steps": 12,
+      "flows": 3,
+      "policy_order": "seeded shuffle per repetition",
+      "trace_sha256": "4923a96f8ba7e75a823c50b6517e1e987c98c6a2d8eca3ba817892e23cfe850a",
+      "provenance_sha256": "98b0265016067320ba726b813689fa9262c1b04d6f853ef592abcb4b7bf4a99e"
+    },
+    "raw_record_sha256": {
+      "s11-cold_migration\\record.json": "13d329afd197d906c942c1c17abb6b4daaf687f16efe5670ed2922a7d274b9d8",
+      "s11-full_proposed_controller\\record.json": "0d2dfca504e16df0e338b0de9bf5da1ebddc8e17dac3694225e1f927e9047e12",
+      "s11-reactive_threshold\\record.json": "71f6be9bf62b62b90977c3c81339d0ac5d3e158a59c9271e64967dcb8b451e51",
+      "s11-static_no_migration\\record.json": "ae665c7b8d78fa70107b4587fa9c4548c6f144f0fe9b6b7f6df93795ff4775b9",
+      "s19-cold_migration\\record.json": "2263b255d121873fc51d6b1987e8694c21d4a5e4831d2e7da07326972f399f35",
+      "s19-full_proposed_controller\\record.json": "b624a66fe572c777e51756793c13d3594d629f6c4ebe0e99b0decff7992f7f32",
+      "s19-reactive_threshold\\record.json": "f775fe3c064f4c156b2bbd7b409675be6d2b8fa6146bbae873b556a6df3bc44b",
+      "s19-static_no_migration\\record.json": "94dafdb1b03b318a9fcbc39e048bd24b282ee30c4668583258ab0a0195c1e310",
+      "s7-cold_migration\\record.json": "8ccdba96122acd1e7949f0dbe448cbdff3d2ddb1730d6bc7a2cb578aa75a42eb",
+      "s7-full_proposed_controller\\record.json": "789170727604e1c89e46f4d52dee5821c42382820d51cefc868f6bc4e5a1f49f",
+      "s7-reactive_threshold\\record.json": "bae9534a98685508986dfba68a07f93e4d2cf719f3ff8ec877b3a2034b6461d6",
+      "s7-static_no_migration\\record.json": "25638db48b0b45a9c2bf436f9cd3280fa2f497247adf32faa1e8748e4166f134"
+    }
+  }
+}

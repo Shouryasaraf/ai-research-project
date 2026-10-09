@@ -1,0 +1,60 @@
+{
+  "checked_date": "2026-10-08",
+  "status": "partial primary-source review; no exhaustive novelty claim",
+  "papers": [
+    {
+      "key": "gemberjacobson2014opennf",
+      "title": "OpenNF: Enabling Innovation in Network Function Control",
+      "authors": ["Aaron Gember-Jacobson", "Raajay Viswanathan", "Chaithan Prakash", "Robert Grandl", "Junaid Khalid", "Sourav Das", "Aditya Akella"],
+      "year": 2014,
+      "venue": "ACM SIGCOMM",
+      "doi": "10.1145/2619239.2626313",
+      "url": "https://wisr.cs.wisc.edu/papers/opennf.pdf",
+      "review_scope": "primary manuscript introduction and design motivation",
+      "overlap": "Coordinated NF internal state and forwarding control; state-update races and flow movement.",
+      "evaluation": "Implementation with several modified network functions.",
+      "project_difference": "Our coarse conntrack copy does not provide equivalent consistency guarantees; uncertainty gating is the proposed integration question.",
+      "remaining_review": "Full mechanism and evaluation comparison; citation-chain screening."
+    },
+    {
+      "key": "forti2019probabilistic",
+      "title": "Probabilistic QoS-aware Placement of VNF chains at the Edge",
+      "authors": ["Stefano Forti", "Federica Paganelli", "Antonio Brogi"],
+      "year": 2019,
+      "venue": "arXiv preprint version",
+      "url": "https://arxiv.org/abs/1906.00197",
+      "review_scope": "primary preprint record and abstract",
+      "overlap": "Probabilistic infrastructure behavior and security-constrained VNF placement.",
+      "evaluation": "Not audited in this review.",
+      "project_difference": "Calibrated traffic intervals coupled to warm-migration actions require further comparison.",
+      "remaining_review": "Full text and journal version; no absence-of-feature claim."
+    },
+    {
+      "key": "ibrahimpasic2021migration",
+      "title": "AI-Empowered VNF Migration as a Cost-Loss-Effective Solution for Network Resilience",
+      "authors": ["Amina Lejla Ibrahimpasic", "Bin Han", "Hans D. Schotten"],
+      "year": 2021,
+      "venue": "IEEE WCNCW",
+      "doi": "10.1109/WCNCW49093.2021.9420029",
+      "url": "https://arxiv.org/abs/2101.09343",
+      "review_scope": "primary preprint metadata and abstract",
+      "overlap": "Stateful VNF migration balancing operations cost and outage loss.",
+      "evaluation": "Not audited in this review.",
+      "project_difference": "Our contextual threshold is a particular rule, not novel cost-benefit reasoning.",
+      "remaining_review": "Detailed cost model, evaluation and citation-chain comparison."
+    },
+    {
+      "key": "bariesso",
+      "title": "ESSO: An Energy Smart Service Function Chain Orchestrator",
+      "authors": ["Md. Faizul Bari", "Shihabur Rahman Chowdhury", "Raouf Boutaba"],
+      "year": null,
+      "venue": "Author-hosted manuscript; publisher metadata pending",
+      "url": "https://cs.uwaterloo.ca/~mfbari/files/j8.pdf",
+      "review_scope": "primary manuscript abstract and introduction",
+      "overlap": "Renewable-energy-aware service-chain relocation and brown-energy reduction.",
+      "evaluation": "Trace-driven simulation on ISP topologies, as stated in abstract.",
+      "project_difference": "Our modeled scores do not establish physical emissions savings.",
+      "remaining_review": "Publisher metadata and detailed energy/migration model comparison."
+    }
+  ]
+}

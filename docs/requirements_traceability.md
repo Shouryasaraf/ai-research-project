@@ -2,6 +2,10 @@
 
 Status values: **specified**, **core implemented**, **testbed pending**, **experiment pending**.
 
+2026-10-09 lifecycle update: six source-pinning proxy trials completed modeled-demand-driven scale-out, PREWARM, pinned-state checkpoint, guarded COMMIT, balanced target admission, drain, and scale-in. The generated validator/report is `results/lifecycle-20261009-snapshotted/`; later trials include exact source snapshots. This functionally connects F1, F3, F4, F5, F6, and F7 on the proxy path, with modeled F2 candidate inputs. It does not verify transparent TCP-state transfer, real carbon/risk data, or a general production lifecycle.
+
+Latest evidence: `scripts/live_experiment.py` connects F4/F5/F6 to sustained real traffic and records live application telemetry, policy attestations, supported state checks and route actions. The nine-policy synthetic batch completed 27 paired trials; see `results/live-paired-20261008-pilot/results.md`. This advances the older pending entries below but does not validate complete state equivalence, proactive established-flow recovery, unified scaling or carbon/risk placement advantages. All results are exploratory.
+
 | ID | Locked functionality | Implementation target | Required verification | Publication evidence | Current status |
 |---|---|---|---|---|---|
 | F1 | Dynamic vFW instance scaling | `scaling.py` manager with hysteresis, cooldown, capacity and health checks | Scale-out/in integration tests; anti-flapping workload | Active-instance count, overload duration, SLA and overhead comparison | Core implemented; isolated two-path 1→2→1 scaling smoke observed; broader workload metrics pending |

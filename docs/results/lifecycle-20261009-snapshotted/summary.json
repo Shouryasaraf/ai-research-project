@@ -1,0 +1,139 @@
+{
+  "scope": "bounded proxy lifecycle functional repetitions; not a benchmark",
+  "trials": [
+    {
+      "status": "completed",
+      "actions": [
+        "PREWARM",
+        "SYNC",
+        "COMMIT"
+      ],
+      "active_paths": [
+        1,
+        2,
+        1
+      ],
+      "source_flows_at_admission": 2,
+      "target_flows_at_admission": 1,
+      "modeled_input": true,
+      "conntrack_transfer": false,
+      "code_sha256": "887b152b7b3493ed2e642374360cce23ad3bfa9200f4e3e21d77d260e734cc19",
+      "source_snapshot_verified": false,
+      "trial": "lifecycle-20261009-v1",
+      "raw_sha256": "b28a0bd1d293f80697c50d812cf46ff412c19317f1eedf7768290a1641b6df3c"
+    },
+    {
+      "status": "completed",
+      "actions": [
+        "PREWARM",
+        "SYNC",
+        "COMMIT"
+      ],
+      "active_paths": [
+        1,
+        2,
+        1
+      ],
+      "source_flows_at_admission": 2,
+      "target_flows_at_admission": 1,
+      "modeled_input": true,
+      "conntrack_transfer": false,
+      "code_sha256": "887b152b7b3493ed2e642374360cce23ad3bfa9200f4e3e21d77d260e734cc19",
+      "source_snapshot_verified": false,
+      "trial": "lifecycle-20261009-v2",
+      "raw_sha256": "1ebb1b88d7a3dddf3ee248efd98c3048f7779d36abf89c840a6ea6048d5032c3"
+    },
+    {
+      "status": "completed",
+      "actions": [
+        "PREWARM",
+        "SYNC",
+        "COMMIT"
+      ],
+      "active_paths": [
+        1,
+        2,
+        1
+      ],
+      "source_flows_at_admission": 2,
+      "target_flows_at_admission": 1,
+      "modeled_input": true,
+      "conntrack_transfer": false,
+      "code_sha256": "887b152b7b3493ed2e642374360cce23ad3bfa9200f4e3e21d77d260e734cc19",
+      "source_snapshot_verified": false,
+      "trial": "lifecycle-20261009-v3",
+      "raw_sha256": "423d9c191b00efac55ba74619e3c24e293e77e1115c26ae2dcb0b5941dceda05"
+    },
+    {
+      "status": "completed",
+      "actions": [
+        "PREWARM",
+        "SYNC",
+        "COMMIT"
+      ],
+      "active_paths": [
+        1,
+        2,
+        1
+      ],
+      "source_flows_at_admission": 2,
+      "target_flows_at_admission": 1,
+      "modeled_input": true,
+      "conntrack_transfer": false,
+      "code_sha256": "a14cfe6938cef5a8cffd4d3d6b727c7004c5ff5dee7292a7fa5fd4f657aada19",
+      "source_snapshot_verified": true,
+      "trial": "lifecycle-20261009-v4",
+      "raw_sha256": "f1124b96d44c4c6ee8842e3081d28640f06a299b4e73896fbac1c535e980fca4"
+    },
+    {
+      "status": "completed",
+      "actions": [
+        "PREWARM",
+        "SYNC",
+        "COMMIT"
+      ],
+      "active_paths": [
+        1,
+        2,
+        1
+      ],
+      "source_flows_at_admission": 2,
+      "target_flows_at_admission": 1,
+      "modeled_input": true,
+      "conntrack_transfer": false,
+      "code_sha256": "a14cfe6938cef5a8cffd4d3d6b727c7004c5ff5dee7292a7fa5fd4f657aada19",
+      "source_snapshot_verified": true,
+      "trial": "lifecycle-20261009-v5",
+      "raw_sha256": "eae365ac3bd418b2f38c9bf36a95270fbbb72cc04fabd745814b113b8f997b5c"
+    },
+    {
+      "status": "completed",
+      "actions": [
+        "PREWARM",
+        "SYNC",
+        "COMMIT"
+      ],
+      "active_paths": [
+        1,
+        2,
+        1
+      ],
+      "source_flows_at_admission": 2,
+      "target_flows_at_admission": 1,
+      "modeled_input": true,
+      "conntrack_transfer": false,
+      "code_sha256": "a14cfe6938cef5a8cffd4d3d6b727c7004c5ff5dee7292a7fa5fd4f657aada19",
+      "source_snapshot_verified": true,
+      "trial": "lifecycle-20261009-v6",
+      "raw_sha256": "1e5d18b7a2ef55fb42614d160b00a38221993fa27d63b3b8b9560659fb50a410"
+    }
+  ],
+  "all_verified": true,
+  "caveats": [
+    "1 Mbps per flow and 2 Mbps source capacity are modeled",
+    "source-pinned SYNC validates a checkpoint; it does not transfer conntrack",
+    "carbon/risk/resource inputs are synthetic candidate assumptions",
+    "earlier trials without executed-source.zip retain only a code fingerprint",
+    "post-admission recovery and production lifecycle remain unverified here"
+  ]
+}

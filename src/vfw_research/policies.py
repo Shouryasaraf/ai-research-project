@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from enum import Enum
 
 from .benefit import calculate_benefit
@@ -11,6 +11,7 @@ from .invariants import validate_security_invariants
 from .models import (
     ControllerDecision,
     DecisionInput,
+    Forecast,
     GateAction,
     NodeCandidate,
     PlacementPolicy,
@@ -54,7 +55,11 @@ class PolicyOutcome:
 def _simple_decision(
     run: PolicyRunInput, *, use_prediction: bool, variant: PolicyVariant
 ) -> ControllerDecision:
-    placement = evaluate_placement(run.candidates, run.decision_input.forecast, run.placement_policy)
+    demand = (run.decision_input.forecast.point_mbps if use_prediction
+              else run.current_utilization * run.decision_input.source_capacity_mbps)
+    point_only = Forecast(demand, demand, demand, run.decision_input.forecast.horizon_seconds,
+                          run.decision_input.forecast.model_version)
+    placement = evaluate_placement(run.candidates, point_only, run.placement_policy)
     selected = placement.ranked[0] if placement.ranked else None
     violations = list(validate_security_invariants(run.decision_input.invariants))
     if not run.decision_input.telemetry_fresh:
@@ -88,17 +93,13 @@ def _simple_decision(
     )
 
 
-def _weights_without(*excluded: str) -> PlacementWeights:
-    base = {
-        "capacity": 0.30,
-        "latency": 0.15,
-        "carbon": 0.20,
-        "security_risk": 0.25,
-        "uncertainty_headroom": 0.10,
-    }
+def _weights_without(weights: PlacementWeights, *excluded: str) -> PlacementWeights:
+    base = asdict(weights)
     for name in excluded:
         base[name] = 0.0
     total = sum(base.values())
+    if total <= 0:
+        raise ValueError("ablation removes every nonzero placement weight")
     normalized = {name: value / total for name, value in base.items()}
     return PlacementWeights(**normalized)
 
@@ -126,18 +127,24 @@ def run_policy(variant: PolicyVariant, run: PolicyRunInput) -> PolicyOutcome:
     placement = run.placement_policy
     threshold = run.threshold_policy
     migration_mode = "warm"
+    decision_input = run.decision_input
     if variant is PolicyVariant.UNCERTAINTY_NO_CARBON_RISK:
+        decision_input = replace(decision_input, benefit_terms=replace(
+            decision_input.benefit_terms, carbon_benefit=0.0, risk_reduction_benefit=0.0))
         placement = replace(
             placement,
-            max_security_risk=1.0,
-            weights=_weights_without("carbon", "security_risk"),
+            weights=_weights_without(placement.weights, "carbon", "security_risk"),
         )
     elif variant is PolicyVariant.RISK_UNAWARE:
+        decision_input = replace(decision_input, benefit_terms=replace(
+            decision_input.benefit_terms, risk_reduction_benefit=0.0))
         placement = replace(
-            placement, max_security_risk=1.0, weights=_weights_without("security_risk")
+            placement, weights=_weights_without(placement.weights, "security_risk")
         )
     elif variant is PolicyVariant.CARBON_UNAWARE:
-        placement = replace(placement, weights=_weights_without("carbon"))
+        decision_input = replace(decision_input, benefit_terms=replace(
+            decision_input.benefit_terms, carbon_benefit=0.0))
+        placement = replace(placement, weights=_weights_without(placement.weights, "carbon"))
     elif variant is PolicyVariant.COLD_MIGRATION:
         migration_mode = "cold"
     elif variant is PolicyVariant.FIXED_THRESHOLD:
@@ -146,7 +153,7 @@ def run_policy(variant: PolicyVariant, run: PolicyRunInput) -> PolicyOutcome:
         )
 
     decision = decide(
-        run.decision_input,
+        decision_input,
         run.candidates,
         placement,
         threshold,

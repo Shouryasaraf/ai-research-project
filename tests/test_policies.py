@@ -1,4 +1,5 @@
 import unittest
+from dataclasses import replace
 
 from vfw_research.models import (
     BenefitTerms,
@@ -12,7 +13,7 @@ from vfw_research.models import (
     ThresholdContext,
     ThresholdPolicy,
 )
-from vfw_research.policies import PolicyRunInput, PolicyVariant, run_all_policies
+from vfw_research.policies import PolicyRunInput, PolicyVariant, run_all_policies, run_policy
 
 
 class PolicyInterfaceTests(unittest.TestCase):
@@ -49,7 +50,22 @@ class PolicyInterfaceTests(unittest.TestCase):
         self.assertEqual(outcomes[PolicyVariant.FULL].decision.action, GateAction.COMMIT)
         self.assertEqual(outcomes[PolicyVariant.COLD_MIGRATION].migration_mode, "cold")
 
+    def test_ablation_removes_corresponding_benefit_credit(self):
+        run = self.build_run()
+        full = run_policy(PolicyVariant.FULL, run).decision.net_benefit
+        carbon = run_policy(PolicyVariant.CARBON_UNAWARE, run).decision.net_benefit
+        risk = run_policy(PolicyVariant.RISK_UNAWARE, run).decision.net_benefit
+        neither = run_policy(PolicyVariant.UNCERTAINTY_NO_CARBON_RISK, run).decision.net_benefit
+        self.assertAlmostEqual(full - carbon, 0.1)
+        self.assertAlmostEqual(full - risk, 0.1)
+        self.assertAlmostEqual(full - neither, 0.2)
+
+    def test_reactive_candidate_check_uses_only_observed_demand(self):
+        run = self.build_run()
+        wide = replace(run.decision_input, forecast=Forecast(90, 0, 999, 60, "wide"))
+        result = run_policy(PolicyVariant.REACTIVE, replace(run, decision_input=wide))
+        self.assertEqual(result.decision.action, GateAction.COMMIT)
+
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -1,0 +1,3 @@
+policy,seed,goodput_mbps,requests,successful_requests,request_failure_fraction,disrupted_flows,rtt_p50_ms,rtt_p95_ms,rtt_p99_ms,maximum_success_gap_seconds_including_pacing,route_commits,state_sync_seconds,state_snapshot_serialized_bytes,controller_cpu_seconds,controller_maxrss_kib,packet_loss_fraction,observed_output_queue_drops,migration_interruption_seconds
+full_proposed_controller,31,0.9771702142901341,691,691,0.0,0,0.49696600001425395,1.2143510000157676,78.71385300001066,0.34641193699999917,1,0.09346495500000174,919,0.07723203400000003,25300,,0,
+reactive_threshold,31,1.0051891034682954,708,708,0.0,0,0.4062129999908848,0.7274919999815666,0.8754579999958878,0.2731878419999987,1,0.04167782000000386,464,0.064144054,25528,,0,

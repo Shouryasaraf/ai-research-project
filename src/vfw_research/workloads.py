@@ -15,6 +15,28 @@ class WorkloadFamily(str, Enum):
     SHIFT = "held_out_shift"
 
 
+def live_demand_schedule(family: str, seed: int, steps: int) -> tuple[list[float], tuple[float, ...], tuple[float, ...]]:
+    """Small isolated-lab rates; future demand is never fed to the controller."""
+    if family not in {"step", "steady", "bursts", "trend", "flash"} or seed < 0 or not 6 <= steps <= 120:
+        raise ValueError("invalid live workload configuration")
+    rng = random.Random(seed)
+    train = tuple(.65 + rng.uniform(-.025, .025) for _ in range(60))
+    calibration = tuple(.65 + rng.uniform(-.025, .025) for _ in range(30))
+    rates = []
+    for i in range(steps):
+        level = .65
+        if family == "step" and i >= 3:
+            level = 1.4
+        elif family == "bursts" and i % 6 >= 3:
+            level = 1.4
+        elif family == "trend":
+            level = .65 + .75 * i / (steps - 1)
+        elif family == "flash" and steps // 2 <= i < steps // 2 + 3:
+            level = 1.7
+        rates.append(level + rng.uniform(-.025, .025))
+    return rates, train, calibration
+
+
 def generate_workload(
     family: WorkloadFamily,
     *,

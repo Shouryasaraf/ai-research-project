@@ -1,0 +1,719 @@
+{
+  "scope": "exploratory repeated supervised fault probes; not independent confirmatory evidence",
+  "attempts": [
+    {
+      "batch": "active-recovery-20261008-v1",
+      "planned": 6,
+      "recorded": 3,
+      "failed": 1,
+      "not_executed": 3,
+      "source_fingerprints": [
+        "9412801ab3d841385180c16641acef6ef7ba5e38c5318fba2d860ef19f0833b0"
+      ],
+      "all_six_completed": false
+    },
+    {
+      "batch": "active-recovery-20261008-v2",
+      "planned": 6,
+      "recorded": 6,
+      "failed": 0,
+      "not_executed": 0,
+      "source_fingerprints": [
+        "e0d7c7597d071e92e5950f508a960b953ef4f994777d37f7275d96fb6a7e3bfd"
+      ],
+      "all_six_completed": true
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v1",
+      "planned": 6,
+      "recorded": 1,
+      "failed": 1,
+      "not_executed": 5,
+      "source_fingerprints": [
+        "b42fdcacf1746a4eaf72e161048114d52be806482603d2a4e0dc18316b84f0b1"
+      ],
+      "all_six_completed": false
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v2",
+      "planned": 6,
+      "recorded": 6,
+      "failed": 1,
+      "not_executed": 0,
+      "source_fingerprints": [
+        "571b96dbd4a8096eacae91cfd598fca6a6a05c1b92c995e730b97d2ab34cec25"
+      ],
+      "all_six_completed": false
+    },
+    {
+      "batch": "active-recovery-capture-20261009-v3",
+      "planned": 6,
+      "recorded": 6,
+      "failed": 0,
+      "not_executed": 0,
+      "source_fingerprints": [
+        "4d0c2cf22c0aadd45e32cff7ce74693e2f7cb3d7bdadc90d56c59410a084afd3"
+      ],
+      "all_six_completed": true
+    }
+  ],
+  "trials": [
+    {
+      "batch": "active-recovery-20261008-v1",
+      "trial": "r0-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.22039934600000066,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.846577375999999,
+        "acceptance_passed": true
+      }
+    },
+    {
+      "batch": "active-recovery-20261008-v1",
+      "trial": "r0-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.30124513799999875,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      }
+    },
+    {
+      "batch": "active-recovery-20261008-v1",
+      "trial": "r1-controller_exit",
+      "status": "failed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 0,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.2577635110000003,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.8685013989999959,
+        "acceptance_passed": false
+      }
+    },
+    {
+      "batch": "active-recovery-20261008-v2",
+      "trial": "r0-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.23758883899999717,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.6656955650000072,
+        "acceptance_passed": true
+      }
+    },
+    {
+      "batch": "active-recovery-20261008-v2",
+      "trial": "r0-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.2489416189999929,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      }
+    },
+    {
+      "batch": "active-recovery-20261008-v2",
+      "trial": "r1-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.21476850400000558,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.6456397150000157,
+        "acceptance_passed": true
+      }
+    },
+    {
+      "batch": "active-recovery-20261008-v2",
+      "trial": "r1-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.251817152000001,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      }
+    },
+    {
+      "batch": "active-recovery-20261008-v2",
+      "trial": "r2-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.2746063319999905,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.7967577309999854,
+        "acceptance_passed": true
+      }
+    },
+    {
+      "batch": "active-recovery-20261008-v2",
+      "trial": "r2-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.19761121500002332,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v1",
+      "trial": "r0-controller_exit",
+      "status": "failed",
+      "error": "capture comparison validity failed",
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.13626512200000107,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.761157445000002,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": false,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 1707,
+            "received_packet_instances": 1695,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 12,
+            "repeated_payload_sequence_instances": 11,
+            "observed_packet_deficit_fraction": null
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 856,
+            "received_packet_instances": 855,
+            "unmatched_receiver_instances": 2,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": null
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v2",
+      "trial": "r0-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.1494723140000005,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.4709852820000009,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 1754,
+            "received_packet_instances": 1748,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 6,
+            "repeated_payload_sequence_instances": 8,
+            "observed_packet_deficit_fraction": 0.0034207525655644243
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 883,
+            "received_packet_instances": 880,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.0033975084937712344
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v2",
+      "trial": "r0-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.24749053400000065,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 618,
+            "received_packet_instances": 597,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 21,
+            "repeated_payload_sequence_instances": 21,
+            "observed_packet_deficit_fraction": 0.03398058252427184
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 309,
+            "received_packet_instances": 306,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.009708737864077669
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v2",
+      "trial": "r1-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.16284806399999496,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.6563181809999961,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 1746,
+            "received_packet_instances": 1739,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 7,
+            "repeated_payload_sequence_instances": 10,
+            "observed_packet_deficit_fraction": 0.004009163802978236
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 880,
+            "received_packet_instances": 877,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.003409090909090909
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v2",
+      "trial": "r1-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.1499010139999939,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 618,
+            "received_packet_instances": 597,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 21,
+            "repeated_payload_sequence_instances": 21,
+            "observed_packet_deficit_fraction": 0.03398058252427184
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 309,
+            "received_packet_instances": 306,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.009708737864077669
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v2",
+      "trial": "r2-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.161737794000004,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.4765775230000031,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 1761,
+            "received_packet_instances": 1755,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 6,
+            "repeated_payload_sequence_instances": 9,
+            "observed_packet_deficit_fraction": 0.0034071550255536627
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 888,
+            "received_packet_instances": 885,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.0033783783783783786
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261008-v2",
+      "trial": "r2-target_state_loss",
+      "status": "failed",
+      "error": "OSError: [Errno 61] No data available"
+    },
+    {
+      "batch": "active-recovery-capture-20261009-v3",
+      "trial": "r0-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.11001036599999736,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.4109752529999966,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 1749,
+            "received_packet_instances": 1743,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 6,
+            "repeated_payload_sequence_instances": 9,
+            "observed_packet_deficit_fraction": 0.003430531732418525
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 882,
+            "received_packet_instances": 879,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.003401360544217687
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261009-v3",
+      "trial": "r0-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.1124744910000004,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 618,
+            "received_packet_instances": 597,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 21,
+            "repeated_payload_sequence_instances": 21,
+            "observed_packet_deficit_fraction": 0.03398058252427184
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 309,
+            "received_packet_instances": 306,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.009708737864077669
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261009-v3",
+      "trial": "r1-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.13978928099999877,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.3987588219999978,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 1771,
+            "received_packet_instances": 1765,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 6,
+            "repeated_payload_sequence_instances": 7,
+            "observed_packet_deficit_fraction": 0.0033879164313946925
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 888,
+            "received_packet_instances": 887,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 1,
+            "repeated_payload_sequence_instances": 1,
+            "observed_packet_deficit_fraction": 0.0011261261261261261
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261009-v3",
+      "trial": "r1-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.17880010900000798,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 618,
+            "received_packet_instances": 597,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 21,
+            "repeated_payload_sequence_instances": 21,
+            "observed_packet_deficit_fraction": 0.03398058252427184
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 309,
+            "received_packet_instances": 306,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.009708737864077669
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261009-v3",
+      "trial": "r2-controller_exit",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 0,
+        "fault_to_containment_seconds": 0.12114405900000236,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "resumed_original_flows": 3,
+        "fault_to_routes_restored_seconds": 0.5087787020000007,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 1761,
+            "received_packet_instances": 1755,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 6,
+            "repeated_payload_sequence_instances": 9,
+            "observed_packet_deficit_fraction": 0.0034071550255536627
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 888,
+            "received_packet_instances": 885,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.0033783783783783786
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    },
+    {
+      "batch": "active-recovery-capture-20261009-v3",
+      "trial": "r2-target_state_loss",
+      "status": "completed",
+      "error": null,
+      "metrics": {
+        "successful_flows_before_fault": 3,
+        "disrupted_flows": 3,
+        "fault_to_containment_seconds": 0.09271379999999851,
+        "packet_loss_fraction": null,
+        "exact_downtime_seconds": null,
+        "successful_requests_started_after_containment": 0,
+        "acceptance_passed": true
+      },
+      "packet_observation": {
+        "comparison_valid": true,
+        "capture_kernel_drops": 0,
+        "directions": [
+          {
+            "direction": "forward",
+            "sent_packet_instances": 616,
+            "received_packet_instances": 595,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 21,
+            "repeated_payload_sequence_instances": 19,
+            "observed_packet_deficit_fraction": 0.03409090909090909
+          },
+          {
+            "direction": "reverse",
+            "sent_packet_instances": 305,
+            "received_packet_instances": 302,
+            "unmatched_receiver_instances": 0,
+            "missing_receiver_instances": 3,
+            "repeated_payload_sequence_instances": 3,
+            "observed_packet_deficit_fraction": 0.009836065573770493
+          }
+        ],
+        "boundary": "matched packet instances between two lab captures; not exact application downtime"
+      }
+    }
+  ],
+  "raw_record_sha256": {
+    "active-recovery-20261008-v1/r0-controller_exit": "528ba5697a4fc677e32ff4d100bcb4ff64dd4bc29ff0520bc439572f0d6194bb",
+    "active-recovery-20261008-v1/r0-target_state_loss": "9347b3981ba687d7aaa1930400c39e7ef2353447163abb1565a6385d4b56a660",
+    "active-recovery-20261008-v1/r1-controller_exit": "3f43eebb68cf08503e5d5b60600c2a0a2575bf2d188e03583af46e6103d739d4",
+    "active-recovery-20261008-v2/r0-controller_exit": "697b8c57ebf082c37e7b88aacde7ff5fb7a36857faade088cd42d6a83e42b438",
+    "active-recovery-20261008-v2/r0-target_state_loss": "8f5ade4859864387e35a4bcf0d658780666ae50bb3c0f7d8d1045ed22fd7e46d",
+    "active-recovery-20261008-v2/r1-controller_exit": "613b8253e185b80415d55dfabd56cccb12c3bd20b56fbd78fc325f2fa6418524",
+    "active-recovery-20261008-v2/r1-target_state_loss": "1d521112427b44c73154c24043f3b5d250b7b0225c76e72e2a97defc198bab7d",
+    "active-recovery-20261008-v2/r2-controller_exit": "4b8c7646bf9e00cd8f7ded4640710f1c6b86c0467113a88e1f795249dad8cfdb",
+    "active-recovery-20261008-v2/r2-target_state_loss": "3b7d2d44064ce3798850e3e301da7f3d46361466803d504838d51db8c888a840",
+    "active-recovery-capture-20261008-v1/r0-controller_exit": "c6cef67258de25d2d012b556e18822d5a340ec280e62b3e0c850d4b99444a094",
+    "active-recovery-capture-20261008-v2/r0-controller_exit": "7f3714feb504f43e2c8fba2f37e2d79993d34d8f4c4e5d2450c1ae9b1ef2e54f",
+    "active-recovery-capture-20261008-v2/r0-target_state_loss": "22ef55fcb75504ca31003413a432637536123559ecf0d46cd92d5e894f43bbb0",
+    "active-recovery-capture-20261008-v2/r1-controller_exit": "fced3fc9dd12330ed213945438a1ca0f91b5054774b87d46a949dc1fc55c5eb9",
+    "active-recovery-capture-20261008-v2/r1-target_state_loss": "6f8dd492c0c156f9a5c46e91361e7676a42643d6aaae5bd7af6903822db20c96",
+    "active-recovery-capture-20261008-v2/r2-controller_exit": "13b209fb873880e00fe36cb83f003864b85bc670a502f97e45765b9ca4f614c8",
+    "active-recovery-capture-20261008-v2/r2-target_state_loss": "6558685f80e09ee8effed3e7e38e20c879de053c602175c9c040ecd366933367",
+    "active-recovery-capture-20261009-v3/r0-controller_exit": "4ae0378323e570ba882715572099756466515142d4cf07b99cc7a6be0b62e739",
+    "active-recovery-capture-20261009-v3/r0-target_state_loss": "28bc0f67123e3dfeff8243042fd40c17084af5959dcfa89c00cdee4951ba262c",
+    "active-recovery-capture-20261009-v3/r1-controller_exit": "be9853c982fe3a6fd6aec8d134fd58c117a663f059fcb9412345f44d9dbacd7e",
+    "active-recovery-capture-20261009-v3/r1-target_state_loss": "fce6b064a99cec27ebf988e15a84c5d26ef90347a15d7e7a85a12cf9e4c40407",
+    "active-recovery-capture-20261009-v3/r2-controller_exit": "9fb95a4e553bf9fcaaff01d636bd202e95042634885bd98efad1f9a43776339e",
+    "active-recovery-capture-20261009-v3/r2-target_state_loss": "d1fa62bf10f65d30a9eca7806ee73af280723faf7dbd958563bd800cf755b109"
+  }
+}
