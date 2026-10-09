@@ -1,0 +1,126 @@
+{
+  "evidence_class": "deterministic modeled sensitivity; independent ready-target opportunities",
+  "axes": {
+    "width_fraction": [
+      0.02,
+      0.2,
+      0.6
+    ],
+    "state_size_mb": [
+      1,
+      100,
+      1000
+    ],
+    "operational_benefit": [
+      0.3,
+      0.8,
+      1.5
+    ],
+    "candidate_carbon": [
+      40,
+      300,
+      600
+    ],
+    "candidate_risk": [
+      0.05,
+      0.4,
+      0.9
+    ]
+  },
+  "scenario_sha256": "8f05ff158a828bdd348588b570afb4e74dcaf470fa2d5715e910a5e3e0ff463a",
+  "raw_records_sha256": "d27be9e60586930e67500d7cd5f2c34dd0a5d07c6f33cf8502b39ab06de1412c",
+  "records": 2187,
+  "hard_constraint_violations": 0,
+  "placement_summary": {
+    "opportunities": 243,
+    "policies": {
+      "static_no_migration": {
+        "candidate_counts": {
+          "none": 243
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": null,
+        "mean_selected_modeled_risk": null
+      },
+      "reactive_threshold": {
+        "candidate_counts": {
+          "node-green": 81,
+          "node-low-latency": 162
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": 268.8888888888889,
+        "mean_selected_modeled_risk": 0.13555555555555554
+      },
+      "prediction_only": {
+        "candidate_counts": {
+          "node-green": 81,
+          "node-low-latency": 162
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": 268.8888888888889,
+        "mean_selected_modeled_risk": 0.13555555555555554
+      },
+      "uncertainty_without_carbon_or_risk": {
+        "candidate_counts": {
+          "node-low-latency": 243
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": 340.0,
+        "mean_selected_modeled_risk": 0.12
+      },
+      "risk_unaware": {
+        "candidate_counts": {
+          "node-green": 108,
+          "node-low-latency": 135
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": 264.44444444444446,
+        "mean_selected_modeled_risk": 0.16666666666666666
+      },
+      "carbon_unaware": {
+        "candidate_counts": {
+          "node-low-latency": 243
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": 340.0,
+        "mean_selected_modeled_risk": 0.12
+      },
+      "cold_migration": {
+        "candidate_counts": {
+          "node-green": 81,
+          "node-low-latency": 162
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": 268.8888888888889,
+        "mean_selected_modeled_risk": 0.13555555555555554
+      },
+      "fixed_benefit_threshold": {
+        "candidate_counts": {
+          "node-green": 81,
+          "node-low-latency": 162
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": 268.8888888888889,
+        "mean_selected_modeled_risk": 0.13555555555555554
+      },
+      "full_proposed_controller": {
+        "candidate_counts": {
+          "node-green": 81,
+          "node-low-latency": 162
+        },
+        "mean_selected_modeled_carbon_gco2_per_kwh": 268.8888888888889,
+        "mean_selected_modeled_risk": 0.13555555555555554
+      }
+    },
+    "paired_comparisons": {
+      "carbon_unaware": {
+        "different_candidate_count": 81,
+        "full_lower_modeled_carbon_count": 81,
+        "full_lower_modeled_risk_count": 54
+      },
+      "risk_unaware": {
+        "different_candidate_count": 27,
+        "full_lower_modeled_carbon_count": 0,
+        "full_lower_modeled_risk_count": 27
+      },
+      "uncertainty_without_carbon_or_risk": {
+        "different_candidate_count": 81,
+        "full_lower_modeled_carbon_count": 81,
+        "full_lower_modeled_risk_count": 54
+      }
+    },
+    "boundary": "selected modeled candidates at independent ready-target opportunities; not deployments, emissions or attacks"
+  }
+}

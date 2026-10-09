@@ -1,5 +1,10 @@
 # Verification Log
 
+## 2026-10-10 — Multi-candidate modeled placement audit
+
+- The regenerated `sensitivity-20261010-placement-v3` grid evaluated 243 paired synthetic opportunities across nine policies (2,187 decisions), with zero hard constraint violations. The generated summary and raw hash are in `docs/results/sensitivity-20261010-placement-v3/`.
+- Compared with the full controller, carbon-unaware placement chose a different eligible candidate 81 times; risk-unaware placement differed 27 times. This is candidate preference even when an action is WAIT, not an executed migration count. Carbon intensity and risk scores are scenario inputs, not physical measurements.
+
 ## 2026-10-10 — Paired captured migration pilot
 
 - Single-seed captured development pilot (`live-captured-pair-20261010-v1`) completed both policies and is retained separately. After a written three-seed protocol, `live-captured-pair-20261010-v2` completed all six declared policy/seed trials with no residual namespaces.

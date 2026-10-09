@@ -7,6 +7,7 @@ import hashlib
 from itertools import product
 import json
 from pathlib import Path
+import statistics
 from .models import Forecast
 from .policies import PolicyVariant, run_policy
 from .scenarios import load_scenario
@@ -50,17 +51,57 @@ def evaluate(base, axes=None):
     return rows
 
 
+def placement_summary(rows: list[dict]) -> dict:
+    """Candidate preferences on identical modeled opportunities, not deployments."""
+    paired = {}
+    for row in rows:
+        by_policy = paired.setdefault(row["input_sha256"], {})
+        if row["policy"] in by_policy:
+            raise ValueError("duplicate policy for modeled opportunity")
+        by_policy[row["policy"]] = row
+    expected = {policy.value for policy in PolicyVariant}
+    if not paired or any(set(by_policy) != expected for by_policy in paired.values()):
+        raise ValueError("modeled opportunities lack paired policies")
+    policies = {}
+    for policy in PolicyVariant:
+        selected = [by_policy[policy.value] for by_policy in paired.values()]
+        carbon = [r["selected_modeled_carbon"] for r in selected if r["selected_modeled_carbon"] is not None]
+        risk = [r["selected_modeled_risk"] for r in selected if r["selected_modeled_risk"] is not None]
+        policies[policy.value] = {"candidate_counts": dict(sorted(Counter(
+            r["decision"]["selected_node_id"] or "none" for r in selected).items())),
+            "mean_selected_modeled_carbon_gco2_per_kwh": statistics.fmean(carbon) if carbon else None,
+            "mean_selected_modeled_risk": statistics.fmean(risk) if risk else None}
+    comparisons = {}
+    for alternative in (PolicyVariant.CARBON_UNAWARE, PolicyVariant.RISK_UNAWARE,
+                        PolicyVariant.UNCERTAINTY_NO_CARBON_RISK):
+        pairs = [(r[PolicyVariant.FULL.value], r[alternative.value]) for r in paired.values()]
+        comparisons[alternative.value] = {
+            "different_candidate_count": sum(a["decision"]["selected_node_id"] != b["decision"]["selected_node_id"]
+                                             for a, b in pairs),
+            "full_lower_modeled_carbon_count": sum(
+                a["selected_modeled_carbon"] is not None and b["selected_modeled_carbon"] is not None
+                and a["selected_modeled_carbon"] < b["selected_modeled_carbon"] for a, b in pairs),
+            "full_lower_modeled_risk_count": sum(
+                a["selected_modeled_risk"] is not None and b["selected_modeled_risk"] is not None
+                and a["selected_modeled_risk"] < b["selected_modeled_risk"] for a, b in pairs),
+        }
+    return {"opportunities": len(paired), "policies": policies, "paired_comparisons": comparisons,
+            "boundary": "selected modeled candidates at independent ready-target opportunities; not deployments, emissions or attacks"}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("scenario", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--summary-output", type=Path,
+                        help="optional compact generated summary directory for source control")
     args = parser.parse_args()
     scenario = load_scenario(args.scenario)
     rows = evaluate(scenario.build_run(scenario.seeds[0]))
     args.output.mkdir(parents=True, exist_ok=False)
     record = {"evidence_class": "deterministic modeled sensitivity; independent ready-target opportunities",
               "axes": AXES, "scenario_sha256": hashlib.sha256(args.scenario.read_bytes()).hexdigest(),
-              "rows": rows}
+              "placement_summary": placement_summary(rows), "rows": rows}
     raw = json.dumps(record, indent=2, sort_keys=True)
     (args.output / "records.json").write_text(raw, encoding="utf-8")
     lines = ["# Modeled sensitivity audit", "", "No traffic, power or attack outcomes are measured.", "",
@@ -73,7 +114,34 @@ def main():
                   "These are decision counts, not migration frequency in a time-evolving system.",
                   "Carbon/risk candidate scores vary; benefit credits remain independently modeled inputs.",
                   "Raw records SHA-256: " + hashlib.sha256(raw.encode()).hexdigest(), ""])
-    (args.output / "results.md").write_text("\n".join(lines), encoding="utf-8")
+    placement = record["placement_summary"]
+    lines.extend(["## Modeled candidate preferences", "",
+                  "Candidate selections are recorded even for WAIT decisions; they are not deployments or measured emissions.", "",
+                  "| Policy | Candidate counts | Mean selected carbon input (gCO2/kWh) | Mean selected risk input |",
+                  "|---|---|---:|---:|"])
+    for policy in PolicyVariant:
+        item = placement["policies"][policy.value]
+        carbon = item["mean_selected_modeled_carbon_gco2_per_kwh"]
+        risk = item["mean_selected_modeled_risk"]
+        lines.append(f'| {policy.value} | {item["candidate_counts"]} | '
+                     f'{carbon:.3f} | {risk:.3f} |' if carbon is not None and risk is not None
+                     else f'| {policy.value} | {item["candidate_counts"]} | n/a | n/a |')
+    lines.extend(["", "| Full compared with | Different candidate choices | Full lower carbon input | Full lower risk input |",
+                  "|---|---:|---:|---:|"])
+    for name, item in placement["paired_comparisons"].items():
+        lines.append(f'| {name} | {item["different_candidate_count"]} | '
+                     f'{item["full_lower_modeled_carbon_count"]} | {item["full_lower_modeled_risk_count"]} |')
+    lines.extend(["", "The prohibited node is never selected. These synthetic inputs do not quantify physical carbon or attack reduction.", ""])
+    rendered = "\n".join(lines)
+    (args.output / "results.md").write_text(rendered, encoding="utf-8")
+    if args.summary_output:
+        args.summary_output.mkdir(parents=True, exist_ok=False)
+        summary = {"evidence_class": record["evidence_class"], "axes": AXES,
+                   "scenario_sha256": record["scenario_sha256"], "raw_records_sha256": hashlib.sha256(raw.encode()).hexdigest(),
+                   "records": len(rows), "hard_constraint_violations": 0,
+                   "placement_summary": placement}
+        (args.summary_output / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+        (args.summary_output / "results.md").write_text(rendered, encoding="utf-8")
     print(json.dumps({"records": len(rows), "hard_constraint_violations": 0}))
 
 

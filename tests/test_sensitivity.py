@@ -4,7 +4,7 @@ import unittest
 from vfw_research.models import PlacementWeights
 from vfw_research.policies import _weights_without, PolicyVariant, run_policy
 from vfw_research.scenarios import load_scenario
-from vfw_research.sensitivity import evaluate, AXES
+from vfw_research.sensitivity import evaluate, placement_summary, AXES
 
 class SensitivityTests(unittest.TestCase):
     def base(self):
@@ -17,6 +17,11 @@ class SensitivityTests(unittest.TestCase):
         self.assertEqual(len(rows), 9)
         self.assertEqual(len({row["input_sha256"] for row in rows}), 1)
         self.assertEqual(rows, evaluate(self.base(), axes))
+        result = placement_summary(rows)
+        self.assertEqual(result["opportunities"], 1)
+        self.assertNotIn("node-quarantined", result["policies"][PolicyVariant.FULL.value]["candidate_counts"])
+        with self.assertRaisesRegex(ValueError, "paired"):
+            placement_summary(rows[:-1])
 
     def test_risk_ablation_keeps_hard_ceiling(self):
         base = self.base()

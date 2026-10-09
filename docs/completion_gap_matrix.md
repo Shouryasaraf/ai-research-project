@@ -4,6 +4,8 @@ This matrix was refreshed from the repository on 2026-10-08. “Implemented” m
 
 ## Latest evidence update (supersedes pending items below where stated)
 
+2026-10-10 modeled placement update: the new paired candidate-choice summary in `results/sensitivity-20261010-placement-v3/` recomputes nine policy decisions for 243 identical synthetic opportunities. Carbon-unaware and risk-unaware choices differ from the full policy in 81 and 27 opportunities respectively; hard-prohibited nodes were never selected. This supports decision sensitivity, not realized traffic performance, emissions, or security outcomes.
+
 2026-10-10 captured migration update: a six-trial paired synthetic batch (full versus reactive, seeds 47/53/59) completed with valid endpoint captures and one route commit per trial. Both policies had zero request failures, but each trial showed eight missing reverse packet instances. Reactive goodput was higher in this batch; see generated `results/live-captured-pair-20261010-v2/`. This narrows the packet-observation gap, while exact downtime, representative independent traces, complete TCP-state equivalence and confirmatory performance claims remain open.
 
 2026-10-10 capture-method update: two ordinary and two deliberate-drop endpoint-capture controls passed, with exact source snapshots and raw capture hashes verified in `results/packet-validation-20261010/`. The detector observed zero matched packet deficits in ordinary trials and 12 forward missing instances in each forced-drop trial. All requests still completed after retransmission. This validates the measurement method in one isolated topology; exact migration downtime, full TCP-state equivalence and independent traffic environments remain open.
