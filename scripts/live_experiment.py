@@ -28,12 +28,13 @@ from validate_conntrack import compare_entries, parse_entry
 from route_actuator import apply_route, verify_route
 from vfw_research.route_transaction import RouteTransaction
 from vfw_research.forecasting import EwmaConformalForecaster, time_ordered_split
-from vfw_research.models import GateAction, NodeCandidate
+from vfw_research.models import NodeCandidate
 from vfw_research.policies import PolicyVariant, run_policy
 from vfw_research.liveness_guard import (
     POLICY_NAME as LIVENESS_POLICY_NAME,
     is_uncertainty_wait,
     run_liveness_guarded,
+    suppress_after_route,
 )
 from vfw_research.scenarios import load_scenario
 from vfw_research.trace_adapter import TraceKind, load_trace
@@ -243,11 +244,7 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
                 if active == "target":
                     observed_overload_streak = 0
                     uncertainty_wait_streak = 0
-                    if outcome.decision.action in (GateAction.PREWARM, GateAction.SYNC, GateAction.COMMIT):
-                        outcome = replace(outcome, decision=replace(
-                            outcome.decision, action=GateAction.WAIT,
-                            reason="already routed through the selected target",
-                        ))
+                    outcome = suppress_after_route(outcome)
             else:
                 outcome = run_policy(variant, run)
             record["decisions"].append({"step": sample["step"], "observed_goodput_mbps": sample["goodput_mbps"],

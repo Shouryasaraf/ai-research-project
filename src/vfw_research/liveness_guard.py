@@ -25,6 +25,20 @@ def is_uncertainty_wait(outcome: PolicyOutcome) -> bool:
             and outcome.decision.reason == UNCERTAINTY_WAIT_REASON)
 
 
+def suppress_after_route(outcome: PolicyOutcome) -> PolicyOutcome:
+    """Do not report a second migration toward the already active target.
+
+    A security FALLBACK remains visible; this helper is only action accounting,
+    not a replacement for a production route-failback controller.
+    """
+    if outcome.decision.action is GateAction.FALLBACK:
+        return outcome
+    return replace(outcome, decision=replace(
+        outcome.decision, action=GateAction.WAIT,
+        reason="already routed through the selected target",
+    ))
+
+
 def run_liveness_guarded(
     run: PolicyRunInput,
     *,

@@ -2,7 +2,9 @@ import unittest
 from dataclasses import replace
 from pathlib import Path
 
-from vfw_research.liveness_guard import is_uncertainty_wait, run_liveness_guarded
+from vfw_research.liveness_guard import (
+    is_uncertainty_wait, run_liveness_guarded, suppress_after_route,
+)
 from vfw_research.models import Forecast, GateAction
 from vfw_research.policies import PolicyVariant, run_policy
 from vfw_research.scenarios import load_scenario
@@ -75,6 +77,25 @@ class LivenessGuardTests(unittest.TestCase):
                 run, observed_overload_streak=3, uncertainty_wait_streak=3,
                 baseline=run_policy(PolicyVariant.REACTIVE, run),
             )
+
+    def test_after_route_suppresses_repeated_action_but_not_fallback(self):
+        run = uncertain_run()
+        ready = replace(run, decision_input=replace(run.decision_input,
+                                                    state_synchronized=True))
+        commit = run_liveness_guarded(
+            ready, observed_overload_streak=4, uncertainty_wait_streak=4,
+        )
+        suppressed = suppress_after_route(commit)
+        self.assertEqual(suppressed.decision.action, GateAction.WAIT)
+        self.assertIn("already routed", suppressed.decision.reason)
+        bad = replace(ready, decision_input=replace(
+            ready.decision_input,
+            invariants=replace(ready.decision_input.invariants, target_policy_hash="wrong"),
+        ))
+        failed = run_liveness_guarded(
+            bad, observed_overload_streak=4, uncertainty_wait_streak=4,
+        )
+        self.assertEqual(suppress_after_route(failed).decision.action, GateAction.FALLBACK)
 
 
 if __name__ == "__main__":

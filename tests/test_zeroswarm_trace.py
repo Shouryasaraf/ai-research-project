@@ -26,6 +26,21 @@ class ZeroSwarmTraceTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 convert(source, csv_path, sidecar)
 
+    def test_other_named_normal_file_and_unknown_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            data = pcap()
+            source = Path(directory) / "ZeroSWARM Normal data_v2.pcap"
+            source.write_bytes(data)
+            metadata = convert(source, Path(directory) / "rates.csv",
+                               Path(directory) / "rates.json",
+                               expected_md5=hashlib.md5(data).hexdigest())
+            self.assertIn("data_v2.pcap", metadata["version"])
+            unknown = Path(directory) / "unknown.pcap"
+            unknown.write_bytes(data)
+            with self.assertRaisesRegex(ValueError, "publisher-identified"):
+                convert(unknown, Path(directory) / "other.csv",
+                        Path(directory) / "other.json")
+
 
 if __name__ == "__main__":
     unittest.main()

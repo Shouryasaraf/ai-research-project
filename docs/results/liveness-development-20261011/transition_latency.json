@@ -1,0 +1,213 @@
+{
+  "batch": "live-liveness-plc070-three-policy-20261010-v1",
+  "boundary": "Before: request finishes before transition start. After: request starts after transition end. In-flight successes excluded. No-commit trials have no phase split.",
+  "evidence_class": "validated descriptive pre/post request-RTT diagnostic; not outage or causal effect",
+  "manifest_sha256": "428477cfc5a6375830d0966fbf4ddd68a488b96232bf740b0f16266f1c235dd0",
+  "trials": [
+    {
+      "after": {
+        "rtt_p95_ms": 0.7410979997075628,
+        "successes": 1522
+      },
+      "before": {
+        "rtt_p95_ms": 55.01475500022934,
+        "successes": 229
+      },
+      "excluded_in_flight_successes": 25,
+      "policy": "full_liveness_guarded_experimental",
+      "record_sha256": "a8cb96c068e300d04c4297dc12dcc4013cb1823e18ad562fec707ac90d7d77bd",
+      "route_commits": 1,
+      "seed": 101,
+      "transition_duration_seconds_including_sync_or_route_work": 0.4654221390001112
+    },
+    {
+      "after": null,
+      "before": null,
+      "excluded_in_flight_successes": 0,
+      "policy": "full_proposed_controller",
+      "record_sha256": "1bfc0bfc0e3cba0df17f1e05a2db7ed7c545747e7325f040d178fa53591ddeed",
+      "route_commits": 0,
+      "seed": 101
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.5646660001730197,
+        "successes": 1713
+      },
+      "before": {
+        "rtt_p95_ms": 9.044418000485166,
+        "successes": 61
+      },
+      "excluded_in_flight_successes": 20,
+      "policy": "reactive_threshold",
+      "record_sha256": "3eeaae8e6548297788dd2c144148f1407dc6ed7720d005ea9e23e48ea5e46ad6",
+      "route_commits": 1,
+      "seed": 101,
+      "transition_duration_seconds_including_sync_or_route_work": 0.3198696130002645
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.46786199982307153,
+        "successes": 1538
+      },
+      "before": {
+        "rtt_p95_ms": 54.925172999901406,
+        "successes": 228
+      },
+      "excluded_in_flight_successes": 18,
+      "policy": "full_liveness_guarded_experimental",
+      "record_sha256": "06282d5115d224ed87417b856ee03f1db9d2bc61dcc1187adb3308cbcd749106",
+      "route_commits": 1,
+      "seed": 103,
+      "transition_duration_seconds_including_sync_or_route_work": 0.2615179199992781
+    },
+    {
+      "after": null,
+      "before": null,
+      "excluded_in_flight_successes": 0,
+      "policy": "full_proposed_controller",
+      "record_sha256": "42c895a443309dda31b6cda00b7ff0d32e39e6c42f3e0fdff3c83c7596138155",
+      "route_commits": 0,
+      "seed": 103
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.6418189996111323,
+        "successes": 1716
+      },
+      "before": {
+        "rtt_p95_ms": 4.447305000212509,
+        "successes": 60
+      },
+      "excluded_in_flight_successes": 18,
+      "policy": "reactive_threshold",
+      "record_sha256": "45077f286238f89f672df657bffb99858eab00f2cf5d747a6e3f6f609feb1005",
+      "route_commits": 1,
+      "seed": 103,
+      "transition_duration_seconds_including_sync_or_route_work": 0.25160232200050814
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.7069990006129956,
+        "successes": 1525
+      },
+      "before": {
+        "rtt_p95_ms": 54.983267999887175,
+        "successes": 229
+      },
+      "excluded_in_flight_successes": 28,
+      "policy": "full_liveness_guarded_experimental",
+      "record_sha256": "091c0709b17fa61624ef631c904f9e79de9447b70c9cf28380db9454d0a59ab4",
+      "route_commits": 1,
+      "seed": 83,
+      "transition_duration_seconds_including_sync_or_route_work": 0.4449829499999396
+    },
+    {
+      "after": null,
+      "before": null,
+      "excluded_in_flight_successes": 0,
+      "policy": "full_proposed_controller",
+      "record_sha256": "caff15462ac60eb1b6bc8487b281df240b3970186a23f94be848fca19da1f8b1",
+      "route_commits": 0,
+      "seed": 83
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.7623709998370032,
+        "successes": 1703
+      },
+      "before": {
+        "rtt_p95_ms": 2.910465000240947,
+        "successes": 61
+      },
+      "excluded_in_flight_successes": 22,
+      "policy": "reactive_threshold",
+      "record_sha256": "92f15d13a9182edf0362c04ce5bdce054454f5a3b24b1e73c090cb05f1e09ce6",
+      "route_commits": 1,
+      "seed": 83,
+      "transition_duration_seconds_including_sync_or_route_work": 0.42796252999960416
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.7589659999212017,
+        "successes": 1525
+      },
+      "before": {
+        "rtt_p95_ms": 55.11006000051566,
+        "successes": 228
+      },
+      "excluded_in_flight_successes": 23,
+      "policy": "full_liveness_guarded_experimental",
+      "record_sha256": "79549ab1292ef824c185ebff72cf6da52e5ae3d2f29b7185a6ee190c01025c51",
+      "route_commits": 1,
+      "seed": 89,
+      "transition_duration_seconds_including_sync_or_route_work": 0.4421401829995375
+    },
+    {
+      "after": null,
+      "before": null,
+      "excluded_in_flight_successes": 0,
+      "policy": "full_proposed_controller",
+      "record_sha256": "3551492fba91cb984bf561fa751cf160478a87084b1ad69089c1e8d16004024e",
+      "route_commits": 0,
+      "seed": 89
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.8359390003533917,
+        "successes": 1704
+      },
+      "before": {
+        "rtt_p95_ms": 2.7774689997386304,
+        "successes": 61
+      },
+      "excluded_in_flight_successes": 14,
+      "policy": "reactive_threshold",
+      "record_sha256": "cfa147359dc4fc61af14092ad8009f3806b2f9b31734faab30f470023739613b",
+      "route_commits": 1,
+      "seed": 89,
+      "transition_duration_seconds_including_sync_or_route_work": 0.42322852199959016
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.6627109996770741,
+        "successes": 1527
+      },
+      "before": {
+        "rtt_p95_ms": 54.83762099993328,
+        "successes": 228
+      },
+      "excluded_in_flight_successes": 28,
+      "policy": "full_liveness_guarded_experimental",
+      "record_sha256": "e14083124c07196dfaf33c9a5823268a80a6afe950dfb1e084b5d466ddf143ac",
+      "route_commits": 1,
+      "seed": 97,
+      "transition_duration_seconds_including_sync_or_route_work": 0.4423086629994941
+    },
+    {
+      "after": null,
+      "before": null,
+      "excluded_in_flight_successes": 0,
+      "policy": "full_proposed_controller",
+      "record_sha256": "b3082f19570d0ee86fe5bf5052a1945493a401dcab5eeecff9b4091656d38fa6",
+      "route_commits": 0,
+      "seed": 97
+    },
+    {
+      "after": {
+        "rtt_p95_ms": 0.7336600001508486,
+        "successes": 1701
+      },
+      "before": {
+        "rtt_p95_ms": 2.9927830000815447,
+        "successes": 62
+      },
+      "excluded_in_flight_successes": 16,
+      "policy": "reactive_threshold",
+      "record_sha256": "f9901867113a7e8a1c223f139cea19a27391a54c1bdbf7119fd6cdca2321ea25",
+      "route_commits": 1,
+      "seed": 97,
+      "transition_duration_seconds_including_sync_or_route_work": 0.47052736599925993
+    }
+  ]
+}

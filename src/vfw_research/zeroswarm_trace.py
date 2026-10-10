@@ -1,4 +1,4 @@
-"""Convert the preselected Zero-SWARM normal classic-PCAP to rate-only CSV.
+"""Convert the two publisher-identified Zero-SWARM normal PCAPs to rate-only CSV.
 
 Packet bytes are skipped by the shared strict PCAP parser. The publisher's MD5
 is checked for download integrity; a local SHA-256 is retained for provenance.
@@ -19,6 +19,10 @@ from .mawi_trace import aggregate_pcap
 SOURCE = "https://doi.org/10.5281/zenodo.15082260"
 FILENAME = "ZeroSWARM Normal data_v2b.pcap"
 PUBLISHER_MD5 = "9f8235fcdbfcacb32e7a70db14fc6c74"
+PUBLISHER_FILES = {
+    FILENAME: PUBLISHER_MD5,
+    "ZeroSWARM Normal data_v2.pcap": "eee8b87e62c482fd574b6e78d32cb12b",
+}
 
 
 def _digest(path: Path, algorithm: str) -> str:
@@ -30,11 +34,12 @@ def _digest(path: Path, algorithm: str) -> str:
 
 
 def convert(path: Path, csv_path: Path, sidecar_path: Path,
-            *, expected_md5: str = PUBLISHER_MD5) -> dict:
-    if path.name != FILENAME:
-        raise ValueError("input must be the preselected Zero-SWARM normal PCAP")
+            *, expected_md5: str | None = None) -> dict:
+    if path.name not in PUBLISHER_FILES:
+        raise ValueError("input must be a publisher-identified Zero-SWARM normal PCAP")
     if csv_path.exists() or sidecar_path.exists():
         raise FileExistsError("output exists; preserve immutable provenance")
+    expected_md5 = expected_md5 or PUBLISHER_FILES[path.name]
     if _digest(path, "md5") != expected_md5:
         raise ValueError("PCAP checksum differs from publisher metadata")
     series, capture = aggregate_pcap(path)
@@ -48,7 +53,7 @@ def convert(path: Path, csv_path: Path, sidecar_path: Path,
     metadata = {
         "kind": "traffic", "unit": "Mbps", "source": SOURCE,
         "license": "CC BY 4.0; cite Zero-SWARM dataset creators; raw PCAP not committed",
-        "version": "Zenodo record 15082260 / " + FILENAME,
+        "version": "Zenodo record 15082260 / " + path.name,
         "retrieved_utc": datetime.now(timezone.utc).isoformat(),
         "preprocessing": "Classic PCAP original lengths summed into one-second UTC bins; packet contents skipped; internal empty bins zero-filled",
         "missing_data_policy": "Explicit zero within first/last observed packet; no extrapolation beyond capture",
