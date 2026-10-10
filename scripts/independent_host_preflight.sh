@@ -30,11 +30,16 @@ if command -v git >/dev/null 2>&1 && [[ -d .git || -f .git ]]; then
     printf 'git_revision=%s\n' "${revision:-unavailable}"
     # Match the Windows checkout's text normalization when WSL reads NTFS;
     # otherwise Git reports unchanged CRLF result tables as modified.
-    if [[ -n "$(git -c "safe.directory=$root" -c core.autocrlf=true status --porcelain 2>/dev/null)" ]]; then
-        printf 'working_tree=dirty\n'
-        missing=1
+    if status="$(git -c "safe.directory=$root" -c core.autocrlf=true status --porcelain 2>/dev/null)"; then
+        if [[ -n "$status" ]]; then
+            printf 'working_tree=dirty\n'
+            missing=1
+        else
+            printf 'working_tree=clean\n'
+        fi
     else
-        printf 'working_tree=clean_or_unavailable\n'
+        printf 'working_tree=unavailable\n'
+        missing=1
     fi
 else
     printf 'git_revision=unavailable\n'
