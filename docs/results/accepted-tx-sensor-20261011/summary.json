@@ -1,0 +1,1268 @@
+{
+  "boundary": "Scheduled load is an exogenous intended-rate label, not measured offered wire traffic. Socket acceptance and completed goodput are response-gated.",
+  "evidence": [
+    {
+      "batch": "accepted-tx-sensor-step-20261011-v1",
+      "family": "step",
+      "manifest_sha256": "d9d543e7de0fed4db4eff94b9011fa35c5150236536c6a127ce8ad87bdd4030b",
+      "source_sha256": "8f6541be07db5c569e3fcd920e4d92aa0cbd980621446bd1e673c7c33a6cae33",
+      "trial_record_sha256": {
+        "s173-static_no_migration": "3564ae2485af0cdc223e4889453e70910ba7d24fff112b6553724eaaf32e3959",
+        "s179-static_no_migration": "5aff6b32d25915f9179af4f90ad4c8cf39463394bf87ec40247dabf6ea27bebb"
+      }
+    },
+    {
+      "batch": "accepted-tx-sensor-steady-20261011-v1",
+      "family": "steady",
+      "manifest_sha256": "4bf12569c49eabeb10d725c9be4c3dc1aad77133922709bd8b8d27d92696bf5f",
+      "source_sha256": "8f6541be07db5c569e3fcd920e4d92aa0cbd980621446bd1e673c7c33a6cae33",
+      "trial_record_sha256": {
+        "s173-static_no_migration": "d4a5bdf8447e3593bb34974a211c4f50872f4aef4a79bcaec295da733c3dd8fd",
+        "s179-static_no_migration": "60312a815917a51e7e9e28933812c5586192a3389890b4bfb0e2c53f149458d8"
+      }
+    },
+    {
+      "batch": "accepted-tx-sensor-bursts-20261011-v1",
+      "family": "bursts",
+      "manifest_sha256": "5a02d291d3eaff484e410d92dd20dbc5cf22105745d6040ba64fc062ad839a6e",
+      "source_sha256": "8f6541be07db5c569e3fcd920e4d92aa0cbd980621446bd1e673c7c33a6cae33",
+      "trial_record_sha256": {
+        "s173-static_no_migration": "b51c38b9caa08998cd6a8a15170a85455b994327118881653b38135b24483cd9",
+        "s179-static_no_migration": "4fd3a27d39330b09e76b5dbd9b54e98779bed6f88c8c50a97e727a3db8fa8819"
+      }
+    },
+    {
+      "batch": "accepted-tx-sensor-trend-20261011-v1",
+      "family": "trend",
+      "manifest_sha256": "19dd231a32df2c5c76e191bd8559aeb9218d4f78fae81aa403a0c9eea33f1aa5",
+      "source_sha256": "8f6541be07db5c569e3fcd920e4d92aa0cbd980621446bd1e673c7c33a6cae33",
+      "trial_record_sha256": {
+        "s173-static_no_migration": "a1ba414dfaf08b6888944f16a14fb6e2ddd5de1b4b9a4f52691d482e104b58ae",
+        "s179-static_no_migration": "70d0416bedd7368824457c914db31c2bd07fe1293bccbf606eeb6e1d45fe51b7"
+      }
+    },
+    {
+      "batch": "accepted-tx-sensor-flash-20261011-v1",
+      "family": "flash",
+      "manifest_sha256": "8a5d099f1001df553503d4c2a99169823e2895274b7171c5235e26d1997cf3eb",
+      "source_sha256": "8f6541be07db5c569e3fcd920e4d92aa0cbd980621446bd1e673c7c33a6cae33",
+      "trial_record_sha256": {
+        "s173-static_no_migration": "586c36adebaa18b04368e84c7a44e69f15d1f66b7c0b355b4e54ed57ee882d71",
+        "s179-static_no_migration": "817de86ff396c5a8a467936259458813c5826785fdbe4a876bd925452b91bdec"
+      }
+    }
+  ],
+  "evidence_class": "captured single-host synthetic sensor diagnostic; not a controller comparison",
+  "planned_capacity_mbps": 1.0,
+  "rows": [
+    {
+      "accepted_tx_mbps": 0.6397226313678753,
+      "family": "step",
+      "goodput_mbps": 0.6397226313678753,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6397626412747718,
+      "seed": 173,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.6397913278765257,
+      "family": "step",
+      "goodput_mbps": 0.6397913278765257,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6398510657592449,
+      "seed": 173,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.6619643377085825,
+      "family": "step",
+      "goodput_mbps": 0.6619643377085825,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6618403605188742,
+      "seed": 173,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 1.0664027421895432,
+      "family": "step",
+      "goodput_mbps": 0.9953092260435736,
+      "planned_overload": true,
+      "scheduled_mbps": 1.421827530156764,
+      "seed": 173,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.9024190557905234,
+      "family": "step",
+      "goodput_mbps": 0.9022510850031628,
+      "planned_overload": true,
+      "scheduled_mbps": 1.424937289765237,
+      "seed": 173,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.9309121825646538,
+      "family": "step",
+      "goodput_mbps": 0.9323522323486143,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3965440148914934,
+      "seed": 173,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 0.9172929558438473,
+      "family": "step",
+      "goodput_mbps": 0.9165489453354444,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4114208572702942,
+      "seed": 173,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.9218316894480193,
+      "family": "step",
+      "goodput_mbps": 0.9232475538096325,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3827142748804697,
+      "seed": 173,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.9188921464875704,
+      "family": "step",
+      "goodput_mbps": 0.9173325875152561,
+      "planned_overload": true,
+      "scheduled_mbps": 1.414040552834067,
+      "seed": 173,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 0.9204786649530025,
+      "family": "step",
+      "goodput_mbps": 0.9204066343821476,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4157462311657012,
+      "seed": 173,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.9118076483959948,
+      "family": "step",
+      "goodput_mbps": 0.9124315332050238,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4030422805084077,
+      "seed": 173,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.9134684724803818,
+      "family": "step",
+      "goodput_mbps": 0.9367947153060658,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4049786496767633,
+      "seed": 173,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.6411490779987687,
+      "family": "step",
+      "goodput_mbps": 0.6411490779987687,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6414507613010185,
+      "seed": 179,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.6580504272141315,
+      "family": "step",
+      "goodput_mbps": 0.6580504272141315,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6580952465382055,
+      "seed": 179,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.6354518712986084,
+      "family": "step",
+      "goodput_mbps": 0.6354518712986084,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6354054946295038,
+      "seed": 179,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 1.0570606681172445,
+      "family": "step",
+      "goodput_mbps": 0.9865899569094283,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4092844380416818,
+      "seed": 179,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.941281172405878,
+      "family": "step",
+      "goodput_mbps": 0.9428650397649022,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3778350060071038,
+      "seed": 179,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.9188916011708549,
+      "family": "step",
+      "goodput_mbps": 0.9188675966880657,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3783083045687696,
+      "seed": 179,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 0.9468369902022591,
+      "family": "step",
+      "goodput_mbps": 0.9464530303525568,
+      "planned_overload": true,
+      "scheduled_mbps": 1.385863612406937,
+      "seed": 179,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.9231131756685448,
+      "family": "step",
+      "goodput_mbps": 0.9231611711542814,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3848335861779955,
+      "seed": 179,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.9189205801434667,
+      "family": "step",
+      "goodput_mbps": 0.9174804538587962,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4138074349312373,
+      "seed": 179,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 0.9149403742898111,
+      "family": "step",
+      "goodput_mbps": 0.9387124372206453,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4071777405446153,
+      "seed": 179,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.9276115626748663,
+      "family": "step",
+      "goodput_mbps": 0.904949234656085,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3915128068711102,
+      "seed": 179,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.9184737301423315,
+      "family": "step",
+      "goodput_mbps": 0.9173937939525216,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4132456458374345,
+      "seed": 179,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.6397392832866102,
+      "family": "steady",
+      "goodput_mbps": 0.6397392832866102,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6397626412747718,
+      "seed": 173,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.639693381637583,
+      "family": "steady",
+      "goodput_mbps": 0.639693381637583,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6398510657592449,
+      "seed": 173,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.6620014288235927,
+      "family": "steady",
+      "goodput_mbps": 0.6620014288235927,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6618403605188742,
+      "seed": 173,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 0.6720146848648386,
+      "family": "steady",
+      "goodput_mbps": 0.6720146848648386,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6718275301567641,
+      "seed": 173,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.6749195151885223,
+      "family": "steady",
+      "goodput_mbps": 0.6749195151885223,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6749372897652371,
+      "seed": 173,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.6464846916435839,
+      "family": "steady",
+      "goodput_mbps": 0.6464846916435839,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6465440148914935,
+      "seed": 173,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 0.6615589509451821,
+      "family": "steady",
+      "goodput_mbps": 0.6615589509451821,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6614208572702943,
+      "seed": 173,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.6325883276549307,
+      "family": "steady",
+      "goodput_mbps": 0.6325883276549307,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6327142748804698,
+      "seed": 173,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.6638232066012194,
+      "family": "steady",
+      "goodput_mbps": 0.6638232066012194,
+      "planned_overload": false,
+      "scheduled_mbps": 0.664040552834067,
+      "seed": 173,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 0.6324932644230173,
+      "family": "steady",
+      "goodput_mbps": 0.6324932644230173,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6657462311657012,
+      "seed": 173,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.6530957427512128,
+      "family": "steady",
+      "goodput_mbps": 0.6530957427512128,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6530422805084078,
+      "seed": 173,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.6553317767348977,
+      "family": "steady",
+      "goodput_mbps": 0.6553317767348977,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6549786496767636,
+      "seed": 173,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.6411571562131265,
+      "family": "steady",
+      "goodput_mbps": 0.6411571562131265,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6414507613010185,
+      "seed": 179,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.6581097274746565,
+      "family": "steady",
+      "goodput_mbps": 0.6581097274746565,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6580952465382055,
+      "seed": 179,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.6354092729445532,
+      "family": "steady",
+      "goodput_mbps": 0.6354092729445532,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6354054946295038,
+      "seed": 179,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 0.6596042004539084,
+      "family": "steady",
+      "goodput_mbps": 0.6596042004539084,
+      "planned_overload": false,
+      "scheduled_mbps": 0.659284438041682,
+      "seed": 179,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.627893315677599,
+      "family": "steady",
+      "goodput_mbps": 0.627893315677599,
+      "planned_overload": false,
+      "scheduled_mbps": 0.627835006007104,
+      "seed": 179,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.6281953760900894,
+      "family": "steady",
+      "goodput_mbps": 0.6281953760900894,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6283083045687696,
+      "seed": 179,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 0.6360560893330426,
+      "family": "steady",
+      "goodput_mbps": 0.6360560893330426,
+      "planned_overload": false,
+      "scheduled_mbps": 0.635863612406937,
+      "seed": 179,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.6349992889264431,
+      "family": "steady",
+      "goodput_mbps": 0.6349992889264431,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6348335861779957,
+      "seed": 179,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.6639619432495568,
+      "family": "steady",
+      "goodput_mbps": 0.6639619432495568,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6638074349312373,
+      "seed": 179,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 0.6570356497625508,
+      "family": "steady",
+      "goodput_mbps": 0.6570356497625508,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6571777405446153,
+      "seed": 179,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.6412888645375896,
+      "family": "steady",
+      "goodput_mbps": 0.6412888645375896,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6415128068711105,
+      "seed": 179,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.6301142961949937,
+      "family": "steady",
+      "goodput_mbps": 0.6301142961949937,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6632456458374345,
+      "seed": 179,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.6396231946002319,
+      "family": "bursts",
+      "goodput_mbps": 0.6396231946002319,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6397626412747718,
+      "seed": 173,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.6398422048956157,
+      "family": "bursts",
+      "goodput_mbps": 0.6398422048956157,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6398510657592449,
+      "seed": 173,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.661955900517741,
+      "family": "bursts",
+      "goodput_mbps": 0.661955900517741,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6618403605188742,
+      "seed": 173,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 1.066364472729912,
+      "family": "bursts",
+      "goodput_mbps": 0.9952735078812511,
+      "planned_overload": true,
+      "scheduled_mbps": 1.421827530156764,
+      "seed": 173,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.9027042471916119,
+      "family": "bursts",
+      "goodput_mbps": 0.9025362233204607,
+      "planned_overload": true,
+      "scheduled_mbps": 1.424937289765237,
+      "seed": 173,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.9306492966917227,
+      "family": "bursts",
+      "goodput_mbps": 0.9320889398113903,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3965440148914934,
+      "seed": 173,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 0.6394833252537011,
+      "family": "bursts",
+      "goodput_mbps": 0.7093092971706354,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6614208572702943,
+      "seed": 173,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.6326130791511761,
+      "family": "bursts",
+      "goodput_mbps": 0.6326130791511761,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6327142748804698,
+      "seed": 173,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.6638338668388614,
+      "family": "bursts",
+      "goodput_mbps": 0.6638338668388614,
+      "planned_overload": false,
+      "scheduled_mbps": 0.664040552834067,
+      "seed": 173,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 1.0615317237622772,
+      "family": "bursts",
+      "goodput_mbps": 0.9907629421781254,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4157462311657012,
+      "seed": 173,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.9121026947134161,
+      "family": "bursts",
+      "goodput_mbps": 0.9127267814015538,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4030422805084077,
+      "seed": 173,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.9133241880105263,
+      "family": "bursts",
+      "goodput_mbps": 0.913228177478555,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4049786496767633,
+      "seed": 173,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.6412056047592228,
+      "family": "bursts",
+      "goodput_mbps": 0.6412056047592228,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6414507613010185,
+      "seed": 179,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.6580225296298313,
+      "family": "bursts",
+      "goodput_mbps": 0.6580225296298313,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6580952465382055,
+      "seed": 179,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.6355342448636251,
+      "family": "bursts",
+      "goodput_mbps": 0.6355342448636251,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6354054946295038,
+      "seed": 179,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 1.0568812443802806,
+      "family": "bursts",
+      "goodput_mbps": 0.9864224947549287,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4092844380416818,
+      "seed": 179,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.9414882966123055,
+      "family": "bursts",
+      "goodput_mbps": 0.9430725124934072,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3778350060071038,
+      "seed": 179,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.9186799455535141,
+      "family": "bursts",
+      "goodput_mbps": 0.9186559465998685,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3783083045687696,
+      "seed": 179,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 0.6254189057875364,
+      "family": "bursts",
+      "goodput_mbps": 0.6943249887494559,
+      "planned_overload": false,
+      "scheduled_mbps": 0.635863612406937,
+      "seed": 179,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.6349758344225632,
+      "family": "bursts",
+      "goodput_mbps": 0.6349758344225632,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6348335861779957,
+      "seed": 179,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.6637987442437502,
+      "family": "bursts",
+      "goodput_mbps": 0.6637987442437502,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6638074349312373,
+      "seed": 179,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 1.0555999184124687,
+      "family": "bursts",
+      "goodput_mbps": 0.9852265905183042,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4071777405446153,
+      "seed": 179,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.9277660753546159,
+      "family": "bursts",
+      "goodput_mbps": 0.928558148840819,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3915128068711102,
+      "seed": 179,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.9183934562786837,
+      "family": "bursts",
+      "goodput_mbps": 0.9173136144744263,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4132456458374345,
+      "seed": 179,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.6396067648354243,
+      "family": "trend",
+      "goodput_mbps": 0.6396067648354243,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6397626412747718,
+      "seed": 173,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.7080776881588973,
+      "family": "trend",
+      "goodput_mbps": 0.7080776881588973,
+      "planned_overload": false,
+      "scheduled_mbps": 0.7080328839410631,
+      "seed": 173,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.7982397246098444,
+      "family": "trend",
+      "goodput_mbps": 0.7982397246098444,
+      "planned_overload": false,
+      "scheduled_mbps": 0.7982039968825105,
+      "seed": 173,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 0.8765045745559604,
+      "family": "trend",
+      "goodput_mbps": 0.8765045745559604,
+      "planned_overload": false,
+      "scheduled_mbps": 0.8763729847022187,
+      "seed": 173,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.9475349160946109,
+      "family": "trend",
+      "goodput_mbps": 0.9475349160946109,
+      "planned_overload": false,
+      "scheduled_mbps": 0.9476645624925099,
+      "seed": 173,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.9710029044143836,
+      "family": "trend",
+      "goodput_mbps": 0.9216298753763641,
+      "planned_overload": false,
+      "scheduled_mbps": 0.9874531058005844,
+      "seed": 173,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 0.891905548095879,
+      "family": "trend",
+      "goodput_mbps": 0.8877539877419618,
+      "planned_overload": true,
+      "scheduled_mbps": 1.0705117663612034,
+      "seed": 173,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.9248619555771779,
+      "family": "trend",
+      "goodput_mbps": 0.9228938237339945,
+      "planned_overload": true,
+      "scheduled_mbps": 1.1099870021531972,
+      "seed": 173,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.9272673149961657,
+      "family": "trend",
+      "goodput_mbps": 0.9222758139216521,
+      "planned_overload": true,
+      "scheduled_mbps": 1.2094950982886123,
+      "seed": 173,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 0.938050156871393,
+      "family": "trend",
+      "goodput_mbps": 0.9345702675805944,
+      "planned_overload": true,
+      "scheduled_mbps": 1.279382594802065,
+      "seed": 173,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.9345888288393717,
+      "family": "trend",
+      "goodput_mbps": 0.9318043139129483,
+      "planned_overload": true,
+      "scheduled_mbps": 1.3348604623265896,
+      "seed": 173,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.913103873879503,
+      "family": "trend",
+      "goodput_mbps": 0.9096003347981014,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4049786496767633,
+      "seed": 173,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.6411161326407344,
+      "family": "trend",
+      "goodput_mbps": 0.6411161326407344,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6414507613010185,
+      "seed": 179,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.7263293704705792,
+      "family": "trend",
+      "goodput_mbps": 0.7263293704705792,
+      "planned_overload": false,
+      "scheduled_mbps": 0.7262770647200237,
+      "seed": 179,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.771839863385438,
+      "family": "trend",
+      "goodput_mbps": 0.771839863385438,
+      "planned_overload": false,
+      "scheduled_mbps": 0.7717691309931402,
+      "seed": 179,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 0.8638892537148594,
+      "family": "trend",
+      "goodput_mbps": 0.8638892537148594,
+      "planned_overload": false,
+      "scheduled_mbps": 0.8638298925871366,
+      "seed": 179,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.9005402119209137,
+      "family": "trend",
+      "goodput_mbps": 0.9005402119209137,
+      "planned_overload": false,
+      "scheduled_mbps": 0.9005622787343767,
+      "seed": 179,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.9690771667874192,
+      "family": "trend",
+      "goodput_mbps": 0.9690771667874192,
+      "planned_overload": false,
+      "scheduled_mbps": 0.9692173954778606,
+      "seed": 179,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 0.9230187716902662,
+      "family": "trend",
+      "goodput_mbps": 0.8707724261228927,
+      "planned_overload": true,
+      "scheduled_mbps": 1.0449545214978462,
+      "seed": 179,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.9083622348330715,
+      "family": "trend",
+      "goodput_mbps": 0.9235398762190857,
+      "planned_overload": true,
+      "scheduled_mbps": 1.112106313450723,
+      "seed": 179,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.9470930833292819,
+      "family": "trend",
+      "goodput_mbps": 0.9237103404089109,
+      "planned_overload": true,
+      "scheduled_mbps": 1.2092619803857827,
+      "seed": 179,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 0.9321764095362287,
+      "family": "trend",
+      "goodput_mbps": 0.9290801424522329,
+      "planned_overload": true,
+      "scheduled_mbps": 1.270814104180979,
+      "seed": 179,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.9263971887270439,
+      "family": "trend",
+      "goodput_mbps": 0.9237810611149592,
+      "planned_overload": true,
+      "scheduled_mbps": 1.323330988689292,
+      "seed": 179,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.9182670633973801,
+      "family": "trend",
+      "goodput_mbps": 0.9137803383541289,
+      "planned_overload": true,
+      "scheduled_mbps": 1.4132456458374345,
+      "seed": 179,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.639446741532885,
+      "family": "flash",
+      "goodput_mbps": 0.639446741532885,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6397626412747718,
+      "seed": 173,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.6401280512209637,
+      "family": "flash",
+      "goodput_mbps": 0.6401280512209637,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6398510657592449,
+      "seed": 173,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.6618535465952481,
+      "family": "flash",
+      "goodput_mbps": 0.6618535465952481,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6618403605188742,
+      "seed": 173,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 0.6720345862612511,
+      "family": "flash",
+      "goodput_mbps": 0.6720345862612511,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6718275301567641,
+      "seed": 173,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.6747755487930313,
+      "family": "flash",
+      "goodput_mbps": 0.6747755487930313,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6749372897652371,
+      "seed": 173,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.6465680161495814,
+      "family": "flash",
+      "goodput_mbps": 0.6465680161495814,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6465440148914935,
+      "seed": 173,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 1.0269597447821663,
+      "family": "flash",
+      "goodput_mbps": 0.9413797660503191,
+      "planned_overload": true,
+      "scheduled_mbps": 1.7114208572702942,
+      "seed": 173,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.9255707967303709,
+      "family": "flash",
+      "goodput_mbps": 0.9269867765314157,
+      "planned_overload": true,
+      "scheduled_mbps": 1.6827142748804698,
+      "seed": 173,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.9426362057799096,
+      "family": "flash",
+      "goodput_mbps": 0.9410763841517511,
+      "planned_overload": true,
+      "scheduled_mbps": 1.714040552834067,
+      "seed": 173,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 0.6436294222004728,
+      "family": "flash",
+      "goodput_mbps": 0.7293416017996284,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6657462311657012,
+      "seed": 173,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.6532928228302015,
+      "family": "flash",
+      "goodput_mbps": 0.6532928228302015,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6530422805084078,
+      "seed": 173,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.644234043565655,
+      "family": "flash",
+      "goodput_mbps": 0.644234043565655,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6549786496767636,
+      "seed": 173,
+      "step": 11
+    },
+    {
+      "accepted_tx_mbps": 0.6410318194021564,
+      "family": "flash",
+      "goodput_mbps": 0.6410318194021564,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6414507613010185,
+      "seed": 179,
+      "step": 0
+    },
+    {
+      "accepted_tx_mbps": 0.6581327210391016,
+      "family": "flash",
+      "goodput_mbps": 0.6581327210391016,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6580952465382055,
+      "seed": 179,
+      "step": 1
+    },
+    {
+      "accepted_tx_mbps": 0.6353505221543676,
+      "family": "flash",
+      "goodput_mbps": 0.6353505221543676,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6354054946295038,
+      "seed": 179,
+      "step": 2
+    },
+    {
+      "accepted_tx_mbps": 0.6597676668853981,
+      "family": "flash",
+      "goodput_mbps": 0.6597676668853981,
+      "planned_overload": false,
+      "scheduled_mbps": 0.659284438041682,
+      "seed": 179,
+      "step": 3
+    },
+    {
+      "accepted_tx_mbps": 0.6278120585945249,
+      "family": "flash",
+      "goodput_mbps": 0.6278120585945249,
+      "planned_overload": false,
+      "scheduled_mbps": 0.627835006007104,
+      "seed": 179,
+      "step": 4
+    },
+    {
+      "accepted_tx_mbps": 0.6284062437303769,
+      "family": "flash",
+      "goodput_mbps": 0.6284062437303769,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6283083045687696,
+      "seed": 179,
+      "step": 5
+    },
+    {
+      "accepted_tx_mbps": 1.0394110683345121,
+      "family": "flash",
+      "goodput_mbps": 0.9551344952263084,
+      "planned_overload": true,
+      "scheduled_mbps": 1.685863612406937,
+      "seed": 179,
+      "step": 6
+    },
+    {
+      "accepted_tx_mbps": 0.9266000746534699,
+      "family": "flash",
+      "goodput_mbps": 0.9266480725853349,
+      "planned_overload": true,
+      "scheduled_mbps": 1.6848335861779955,
+      "seed": 179,
+      "step": 7
+    },
+    {
+      "accepted_tx_mbps": 0.9426212819648744,
+      "family": "flash",
+      "goodput_mbps": 0.9411810661024376,
+      "planned_overload": true,
+      "scheduled_mbps": 1.7138074349312373,
+      "seed": 179,
+      "step": 8
+    },
+    {
+      "accepted_tx_mbps": 0.6242591676095057,
+      "family": "flash",
+      "goodput_mbps": 0.7099385043657217,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6571777405446153,
+      "seed": 179,
+      "step": 9
+    },
+    {
+      "accepted_tx_mbps": 0.6412207204262342,
+      "family": "flash",
+      "goodput_mbps": 0.6412207204262342,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6415128068711105,
+      "seed": 179,
+      "step": 10
+    },
+    {
+      "accepted_tx_mbps": 0.6521957159450205,
+      "family": "flash",
+      "goodput_mbps": 0.6521957159450205,
+      "planned_overload": false,
+      "scheduled_mbps": 0.6632456458374345,
+      "seed": 179,
+      "step": 11
+    }
+  ],
+  "summary": [
+    {
+      "accepted_trigger": {
+        "FN": 0,
+        "FP": 6,
+        "TN": 66,
+        "TP": 48
+      },
+      "completed_trigger": {
+        "FN": 0,
+        "FP": 6,
+        "TN": 66,
+        "TP": 48
+      },
+      "group": "all",
+      "mean_absolute_planned_minus_accepted_mbps": 0.18244166277203439,
+      "mean_absolute_planned_minus_completed_mbps": 0.1894807589354465,
+      "mean_accepted_minus_completed_planned_nonoverload_mbps": -0.0036215353082806353,
+      "mean_accepted_minus_completed_planned_overload_mbps": 0.013750628758538967,
+      "planned_overload_samples": 48,
+      "samples": 120
+    },
+    {
+      "accepted_trigger": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 6,
+        "TP": 18
+      },
+      "completed_trigger": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 6,
+        "TP": 18
+      },
+      "group": "step",
+      "mean_absolute_planned_minus_accepted_mbps": 0.34862922699341836,
+      "mean_absolute_planned_minus_completed_mbps": 0.35352456805435967,
+      "mean_accepted_minus_completed_planned_nonoverload_mbps": 0.0,
+      "mean_accepted_minus_completed_planned_overload_mbps": 0.006527121414588321,
+      "planned_overload_samples": 18,
+      "samples": 24
+    },
+    {
+      "accepted_trigger": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 24,
+        "TP": 0
+      },
+      "completed_trigger": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 24,
+        "TP": 0
+      },
+      "group": "steady",
+      "mean_absolute_planned_minus_accepted_mbps": 0.0028983434073263,
+      "mean_absolute_planned_minus_completed_mbps": 0.0028983434073263,
+      "mean_accepted_minus_completed_planned_nonoverload_mbps": 0.0,
+      "mean_accepted_minus_completed_planned_overload_mbps": null,
+      "planned_overload_samples": 0,
+      "samples": 24
+    },
+    {
+      "accepted_trigger": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 12,
+        "TP": 12
+      },
+      "completed_trigger": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 12,
+        "TP": 12
+      },
+      "group": "bursts",
+      "mean_absolute_planned_minus_accepted_mbps": 0.21968774620240092,
+      "mean_absolute_planned_minus_completed_mbps": 0.23442054860011385,
+      "mean_accepted_minus_completed_planned_nonoverload_mbps": -0.011561004573237813,
+      "mean_accepted_minus_completed_planned_overload_mbps": 0.023301639994853702,
+      "planned_overload_samples": 12,
+      "samples": 24
+    },
+    {
+      "accepted_trigger": {
+        "FN": 0,
+        "FP": 6,
+        "TN": 6,
+        "TP": 12
+      },
+      "completed_trigger": {
+        "FN": 0,
+        "FP": 6,
+        "TN": 6,
+        "TP": 12
+      },
+      "group": "trend",
+      "mean_absolute_planned_minus_accepted_mbps": 0.1548109944722853,
+      "mean_absolute_planned_minus_completed_mbps": 0.1606819416576736,
+      "mean_accepted_minus_completed_planned_nonoverload_mbps": 0.004114419086501629,
+      "mean_accepted_minus_completed_planned_overload_mbps": 0.007627475284274978,
+      "planned_overload_samples": 12,
+      "samples": 24
+    },
+    {
+      "accepted_trigger": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 18,
+        "TP": 6
+      },
+      "completed_trigger": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 18,
+        "TP": 6
+      },
+      "group": "flash",
+      "mean_absolute_planned_minus_accepted_mbps": 0.18618200278474106,
+      "mean_absolute_planned_minus_completed_mbps": 0.19587839295775908,
+      "mean_accepted_minus_completed_planned_nonoverload_mbps": -0.009521750908631752,
+      "mean_accepted_minus_completed_planned_overload_mbps": 0.028565435266289407,
+      "planned_overload_samples": 6,
+      "samples": 24
+    }
+  ],
+  "threshold_mbps": 0.8
+}
