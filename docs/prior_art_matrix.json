@@ -1,7 +1,48 @@
 {
-  "checked_date": "2026-10-10",
+  "checked_date": "2026-10-11",
   "status": "partial primary-source review; no exhaustive novelty claim",
   "papers": [
+    {
+      "key": "deng2017vfwelasticity",
+      "title": "On the Safety and Efficiency of Virtual Firewall Elasticity Control",
+      "authors": ["Juan Deng", "Hongda Li", "Hongxin Hu", "Kuang-Ching Wang", "Gail-Joon Ahn", "Ziming Zhao", "Wonkyu Han"],
+      "year": 2017,
+      "venue": "NDSS",
+      "doi": "10.14722/ndss.2017.23013",
+      "url": "https://cse.buffalo.edu/~hongxinh/papers/NDSS2017.pdf",
+      "review_scope": "author-hosted full-text abstract, introduction, controller workflow and migration/scaling sections",
+      "overlap": "Virtual firewall controller for safe elastic scale-out/in, coordinated rule/state movement, correct flow update, buffer cost and resource optimization.",
+      "evaluation": "ClickOS/NFV-SDN prototype with CloudLab evaluation as stated in the paper.",
+      "project_difference": "Our candidate distinction is the exact uncertainty/carbon/risk decision rule; our two-node proxy is weaker on rule dependencies, buffering, distributed forwarding and safe scaling.",
+      "remaining_review": "Detailed method/metric comparison and feasibility of direct baseline reproduction; citation chain."
+    },
+    {
+      "key": "yuan2020faultplacement",
+      "title": "Fault tolerant placement of stateful VNFs and dynamic fault recovery in cloud networks",
+      "authors": ["Guochang Yuan", "Zichuan Xu", "Binxu Yang", "Weifa Liang", "Wei Koong Chai", "Daphné Tuncer", "Alex Galis", "George Pavlou", "Guowei Wu"],
+      "year": 2020,
+      "venue": "Computer Networks 166, article 106953",
+      "doi": "10.1016/j.comnet.2019.106953",
+      "url": "https://discovery.ucl.ac.uk/10084175/1/nfvreplication_MR-R3.pdf",
+      "review_scope": "author manuscript abstract, introduction, contributions and conclusion; publisher metadata",
+      "overlap": "Joint active/standby stateful VNF placement, request routing and state-transfer paths under resource constraints.",
+      "evaluation": "Simulation and a fault-recovery testbed with hardware and virtual switches, as reported in the manuscript.",
+      "project_difference": "General placement/routing/state-transfer and recovery integration already exists; exact uncertainty/carbon/risk choices need full-text comparison.",
+      "remaining_review": "Detailed objective, constraint, protocol and metric comparison; citation chain."
+    },
+    {
+      "key": "xing2020p4sync",
+      "title": "Secure State Migration in the Data Plane",
+      "authors": ["Jiarong Xing", "Ang Chen", "T.S. Eugene Ng"],
+      "year": 2020,
+      "venue": "ACM SIGCOMM Workshop on Secure Programmable Network Infrastructure (SPIN)",
+      "url": "https://www.cs.rice.edu/~eugeneng/papers/SPIN20.pdf",
+      "review_scope": "author-hosted full-text abstract and introduction",
+      "overlap": "Authenticated state movement in a programmable data plane using a protocol designed for integrity and sender authenticity.",
+      "evaluation": "P4 bmv2 prototype and initial overhead evaluation reported in the paper.",
+      "project_difference": "Our policy hash-equivalence check is not authenticated state transfer and does not make P4Sync's guarantee.",
+      "remaining_review": "Full protocol, threat and evaluation comparison."
+    },
     {
       "key": "gemberjacobson2014opennf",
       "title": "OpenNF: Enabling Innovation in Network Function Control",
