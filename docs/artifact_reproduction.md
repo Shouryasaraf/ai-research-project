@@ -1,5 +1,7 @@
 # Reviewer reproduction guide
 
+The current same-host local archive snapshot is `artifacts/raw/research-vfw-lab-artifact-20261010-v4.zip` (SHA-256 `773362de3921594217100536d2fcd5721ae49e7b16ca844311dfd509bf8ad44a`). It contains 329 allowlisted files, including the finite-placement audit code, tests and tracked result plus 24 generated lab PCAPs. It excludes original/derived MAWI traffic and NESO responses. A fresh extraction without Git passed 133 non-privileged tests on the same host. This is package QA, not independent-host reproduction or permission to redistribute the archive.
+
 Run from the repository root. Python 3.11+ and the Python standard library suffice for the non-privileged tests. Raw outputs are intentionally ignored by Git; retain them separately when sharing an artifact. No software license is granted by this guide.
 
 ## Fast checks

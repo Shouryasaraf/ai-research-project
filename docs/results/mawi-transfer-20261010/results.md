@@ -10,6 +10,8 @@ The source is the [official 2005-01-01 14:00 JST MAWI capture](https://mawi.wide
 
 The chronological split was 540 training, 180 calibration, 181 held-out seconds. No capacity normalization was asserted for forecasting. All numbers below are from the immutable local `forecast.json` and `decisions.json`; the assumed capacity of 15.38236 Mbps is the training-only 90th percentile, **not** measured vFW capacity.
 
+The post-hoc [finite-placement audit](finite_placement_audit.json) also checks the overcounting consequence of resetting placement every second. For fixed EWMA, 180 full-policy COMMIT recommendations on the 2005 segment have the same `node-green` target: after the first recommendation at test index 0, 179 are to that already-selected target under a one-way placement assumption. Reactive has 133 recommendations, of which 132 are later same-target repeats. On the 2000 segment, the full policy has no COMMIT; reactive has 109, of which 108 follow its first same-target recommendation. Thus these recommendation counts cannot be used as migration frequency, cumulative cost, or evidence of anti-thrashing. The audit neither executes the first move nor reruns either policy after a hypothetical move, and cannot estimate return moves or node-location-dependent costs.
+
 | Forecaster | MAE (Mbps) | 90% interval coverage | Mean interval width (Mbps) | Full COMMIT / 181 | Reactive COMMIT / 181 |
 |---|---:|---:|---:|---:|---:|
 | Rolling mean | 0.612957 | 0.900552 | 2.488768 | 181 | 133 |

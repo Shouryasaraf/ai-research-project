@@ -1,5 +1,11 @@
 # Verification Log
 
+## 2026-10-10 — Finite-placement offline audit
+
+Added `vfw_research.finite_placement_audit` with four focused tests. It validates the two immutable MAWI decision records through the existing action-episode consistency checks and exposes same-target repeat recommendations under a one-way placement assumption. Fixed EWMA 2005 full-policy decisions show 180 COMMIT recommendations, with 179 later recommendations to the same target after index 0; reactive shows 133 and 132, respectively. The earlier 2000 segment has zero full-policy COMMIT and 109 reactive recommendations, 108 later to the same target. No policy was rerun after a hypothetical move, no migration was executed, and no cumulative costs are inferred. Tracked output: `results/mawi-transfer-20261010/finite_placement_audit.json`.
+
+Full regression passed 133 tests on Windows and Ubuntu WSL2; no project namespaces remained. A new ignored local allowlisted artifact snapshot `research-vfw-lab-artifact-20261010-v4.zip` contains 329 files, 24 generated lab PCAPs, and no original/derived MAWI or NESO traffic data; SHA-256 `773362de3921594217100536d2fcd5721ae49e7b16ca844311dfd509bf8ad44a`. Fresh same-host extraction without Git passed 133 tests. This does not satisfy independent-host or confirmatory evidence gates.
+
 ## 2026-10-10 — Combined captured-lab artifact QA
 
 - Built ignored local `artifacts/raw/research-vfw-lab-artifact-20261010-v3.zip`: 326 allowlisted files, 3,676,506 compressed bytes, SHA-256 `a1f252a2e420e19d213672dc80f847430ac690f9aefff884b6b2ab0089d7812c`. Its manifest lists 24 generated lab PCAPs and zero original/derived MAWI or NESO traffic files.
