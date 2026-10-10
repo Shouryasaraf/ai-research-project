@@ -19,9 +19,11 @@ The complete JSON configuration is hashed with canonical key ordering. Every run
 
 ## External data
 
-The first historical [MAWI samplepoint-B capture dated 2000-12-28](https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2000/200012281400.html) was incorporated for offline traffic forecasting and controller decisions, then for bounded rate-derived lab payloads. No external carbon, vulnerability, anomaly, or attack dataset has been incorporated. Network downloads are not required for unit tests.
+The first historical [MAWI samplepoint-B capture dated 2000-12-28](https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2000/200012281400.html) was incorporated for offline traffic forecasting and controller decisions, then for bounded rate-derived lab payloads. A later, separate [NESO regional carbon forecast replay](results/neso-carbon-replay-20261010/results.md) supplies externally sourced *forecast intensity*, not measured vFW power or emissions. No external vulnerability, anomaly, or attack dataset has been incorporated. Network downloads are not required for unit tests.
 
 A separate [MAWI samplepoint-B capture dated 2005-01-01](https://mawi.wide.ad.jp/mawi/samplepoint-B/2005/200501011400.html) was later converted into 901 one-second rates and used for another offline decision evaluation and a six-trial captured Linux pilot with scaled/capped payloads. It is a second historical **time segment from the same samplepoint**, not an independent site or recent workload. The publisher's packet and original-byte totals match the local header-only conversion; hashes, metrics, and limitations are in [the transfer report](results/mawi-transfer-20261010/results.md). The original capture, derived CSV, and sidecar remain Git-ignored and are not redistributed. This does not supply attack, carbon, or actual vFW migration labels.
+
+The NESO converter in `vfw_research.neso_carbon` imports only 48 aligned half-hourly regional forecasts per selected UTC day, with CC BY 4.0 attribution and publisher-response/derived-CSV hashes in ignored sidecars. The replay maps those regions to **hypothetical** scenario candidates and changes only their carbon-intensity attributes. It does not assert that WSL namespaces are hosted in Great Britain or that published forecast intensity is realized emissions.
 
 The offline CSV adapter in `src/vfw_research/trace_adapter.py` enforces a minimal sidecar and strict UTC/unit/checksum/time-series validation; see `external_trace_contract.md`. It does not certify licensing or prove that any real trace has been evaluated.
 

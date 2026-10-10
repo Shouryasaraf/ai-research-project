@@ -54,6 +54,8 @@ A later captured three-seed full-versus-reactive development batch recorded a ro
 
 A post-hoc timing diagnostic finds the last successful same-flow response before each recorded transition and the first after it. These brackets include pacing and synchronization, so they are not outage estimates. Their policy ordering reverses between the synthetic step and second historical rate-derived batches; see `results/live-captured-pair-gap-20261010-v3/` and `results/live-mawi2005-captured-pair-gap-20261010-v2/`. Exact interruption remains unmeasured.
 
+An additional offline carbon-input check imports two aligned historical half-hourly regional **forecasts** from NESO's CC BY 4.0 Carbon Intensity API. When mapped to hypothetical candidates with all other inputs held modeled and fixed, full and carbon-unaware placement prefer different nodes in every slot. This demonstrates implementation sensitivity to a sourced carbon signal but does not estimate real power use or emissions. The provenance and decision boundary are in `results/neso-carbon-replay-20261010/`.
+
 ## 6. Validity, ethics and reproducibility
 
 Short single-host experiments cannot represent production failure domains or multi-host timing. The synchronous client can censor offered demand under congestion. RTT includes only completed requests; failures must be reported alongside it. Local queue drops, request timeouts and end-to-end packet loss are different metrics. In-flight updates, complete TCP sequence/window consistency, packet-level disruption and independent reproduction remain open.

@@ -1,0 +1,35 @@
+{
+  "candidate_counts": {
+    "carbon_unaware": {
+      "node-low-latency": 48
+    },
+    "full_proposed_controller": {
+      "node-green": 48
+    }
+  },
+  "carbon_csv_sha256": {
+    "london": "35a46ff551d08420e9eace129e6224151db9ecd3247ba9ad8ebcce9b16b15368",
+    "north_scotland": "3e674bdfe598c276b68ea849b6d003d9691229543796bd890add91432cd3f241"
+  },
+  "carbon_signal_type": "historical API regional forecast, not metered vFW power or realized grid intensity",
+  "carbon_sources": {
+    "london": "https://api.carbonintensity.org.uk/regional/intensity/2025-01-01T00:00Z/2025-01-02T00:00Z/regionid/13",
+    "north_scotland": "https://api.carbonintensity.org.uk/regional/intensity/2025-01-01T00:00Z/2025-01-02T00:00Z/regionid/1"
+  },
+  "different_candidate_choices": 48,
+  "evidence_class": "offline placement preference with externally sourced regional carbon forecasts; no deployment or emissions measurement",
+  "hard_prohibited_choices": 0,
+  "modeled_inputs": [
+    "node capacity",
+    "node load",
+    "CPU/memory headroom",
+    "latency",
+    "risk",
+    "benefit terms",
+    "traffic forecast",
+    "source capacity"
+  ],
+  "opportunities": 48,
+  "raw_records_sha256": "d7e4e2c6f6edb587b302c7170bbda1feeec725ef691e2f86e02fc805634c04e2",
+  "scenario_sha256": "11b4032655dd6eea209f47b0a5c3261562d4ca9f0f5e74f8ea2ade4915c3383f"
+}

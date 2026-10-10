@@ -1,5 +1,16 @@
 # Verification Log
 
+## 2026-10-10 — Externally sourced carbon forecast replay
+
+- Fetched two public NESO regional API responses (North Scotland region 1, London region 13) for 2025-01-01 UTC under the published CC BY 4.0 terms. Both 49-slot API responses include one interval ending at day start; `neso_carbon` retained exactly 48 consecutive half-hour slots inside the day and recorded publisher/derived hashes in ignored provenance sidecars.
+- `carbon_signal_replay` paired full and carbon-unaware placement decisions with the same modeled scenario inputs and changed only the two candidate carbon intensities. Full chose the hypothetical North Scotland node 48/48 times; carbon-unaware chose London 48/48; the prohibited node was never chosen. Both policies recommended COMMIT in all slots. The raw replay SHA-256 is `d7e4e2c6f6edb587b302c7170bbda1feeec725ef691e2f86e02fc805634c04e2`; details and source attribution are in `docs/results/neso-carbon-replay-20261010/results.md`.
+- This is sourced **forecast** input plus modeled placement, not online information availability, measured node power, actual emissions, security incidents or physical node deployment. Windows and Linux each passed 128 tests, and `ip netns list` was empty after Linux verification.
+
+## 2026-10-10 — Fresh-extraction artifact check
+
+- Built `artifacts/raw/research-mawi2005-lab-artifact-20261010-v2.zip`: 251 allowlisted files, 2,007,472 compressed bytes, SHA-256 `b1cc1782bb2c7deef8991dd12298b09f7d075c93039e4653a82a999be8d8ff93`. It includes 12 attested generated lab endpoint captures but no external original MAWI capture, derived CSV, or sidecar.
+- Extracted it into a new local directory with no Git checkout, passed 124 Windows tests, then regenerated the second-MAWI live summary from the packaged batch. Regenerated and tracked `summary.json` SHA-256 values both equal `e145f9fa03e39c80d076475cc67dfb28f4517aefe502d95ad527056ad869d9f9`. This is same-host artifact QA, not independent-host confirmation.
+
 ## 2026-10-10 — Post-hoc transition response-gap analysis
 
 - Added a same-flow success-gap bracket around recorded route-commit transition windows to `live_analysis`; the exact-outage field remains null. A unit test checks the bracket and its explicit pacing caveat.
