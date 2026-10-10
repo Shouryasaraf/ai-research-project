@@ -4,6 +4,8 @@ This repository is a software-only, publication-oriented NFV/SDN research protot
 
 ## Current verified status
 
+**2026-10-11 evidence boundary:** The [working manuscript](docs/manuscript_draft.md) and [publication claim ledger](docs/publication_claim_ledger.md) now include the preselected three-member Cyber4OT PLC-port comparison, the separate post-result liveness-guard development/check, socket-accepted-rate diagnostic, and a [direct safe-vFW prior-art comparator](docs/direct_vfw_comparator.md). The original full controller stalled at the uncertainty gate in all 15 PLC-port runs and underperformed reactive control on mean goodput in each member. The guard recovered a commit on one inspected development member but did not beat reactive mean goodput; its distinct-file check never exercised the escape. These are mixed, single-host results, **not** a publication-ready demonstration of superiority, complete state consistency, measured emissions or attack reduction. An [independent-host gate](docs/independent_host_gate.md) documents what a second machine must verify. Older dated entries below are historical snapshots; their test counts and pending-work descriptions are not the current acceptance status.
+
 **2026-10-10 independent-source development transfer:** a [precommitted protocol](docs/cyber4ot_transfer_protocol.md) selected normal-traffic metadata from the public 2024 Cyber4OT simulated industrial-network archive, a different publisher from MAWI. A strict PCAPNG converter yielded 906 one-second rates; ten captured WSL2 trials (five full/reactive pairs) completed. The full policy's mean goodput was only 0.001408 Mbps higher, with a descriptive paired interval spanning zero; both policies had some observed reverse packet-instance deficits. See the [complete transfer report](docs/results/cyber4ot-transfer-20261010/results.md). This is rate-derived generated traffic on the same host, not attack-packet replay, independent-host confirmation or proof of superiority. Windows and Linux each pass 137 tests.
 
 **2026-10-10 TCP wire diagnostic:** reanalysis of 12 validated captured migration trials found no sender-side RST at either endpoint, but did find repeated payload-sequence instances in every trial. See the [method and two reports](docs/tcp_wire_diagnostic.md). This adds bounded wire-visible continuity evidence; internal full TCP-state equivalence, exact outage, and general losslessness remain unverified.
@@ -52,7 +54,7 @@ The isolated route lab and sustained controller pilot show bounded established T
 6. Adaptive Migration-Benefit Threshold
 7. Security-Invariant Migration and Fallback Controller
 
-Functions 2, 4, 5, 6, and 7 are proposed research contributions pending prior-art review and experimental validation.
+Functions 2, 4, 5, 6, and 7 are research hypotheses and candidate integration points, **not five established novelties**. Prior work directly covers safe vFW elasticity and state movement; the remaining claim, if supported, must be narrower and evidence-backed. See the [prior-art comparator](docs/direct_vfw_comparator.md) and [claim ledger](docs/publication_claim_ledger.md).
 
 ## Run the deterministic smoke scenario
 
@@ -70,7 +72,7 @@ $env:PYTHONPATH = "src"
 python -m unittest discover -s tests -v
 ```
 
-On this Codex host, `python` was not on the regular PATH. The bundled runtime used during development was:
+On an earlier Codex host, `python` was not on the regular PATH. The bundled runtime used during that development stage was:
 
 ```text
 C:\Users\SHOURYA\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
