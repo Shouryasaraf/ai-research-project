@@ -19,7 +19,9 @@ The complete JSON configuration is hashed with canonical key ordering. Every run
 
 ## External data
 
-One historical [MAWI samplepoint-B capture dated 2000-12-28](https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2000/200012281400.html) has been incorporated as an **offline traffic-forecast pilot only**. No external carbon, vulnerability, anomaly, or attack dataset has been incorporated. Network downloads are not required for unit tests.
+The first historical [MAWI samplepoint-B capture dated 2000-12-28](https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2000/200012281400.html) was incorporated for offline traffic forecasting and controller decisions, then for bounded rate-derived lab payloads. No external carbon, vulnerability, anomaly, or attack dataset has been incorporated. Network downloads are not required for unit tests.
+
+A separate [MAWI samplepoint-B capture dated 2005-01-01](https://mawi.wide.ad.jp/mawi/samplepoint-B/2005/200501011400.html) was later converted into 901 one-second rates and used for another offline decision evaluation and a six-trial captured Linux pilot with scaled/capped payloads. It is a second historical **time segment from the same samplepoint**, not an independent site or recent workload. The publisher's packet and original-byte totals match the local header-only conversion; hashes, metrics, and limitations are in [the transfer report](results/mawi-transfer-20261010/results.md). The original capture, derived CSV, and sidecar remain Git-ignored and are not redistributed. This does not supply attack, carbon, or actual vFW migration labels.
 
 The offline CSV adapter in `src/vfw_research/trace_adapter.py` enforces a minimal sidecar and strict UTC/unit/checksum/time-series validation; see `external_trace_contract.md`. It does not certify licensing or prove that any real trace has been evaluated.
 

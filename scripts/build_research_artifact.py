@@ -39,9 +39,15 @@ def collect(root: Path, evidence: list[Path], include_lab_captures: bool = False
                 observation = record.get("packet_observation")
                 if not observation:
                     continue
+                source = record.get("source", {})
+                scaled_trace = (source.get("kind") == "scaled external trace"
+                                and isinstance(source.get("csv_sha256"), str)
+                                and len(source["csv_sha256"]) == 64
+                                and type(source.get("scale")) in (int, float)
+                                and 0 < source["scale"] <= 1)
                 isolated_live = (record.get("evidence_class") ==
                     "single-host namespace live pilot; modeled carbon/risk; coarse TCP state copy"
-                    and record.get("source", {}).get("kind") == "seeded synthetic demand"
+                    and (source.get("kind") == "seeded synthetic demand" or scaled_trace)
                     and record.get("status") == "completed")
                 if record.get("scope") not in ATTESTED_CAPTURE_SCOPES and not isolated_live:
                     raise ValueError("capture is not attested as an isolated synthetic lab")

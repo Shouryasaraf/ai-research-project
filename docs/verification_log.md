@@ -1,5 +1,12 @@
 # Verification Log
 
+## 2026-10-10 — Second historical MAWI workload transfer
+
+- Downloaded the research-only 2005-01-01 samplepoint-B capture to ignored local storage; compressed size 86,166,098 bytes, SHA-256 `894b23c03a8ee9166298bb83ff9bc7076b500704b15d9c54ed8928ad6e849a20`. Header-only conversion read 3,103,414 packets and 1,562,599,468 original bytes, matching the official publisher page; derived CSV SHA-256 `891910016d63705c1e34c6207de9fc30f67c0b27b11d9e0ece94665a79c58179`.
+- Offline fixed-EWMA forecast on the 181-second held-out segment: MAE 0.548757 Mbps, interval coverage 0.917127, mean width 2.222188 Mbps. All models and decision results, including almost-all-COMMIT full-policy behavior, are in `docs/results/mawi-transfer-20261010/results.md`.
+- After a written live protocol, six paired, captured trace-derived Linux trials completed. The generated `docs/results/live-mawi2005-captured-pair-20261010-v1/` report passed source-snapshot, raw record, capture-hash and packet-matching checks; `ip netns list` was empty. Full goodput was slightly lower than reactive, and each policy had 15 missing reverse packet instances per trial. This is scaled/capped generated traffic, not direct MAWI packet replay or an independent site.
+- A separate allowlisted local archive, `artifacts/raw/research-mawi2005-lab-artifact-20261010.zip`, contains code/docs and the attested generated **lab** captures/records, not the external MAWI capture or derived CSV. It has 241 files, 1,989,630 compressed bytes, SHA-256 `afd5424c7319c008e1ca10b9888fa98cd4b5b1ca6c915972da754108b1b0cb8c`. Redistribution still requires an owner license/terms decision.
+
 ## 2026-10-10 — Multi-candidate modeled placement audit
 
 - The regenerated `sensitivity-20261010-placement-v3` grid evaluated 243 paired synthetic opportunities across nine policies (2,187 decisions), with zero hard constraint violations. The generated summary and raw hash are in `docs/results/sensitivity-20261010-placement-v3/`.

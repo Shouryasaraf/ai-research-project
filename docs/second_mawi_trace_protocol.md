@@ -1,0 +1,12 @@
+# Second MAWI workload: frozen development protocol
+
+Written on 2026-10-10 after obtaining, converting, **and inspecting the offline forecast and controller results**, but before the paired live trials. The conversion was checked against the publisher's 3,103,414 packet and 1,562,599,468 original-byte totals. The source is MAWI samplepoint-B 2005-01-01 14:00 JST, a separate date from the previously used 2000-12-28 capture at the same sampling point. It is historical, holiday traffic, not an independent network/site or a modern vFW deployment.
+
+This is an exploratory transfer check, **not** a confirmatory comparison: the algorithms, synthetic node inputs, and earlier development trace have already been examined. Report all prespecified outputs, including adverse results, without retuning on this trace.
+
+1. Preserve the already-run offline outputs from the existing chronological 60/20/20 split and one-second horizon. Report all three existing forecasters' MAE, coverage, and interval width; do not select a model after viewing results.
+2. Preserve the already-run controller outputs for all existing policies at each held-out opportunity with the existing synthetic-small scenario, ready/synchronized modeled target, and training-only 90th-percentile hypothetical source capacity. Report COMMIT and WAIT counts and post-hoc same-step capacity exceedances. Counts are decision propensity, not realized migration benefit.
+3. Run a separate six-trial, paired Linux namespace development pilot on the first held-out trace-derived rates: seeds 47, 53, 59; full proposed and reactive threshold; three persistent TCP echo flows, 12 steps, packet capture enabled. Preserve source snapshot and every outcome. This scales and caps payloads; it does not replay MAWI packets or full rates.
+4. Validate captures, source snapshot, and records with the existing analysis pipeline. Report goodput, failures, route commits and packet-instance deficits in both directions, including negative results. Do not interpret missing observed packet instances as a statistically estimated packet-loss rate. Exact service downtime and physical carbon/security outcomes remain unmeasured.
+
+The original MAWI capture and derived CSV/sidecar remain Git-ignored under `artifacts/raw/mawi-20050101-v1/`; the original capture is not redistributed. The official [capture summary](https://mawi.wide.ad.jp/mawi/samplepoint-B/2005/200501011400.html) and [research/privacy terms](https://mawi.wide.ad.jp/mawi/guideline.txt) are the source and usage references.

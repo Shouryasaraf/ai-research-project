@@ -32,6 +32,16 @@ class ArtifactTests(unittest.TestCase):
                                                                 for node in ("client", "server")}}}
             (trial / "record.json").write_text(json.dumps(record))
             self.assertEqual(sum(p.suffix == ".pcap" for p in artifact.collect(root, [trial], True)), 2)
+            record["source"] = {"kind": "scaled external trace", "csv_sha256": "a" * 64,
+                                "scale": 0.01}
+            (trial / "record.json").write_text(json.dumps(record))
+            self.assertEqual(sum(p.suffix == ".pcap" for p in artifact.collect(root, [trial], True)), 2)
+            record["source"]["scale"] = 2
+            (trial / "record.json").write_text(json.dumps(record))
+            with self.assertRaisesRegex(ValueError, "attested"):
+                artifact.collect(root, [trial], True)
+            record["source"]["scale"] = 0.01
+            (trial / "record.json").write_text(json.dumps(record))
             (trial / "client.pcap").write_bytes(b"altered")
             with self.assertRaisesRegex(ValueError, "hash"):
                 artifact.collect(root, [trial], True)
