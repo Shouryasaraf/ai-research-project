@@ -88,6 +88,11 @@ class LivenessGuardTests(unittest.TestCase):
         suppressed = suppress_after_route(commit)
         self.assertEqual(suppressed.decision.action, GateAction.WAIT)
         self.assertIn("already routed", suppressed.decision.reason)
+        for variant in (PolicyVariant.FULL, PolicyVariant.REACTIVE):
+            with self.subTest(variant=variant):
+                after_route = suppress_after_route(run_policy(variant, ready))
+                self.assertEqual(after_route.decision.action, GateAction.WAIT)
+                self.assertIn("already routed", after_route.decision.reason)
         bad = replace(ready, decision_input=replace(
             ready.decision_input,
             invariants=replace(ready.decision_input.invariants, target_policy_hash="wrong"),

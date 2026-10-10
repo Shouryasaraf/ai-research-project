@@ -244,9 +244,10 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
                 if active == "target":
                     observed_overload_streak = 0
                     uncertainty_wait_streak = 0
-                    outcome = suppress_after_route(outcome)
             else:
                 outcome = run_policy(variant, run)
+            if active == "target":
+                outcome = suppress_after_route(outcome)
             record["decisions"].append({"step": sample["step"], "observed_goodput_mbps": sample["goodput_mbps"],
                 "forecast": asdict(forecast), "decision": outcome.decision.as_record(),
                 "duration_seconds": time.monotonic() - start, "active_path": active, "guard": guard,

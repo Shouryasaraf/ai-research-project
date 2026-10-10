@@ -28,8 +28,9 @@ def is_uncertainty_wait(outcome: PolicyOutcome) -> bool:
 def suppress_after_route(outcome: PolicyOutcome) -> PolicyOutcome:
     """Do not report a second migration toward the already active target.
 
-    A security FALLBACK remains visible; this helper is only action accounting,
-    not a replacement for a production route-failback controller.
+    Applies to all live-lab policies. A security FALLBACK remains visible;
+    this helper is only action accounting, not a replacement for a production
+    route-failback controller.
     """
     if outcome.decision.action is GateAction.FALLBACK:
         return outcome
