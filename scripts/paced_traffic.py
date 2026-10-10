@@ -9,6 +9,12 @@ import time
 from pathlib import Path
 
 
+def accepted_payload_bytes(sends: list[tuple[float, int]], start: float, end: float) -> int:
+    if end <= start:
+        raise ValueError("sample end must follow start")
+    return sum(size for at, size in sends if start <= at < end)
+
+
 def receive(connection: socket.socket, expected: bytes) -> None:
     data = bytearray()
     while len(data) < len(expected):
@@ -35,6 +41,7 @@ def run(plan: dict) -> None:
         receive(conn, b"server:ready\n")
         connections.append(conn)
     events: list[dict] = []
+    accepted_sends: list[tuple[float, int]] = []
     lock = threading.Lock()
     started = time.monotonic()
     stop = started + len(rates) * interval
@@ -47,13 +54,18 @@ def run(plan: dict) -> None:
                 size = max(1, min(32768, round(rates[step] * 1e6 / 8 / 20 / flows)))
                 payload = b"x" * size
                 error = None
+                accepted_at = None
                 try:
                     connection.sendall(payload + b"\n")
+                    with lock:
+                        accepted_at = time.monotonic()
+                        accepted_sends.append((accepted_at, size))
                     receive(connection, b"server:" + payload + b"\n")
                 except (OSError, ValueError) as exc:
                     error = type(exc).__name__ + ": " + str(exc)
                 finished = time.monotonic()
                 event = {"flow_id": flow_id, "offered_step": step, "sent_monotonic": sent,
+                         "accepted_by_socket_monotonic": accepted_at,
                          "finished_monotonic": finished, "payload_bytes": size,
                          "success": error is None, "error": error,
                          "rtt_ms": (finished - sent) * 1000}
@@ -74,9 +86,12 @@ def run(plan: dict) -> None:
         now = time.monotonic()
         with lock:
             sample = [event for event in events if previous <= event["finished_monotonic"] < now]
+            accepted_bytes = accepted_payload_bytes(accepted_sends, previous, now)
         print(json.dumps({"type": "sample", "step": step, "observed_monotonic": now,
                           "duration_seconds": now - previous,
                           "scheduled_mbps": rates[step],
+                          "accepted_tx_payload_bytes": accepted_bytes,
+                          "accepted_tx_mbps": accepted_bytes * 8 / 1e6 / (now - previous),
                           "goodput_mbps": sum(e["payload_bytes"] for e in sample if e["success"]) * 8 / 1e6 / (now - previous),
                           "completed_requests": len(sample),
                           "errors": sum(not e["success"] for e in sample)}), flush=True)
