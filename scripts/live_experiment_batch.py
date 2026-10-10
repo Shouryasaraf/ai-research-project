@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from vfw_research.policies import PolicyVariant
+from vfw_research.liveness_guard import POLICY_NAME as LIVENESS_POLICY_NAME
 
 
 def code_digest() -> str:
@@ -55,7 +56,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seeds", type=int, nargs="+", default=[7, 11, 19])
-    parser.add_argument("--policies", choices=[p.value for p in PolicyVariant], nargs="+", default=[p.value for p in PolicyVariant])
+    parser.add_argument("--policies", choices=[p.value for p in PolicyVariant] + [LIVENESS_POLICY_NAME], nargs="+", default=[p.value for p in PolicyVariant])
     parser.add_argument("--steps", type=int, default=12)
     parser.add_argument("--flows", type=int, default=3)
     parser.add_argument("--family", choices=["step", "steady", "bursts", "trend", "flash"], default="step")

@@ -28,8 +28,13 @@ from validate_conntrack import compare_entries, parse_entry
 from route_actuator import apply_route, verify_route
 from vfw_research.route_transaction import RouteTransaction
 from vfw_research.forecasting import EwmaConformalForecaster, time_ordered_split
-from vfw_research.models import NodeCandidate
+from vfw_research.models import GateAction, NodeCandidate
 from vfw_research.policies import PolicyVariant, run_policy
+from vfw_research.liveness_guard import (
+    POLICY_NAME as LIVENESS_POLICY_NAME,
+    is_uncertainty_wait,
+    run_liveness_guarded,
+)
 from vfw_research.scenarios import load_scenario
 from vfw_research.trace_adapter import TraceKind, load_trace
 from vfw_research.workloads import live_demand_schedule
@@ -131,14 +136,17 @@ def workload(seed: int, steps: int, csv: Path | None, provenance: Path | None, f
 
 def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, flows: int,
               trace_csv: Path | None = None, provenance: Path | None = None, family: str = "step",
-              capture: bool = False) -> dict:
+              capture: bool = False, liveness_guarded: bool = False) -> dict:
     if os.geteuid() != 0 or not 6 <= steps <= 120 or not 1 <= flows <= 16:
         raise ValueError("requires Linux root, 6..120 steps and 1..16 flows")
+    if liveness_guarded and variant is not PolicyVariant.FULL:
+        raise ValueError("experimental liveness guard applies only to the full controller")
     train, calibration, rates, source = workload(seed, steps, trace_csv, provenance, family)
     output.mkdir(parents=True, exist_ok=False)
     plan = {"rates_mbps": rates, "interval_seconds": 1.0, "flows": flows}
     (output / "traffic-plan.json").write_text(json.dumps(plan, indent=2), encoding="utf-8")
-    record = {"status": "running", "policy": variant.value, "seed": seed, "source": source,
+    record = {"status": "running", "policy": LIVENESS_POLICY_NAME if liveness_guarded else variant.value,
+              "seed": seed, "source": source,
               "evidence_class": "single-host namespace live pilot; modeled carbon/risk; coarse TCP state copy",
               "plan_sha256": hashlib.sha256(json.dumps(plan, sort_keys=True).encode()).hexdigest(),
               "started_utc": datetime.now(timezone.utc).isoformat(),
@@ -168,6 +176,8 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
     watchdog = None
     owns_lab = False
     active, synced = "source", False
+    observed_overload_streak = 0
+    uncertainty_wait_streak = 0
     cpu_start = time.process_time()
     try:
         existing = command("ip", "netns", "list")
@@ -220,10 +230,31 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
             run = replace(base, current_utilization=min(1.0, sample["goodput_mbps"]), decision_input=inp,
                           candidates=[NodeCandidate("target", 3.0, 0.0, 0.8, 0.8, 5, 90, 0.18)])
             start = time.monotonic()
-            outcome = run_policy(variant, run)
+            if liveness_guarded:
+                baseline = run_policy(PolicyVariant.FULL, run)
+                observed_overload_streak = (observed_overload_streak + 1
+                    if sample["goodput_mbps"] >= run.overload_trigger_fraction else 0)
+                uncertainty_wait_streak = (uncertainty_wait_streak + 1
+                    if is_uncertainty_wait(baseline) else 0)
+                outcome = run_liveness_guarded(
+                    run, observed_overload_streak=observed_overload_streak,
+                    uncertainty_wait_streak=uncertainty_wait_streak, baseline=baseline,
+                )
+                if active == "target":
+                    observed_overload_streak = 0
+                    uncertainty_wait_streak = 0
+                    if outcome.decision.action in (GateAction.PREWARM, GateAction.SYNC, GateAction.COMMIT):
+                        outcome = replace(outcome, decision=replace(
+                            outcome.decision, action=GateAction.WAIT,
+                            reason="already routed through the selected target",
+                        ))
+            else:
+                outcome = run_policy(variant, run)
             record["decisions"].append({"step": sample["step"], "observed_goodput_mbps": sample["goodput_mbps"],
                 "forecast": asdict(forecast), "decision": outcome.decision.as_record(),
-                "duration_seconds": time.monotonic() - start, "active_path": active, "guard": guard})
+                "duration_seconds": time.monotonic() - start, "active_path": active, "guard": guard,
+                "observed_overload_streak": observed_overload_streak if liveness_guarded else None,
+                "uncertainty_wait_streak": uncertainty_wait_streak if liveness_guarded else None})
             action = outcome.decision.action.value
             if active == "source" and action in {"SYNC", "COMMIT"}:
                 transition = {"requested_action": action, "started_monotonic": time.monotonic()}
@@ -239,6 +270,9 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
                         raise RuntimeError("route transaction refused")
                     transition["route_journal"] = transaction.events()
                     active = "target"
+                    if liveness_guarded:
+                        observed_overload_streak = 0
+                        uncertainty_wait_streak = 0
                     transition["route_committed"] = True
                 transition["finished_monotonic"] = time.monotonic()
                 record["transitions"].append(transition)
@@ -288,7 +322,7 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--policy", choices=[v.value for v in PolicyVariant], required=True)
+    parser.add_argument("--policy", choices=[v.value for v in PolicyVariant] + [LIVENESS_POLICY_NAME], required=True)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--steps", type=int, default=12)
     parser.add_argument("--flows", type=int, default=3)
@@ -299,9 +333,10 @@ def main() -> int:
     args = parser.parse_args()
     with open("/tmp/vfwlab-research.lock", "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        result = run_trial(args.output, PolicyVariant(args.policy), seed=args.seed, steps=args.steps,
+        liveness_guarded = args.policy == LIVENESS_POLICY_NAME
+        result = run_trial(args.output, PolicyVariant.FULL if liveness_guarded else PolicyVariant(args.policy), seed=args.seed, steps=args.steps,
                            flows=args.flows, trace_csv=args.trace_csv, provenance=args.provenance, family=args.family,
-                           capture=args.capture)
+                           capture=args.capture, liveness_guarded=liveness_guarded)
     print(json.dumps({"status": result["status"], "output": str(args.output), "error": result.get("error")}))
     return 0 if result["status"] == "completed" else 1
 
