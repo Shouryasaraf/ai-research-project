@@ -1,5 +1,10 @@
 # Verification Log
 
+## 2026-10-10 — Combined captured-lab artifact QA
+
+- Built ignored local `artifacts/raw/research-vfw-lab-artifact-20261010-v3.zip`: 326 allowlisted files, 3,676,506 compressed bytes, SHA-256 `a1f252a2e420e19d213672dc80f847430ac690f9aefff884b6b2ab0089d7812c`. Its manifest lists 24 generated lab PCAPs and zero original/derived MAWI or NESO traffic files.
+- Fresh same-host extraction (without Git) passed 129 non-privileged tests. Regeneration from packaged raw records and PCAPs made both live-gap summaries and both TCP-wire summaries byte-identical to tracked results. This is same-host package QA, not an independent-machine study.
+
 ## 2026-10-10 — TCP wire-visible audit
 
 - Extended the classic-PCAP parser to expose TCP flags and advertised window without changing its packet-instance matching key. `tcp_wire_diagnostic` rechecks executed-source archive, trial identities, raw-record hashes, capture hashes and endpoint matching before summarizing sender-side packets.
