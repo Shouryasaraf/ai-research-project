@@ -51,6 +51,8 @@ class LiveAnalysisTests(unittest.TestCase):
         baseline["traffic_events"][0]["payload_bytes"] = 2000
         report = render_report(summarize([full, baseline]))
         self.assertIn("-0.004000 Mbps", report)
+        self.assertIn("Paired bootstrap intervals are descriptive only", report)
+        self.assertNotIn("Three-seed bootstrap", report)
         self.assertIn("successful requests only", report)
 
     def test_batch_manifest_requires_complete_matching_records(self):

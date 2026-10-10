@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import zipfile
 
@@ -44,7 +45,8 @@ def collect(root: Path, evidence: list[Path], include_lab_captures: bool = False
                                 and isinstance(source.get("csv_sha256"), str)
                                 and len(source["csv_sha256"]) == 64
                                 and type(source.get("scale")) in (int, float)
-                                and 0 < source["scale"] <= 1)
+                                and math.isfinite(source["scale"])
+                                and source["scale"] > 0)
                 isolated_live = (record.get("evidence_class") ==
                     "single-host namespace live pilot; modeled carbon/risk; coarse TCP state copy"
                     and (source.get("kind") == "seeded synthetic demand" or scaled_trace)
@@ -65,11 +67,15 @@ def collect(root: Path, evidence: list[Path], include_lab_captures: bool = False
     return sorted(paths)
 
 
-def build(root: Path, evidence: list[Path], output: Path, include_lab_captures: bool = False) -> dict:
+def build(root: Path, evidence: list[Path], output: Path, include_lab_captures: bool = False,
+          max_uncompressed_mib: int = 100) -> dict:
     root = root.resolve()
+    if (type(max_uncompressed_mib) is not int or not 1 <= max_uncompressed_mib <= 500
+            or (max_uncompressed_mib > 100 and not include_lab_captures)):
+        raise ValueError("larger artifact limit requires attested lab captures and is capped at 500 MiB")
     files = collect(root, evidence, include_lab_captures)
-    if sum(path.stat().st_size for path in files) > 100 * 1024 * 1024:
-        raise ValueError("artifact exceeds 100 MiB local safety bound")
+    if sum(path.stat().st_size for path in files) > max_uncompressed_mib * 1024 * 1024:
+        raise ValueError("artifact exceeds configured local safety bound")
     manifest = {"classification": "local research development artifact; redistribution license not implied",
                 "excluded": ["external/original traffic captures", "unattested captures", "credentials", "Git internals", "Python environments"],
                 "verified_synthetic_lab_captures_included": include_lab_captures,
@@ -95,5 +101,7 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--evidence", type=Path, nargs="+", required=True)
     parser.add_argument("--include-lab-captures", action="store_true")
+    parser.add_argument("--max-uncompressed-mib", type=int, default=100)
     args = parser.parse_args()
-    print(json.dumps(build(ROOT, args.evidence, args.output, args.include_lab_captures), indent=2))
+    print(json.dumps(build(ROOT, args.evidence, args.output, args.include_lab_captures,
+                           args.max_uncompressed_mib), indent=2))

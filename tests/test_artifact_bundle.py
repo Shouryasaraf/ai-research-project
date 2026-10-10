@@ -38,6 +38,9 @@ class ArtifactTests(unittest.TestCase):
             self.assertEqual(sum(p.suffix == ".pcap" for p in artifact.collect(root, [trial], True)), 2)
             record["source"]["scale"] = 2
             (trial / "record.json").write_text(json.dumps(record))
+            self.assertEqual(sum(p.suffix == ".pcap" for p in artifact.collect(root, [trial], True)), 2)
+            record["source"]["scale"] = float("inf")
+            (trial / "record.json").write_text(json.dumps(record))
             with self.assertRaisesRegex(ValueError, "attested"):
                 artifact.collect(root, [trial], True)
             record["source"]["scale"] = 0.01
@@ -66,3 +69,7 @@ class ArtifactTests(unittest.TestCase):
                 artifact.build(root, [evidence], output)
             with self.assertRaises(ValueError):
                 artifact.collect(root, [root])
+            with self.assertRaisesRegex(ValueError, "requires attested"):
+                artifact.build(root, [evidence], root / "larger.zip", max_uncompressed_mib=300)
+            with self.assertRaisesRegex(ValueError, "capped"):
+                artifact.build(root, [evidence], root / "too-large.zip", True, 501)

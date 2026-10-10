@@ -208,7 +208,7 @@ def render_report(summary: dict) -> str:
                  for key in ("goodput_mbps", "request_failure_fraction", "rtt_p95_ms")]
         lines.append(f'| {row["policy"]} | {row["completed"]} | {row["failed"]} | ' + " | ".join(cells) + " |")
     lines.extend(["", "## Paired goodput differences", "",
-                  "Positive values favor the full controller. Three-seed bootstrap intervals are descriptive only.", ""])
+                  "Positive values favor the full controller. Paired bootstrap intervals are descriptive only.", ""])
     for pair in summary["paired_goodput"]:
         lines.append(f'- Versus {pair["baseline"]}: {pair["goodput_difference_full_minus_baseline_mbps"]:.6f} Mbps '
                      f'(n={pair["paired_trials"]}; interval={pair["descriptive_paired_bootstrap_ci95"]}).')

@@ -2,6 +2,8 @@
 
 The current same-host local archive snapshot is `artifacts/raw/research-vfw-lab-artifact-20261010-v4.zip` (SHA-256 `773362de3921594217100536d2fcd5721ae49e7b16ca844311dfd509bf8ad44a`). It contains 329 allowlisted files, including the finite-placement audit code, tests and tracked result plus 24 generated lab PCAPs. It excludes original/derived MAWI traffic and NESO responses. A fresh extraction without Git passed 133 non-privileged tests on the same host. This is package QA, not independent-host reproduction or permission to redistribute the archive.
 
+The newer Git-ignored local `artifacts/raw/research-vfw-lab-artifact-20261010-v5.zip` (SHA-256 `4f40a117349cf8d08c001b0c84c22cf58d7b6eb6ac204da92ab86fc55ff906b9`) adds the protocol-frozen Cyber4OT lab pair. It contains 440 allowlisted files and 44 generated lab endpoint PCAPs; no original/derived Cyber4OT, MAWI or NESO traffic is included. The larger captured batch used the artifact builder's explicit `--max-uncompressed-mib 300` override; the default remains 100 MiB, and the override requires attested lab captures. Same-host fresh extraction passed 137 tests, and regenerated Cyber4OT live and TCP-wire summaries matched the tracked JSON bytes. Neither archive is an independent-host reproduction or a redistribution license.
+
 Run from the repository root. Python 3.11+ and the Python standard library suffice for the non-privileged tests. Raw outputs are intentionally ignored by Git; retain them separately when sharing an artifact. No software license is granted by this guide.
 
 ## Fast checks
