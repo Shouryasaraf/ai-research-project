@@ -31,6 +31,8 @@ class PacketObservationTests(unittest.TestCase):
             parsed = packets(path)
             self.assertEqual(parsed[0]["payload_bytes"], 4)
             self.assertEqual(parsed[0]["key"][2], 3)
+            self.assertEqual(parsed[0]["flags"], 24)
+            self.assertEqual(parsed[0]["window"], 4096)
             path.write_bytes(data[:-1])
             with self.assertRaises(ValueError):
                 packets(path)

@@ -4,6 +4,8 @@ This matrix was refreshed from the repository on 2026-10-08. “Implemented” m
 
 ## Latest evidence update (supersedes pending items below where stated)
 
+2026-10-10 wire-visible TCP update: a new diagnostic validates archived source, records and endpoint captures from 12 completed synthetic/second-MAWI rate-derived migration trials, then counts TCP RST and repeated payload-sequence instances. No sender-side RST was observed at the endpoints; every trial had repeated payload-sequence instances. See `tcp_wire_diagnostic.md` and generated `results/tcp-wire-*/`. This narrows reset observation, not internal TCP state equivalence, packet-loss probability, exact downtime, or general correctness.
+
 2026-10-10 carbon-signal update: strict CC BY 4.0 NESO regional forecast import and [48-slot replay](results/neso-carbon-replay-20261010/results.md) now source candidate carbon intensity from public historical API responses while all node/traffic/risk and benefit attributes remain modeled. Full versus carbon-unaware choices differ in all 48 independent modeled slots; there is no deployment, metered energy or realized emissions measurement. Source provenance improves, but the physical carbon-benefit gate remains open.
 
 2026-10-10 artifact update: a new allowlisted local archive containing generated lab captures (not the external MAWI original or derived traffic series) passed a fresh extraction on the same host: 124 tests and byte-identical regeneration of the six-trial second-MAWI live summary. See `artifact_reproduction.md`. This narrows package completeness, not independent-host reproducibility or artifact redistribution approval.

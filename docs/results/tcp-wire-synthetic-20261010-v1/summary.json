@@ -1,0 +1,134 @@
+{
+  "batch": "live-captured-pair-20261010-v2",
+  "boundary": "RST absence at endpoints and repeated payload sequences do not prove full TCP state equivalence or zero packet loss",
+  "evidence_class": "wire-visible TCP flags and payload repetition in validated isolated lab captures",
+  "manifest_sha256": "f83416da8243f28e01cbaac0184021baf2d03bf51d7bccaca6e81d8bf69158fe",
+  "trials": [
+    {
+      "forward": {
+        "repeated_payload_sequence_instances": 11,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 1973,
+        "zero_window_advertisements": 0
+      },
+      "policy": "full_proposed_controller",
+      "record_sha256": "a79c059682730c6ed9c81b0019a959e9e74cd2f518bc7766f177cca87f3705b1",
+      "reverse": {
+        "repeated_payload_sequence_instances": 19,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 1856,
+        "zero_window_advertisements": 0
+      },
+      "seed": 47
+    },
+    {
+      "forward": {
+        "repeated_payload_sequence_instances": 10,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2136,
+        "zero_window_advertisements": 0
+      },
+      "policy": "reactive_threshold",
+      "record_sha256": "596f387c44d601ac0dc2a254bba4eda6e9b626b09d67a003c6cba60aeab6e04c",
+      "reverse": {
+        "repeated_payload_sequence_instances": 19,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2008,
+        "zero_window_advertisements": 0
+      },
+      "seed": 47
+    },
+    {
+      "forward": {
+        "repeated_payload_sequence_instances": 11,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2212,
+        "zero_window_advertisements": 0
+      },
+      "policy": "full_proposed_controller",
+      "record_sha256": "692bfb6a9d47ea102f8a14c3390e68943a536ccd099e7079ed520189cda5e99c",
+      "reverse": {
+        "repeated_payload_sequence_instances": 15,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2066,
+        "zero_window_advertisements": 0
+      },
+      "seed": 53
+    },
+    {
+      "forward": {
+        "repeated_payload_sequence_instances": 9,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2378,
+        "zero_window_advertisements": 0
+      },
+      "policy": "reactive_threshold",
+      "record_sha256": "f543af686cd40136e232e3ffa527517197d67a99411014ebb6a2f71a3a7cf2b9",
+      "reverse": {
+        "repeated_payload_sequence_instances": 16,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2226,
+        "zero_window_advertisements": 0
+      },
+      "seed": 53
+    },
+    {
+      "forward": {
+        "repeated_payload_sequence_instances": 8,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2240,
+        "zero_window_advertisements": 0
+      },
+      "policy": "full_proposed_controller",
+      "record_sha256": "1bd74cc35a12e759766cf964f4e814bb7f0c8203edd37bbf314afd38d1d148b1",
+      "reverse": {
+        "repeated_payload_sequence_instances": 16,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2101,
+        "zero_window_advertisements": 0
+      },
+      "seed": 59
+    },
+    {
+      "forward": {
+        "repeated_payload_sequence_instances": 8,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2316,
+        "zero_window_advertisements": 0
+      },
+      "policy": "reactive_threshold",
+      "record_sha256": "24b7f8b036393e6aa9858cbc0dd89093aa199155aadc348a4f34be60da6c790b",
+      "reverse": {
+        "repeated_payload_sequence_instances": 16,
+        "sender_fin_instances": 3,
+        "sender_rst_instances": 0,
+        "sender_syn_instances": 3,
+        "sent_packet_instances": 2188,
+        "zero_window_advertisements": 0
+      },
+      "seed": 59
+    }
+  ]
+}

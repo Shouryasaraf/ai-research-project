@@ -1,5 +1,10 @@
 # Verification Log
 
+## 2026-10-10 — TCP wire-visible audit
+
+- Extended the classic-PCAP parser to expose TCP flags and advertised window without changing its packet-instance matching key. `tcp_wire_diagnostic` rechecks executed-source archive, trial identities, raw-record hashes, capture hashes and endpoint matching before summarizing sender-side packets.
+- Across six synthetic and six second-MAWI rate-derived full/reactive captured trials, all 12 had zero visible RST at sender-side endpoint captures. Every trial had repeated payload-sequence instances; the [synthetic](results/tcp-wire-synthetic-20261010-v1/results.md) and [second-MAWI](results/tcp-wire-mawi2005-20261010-v1/results.md) tables retain both counts. This does not prove full TCP sequence/window equivalence or zero loss.
+
 ## 2026-10-10 — Externally sourced carbon forecast replay
 
 - Fetched two public NESO regional API responses (North Scotland region 1, London region 13) for 2025-01-01 UTC under the published CC BY 4.0 terms. Both 49-slot API responses include one interval ending at day start; `neso_carbon` retained exactly 48 consecutive half-hour slots inside the day and recorded publisher/derived hashes in ignored provenance sidecars.

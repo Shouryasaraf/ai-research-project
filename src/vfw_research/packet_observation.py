@@ -52,7 +52,10 @@ def packets(path: Path) -> list[dict]:
             payload = tcp[offset:]
             digest = hashlib.sha256(payload).hexdigest()
             key = (src, dst, identifier, sport, dport, seq, ack, tcp[13], len(payload), digest)
-            result.append({"timestamp": sec + fraction / precision, "source": src, "key": key,
+            result.append({"timestamp": sec + fraction / precision, "source": src,
+                           "sport": sport, "dport": dport, "seq": seq, "ack": ack,
+                           "flags": tcp[13], "window": struct.unpack("!H", tcp[14:16])[0],
+                           "key": key,
                            "payload_key": (src, dst, sport, dport, seq, len(payload), digest),
                            "payload_bytes": len(payload)})
     return result

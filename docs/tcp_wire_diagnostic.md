@@ -1,0 +1,7 @@
+# Wire-visible TCP continuity diagnostic
+
+The parser extracts TCP flags, sequence and acknowledgment values, advertised window, and a payload digest from generated IPv4/TCP frames in the isolated endpoint captures. It does not export packet payloads. The diagnostic validates each capture against its recorded SHA-256 and packet-instance comparison, checks the batch's executed-source archive and trial identities, then inspects the **sender-side** capture at both endpoints.
+
+For each direction it counts visible RST, SYN and FIN packet instances, zero advertised windows, and repeated identical payload-sequence instances (same endpoint tuple, TCP sequence, length and payload digest). The latter is a retransmission *indicator*, not an attribution to migration: congestion, deliberate pacing, ACK loss, duplicate capture, and other effects can also cause repetition. The results are in [synthetic captured trials](results/tcp-wire-synthetic-20261010-v1/results.md) and [second-MAWI rate-derived trials](results/tcp-wire-mawi2005-20261010-v1/results.md).
+
+All 12 analyzed migration trials had zero sender-side RST instances at the two capture points; repeated payload-sequence instances were present in every trial. This supports a bounded statement that the observed established sockets continued without a wire-visible reset in those runs. It **does not** establish zero packet loss, exact outage, TCP window/sequence-state equivalence inside the two firewalls, atomic bidirectional route changes, or general recovery after host failure. Those stronger claims remain open.
