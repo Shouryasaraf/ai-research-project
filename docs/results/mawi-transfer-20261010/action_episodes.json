@@ -1,0 +1,713 @@
+{
+  "episode_definition": "maximal contiguous COMMIT recommendations within each model/policy test segment",
+  "evidence_class": "descriptive offline action-run analysis; no migration execution",
+  "records": [
+    {
+      "decision_record_sha256": "2494cc6c95b288b60ce27de30a525a58507d13959ee7b0064261bacc07021d50",
+      "groups": [
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "carbon_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "cold_migration"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "fixed_benefit_threshold"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "full_proposed_controller"
+        },
+        {
+          "commit_recommendations": 123,
+          "contiguous_commit_episodes": 10,
+          "episode_start_indices": [
+            0,
+            8,
+            41,
+            45,
+            47,
+            50,
+            53,
+            63,
+            77,
+            82
+          ],
+          "longest_commit_episode_seconds": 64,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "prediction_only"
+        },
+        {
+          "commit_recommendations": 109,
+          "contiguous_commit_episodes": 25,
+          "episode_start_indices": [
+            0,
+            2,
+            8,
+            13,
+            21,
+            25,
+            38,
+            41,
+            43,
+            45,
+            47,
+            50,
+            53,
+            62,
+            70,
+            77,
+            81,
+            86,
+            89,
+            97,
+            102,
+            109,
+            112,
+            136,
+            140
+          ],
+          "longest_commit_episode_seconds": 23,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "reactive_threshold"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "risk_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "static_no_migration"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 146,
+          "policy": "uncertainty_without_carbon_or_risk"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "carbon_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "cold_migration"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "fixed_benefit_threshold"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "full_proposed_controller"
+        },
+        {
+          "commit_recommendations": 123,
+          "contiguous_commit_episodes": 10,
+          "episode_start_indices": [
+            0,
+            8,
+            41,
+            45,
+            47,
+            50,
+            53,
+            63,
+            77,
+            82
+          ],
+          "longest_commit_episode_seconds": 64,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "prediction_only"
+        },
+        {
+          "commit_recommendations": 109,
+          "contiguous_commit_episodes": 25,
+          "episode_start_indices": [
+            0,
+            2,
+            8,
+            13,
+            21,
+            25,
+            38,
+            41,
+            43,
+            45,
+            47,
+            50,
+            53,
+            62,
+            70,
+            77,
+            81,
+            86,
+            89,
+            97,
+            102,
+            109,
+            112,
+            136,
+            140
+          ],
+          "longest_commit_episode_seconds": 23,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "reactive_threshold"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "risk_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "static_no_migration"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "ewma_conformal",
+          "opportunities": 146,
+          "policy": "uncertainty_without_carbon_or_risk"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "carbon_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "cold_migration"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "fixed_benefit_threshold"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "full_proposed_controller"
+        },
+        {
+          "commit_recommendations": 121,
+          "contiguous_commit_episodes": 6,
+          "episode_start_indices": [
+            0,
+            41,
+            47,
+            54,
+            64,
+            83
+          ],
+          "longest_commit_episode_seconds": 63,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "prediction_only"
+        },
+        {
+          "commit_recommendations": 109,
+          "contiguous_commit_episodes": 25,
+          "episode_start_indices": [
+            0,
+            2,
+            8,
+            13,
+            21,
+            25,
+            38,
+            41,
+            43,
+            45,
+            47,
+            50,
+            53,
+            62,
+            70,
+            77,
+            81,
+            86,
+            89,
+            97,
+            102,
+            109,
+            112,
+            136,
+            140
+          ],
+          "longest_commit_episode_seconds": 23,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "reactive_threshold"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "risk_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "static_no_migration"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "rolling_mean_conformal",
+          "opportunities": 146,
+          "policy": "uncertainty_without_carbon_or_risk"
+        }
+      ],
+      "sampling_interval_seconds": 1,
+      "traffic_csv_sha256": "4923a96f8ba7e75a823c50b6517e1e987c98c6a2d8eca3ba817892e23cfe850a",
+      "traffic_source": "https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2000/200012281400.dump.gz"
+    },
+    {
+      "decision_record_sha256": "dab5467371cba1ee64df5980d4d9c7dcd9a0d4bc7abc31da802dd44aadb1a5b3",
+      "groups": [
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "carbon_unaware"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "cold_migration"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "fixed_benefit_threshold"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "full_proposed_controller"
+        },
+        {
+          "commit_recommendations": 133,
+          "contiguous_commit_episodes": 6,
+          "episode_start_indices": [
+            1,
+            40,
+            50,
+            78,
+            143,
+            150
+          ],
+          "longest_commit_episode_seconds": 64,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "prediction_only"
+        },
+        {
+          "commit_recommendations": 133,
+          "contiguous_commit_episodes": 11,
+          "episode_start_indices": [
+            0,
+            26,
+            39,
+            50,
+            73,
+            75,
+            77,
+            112,
+            140,
+            143,
+            150
+          ],
+          "longest_commit_episode_seconds": 34,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "reactive_threshold"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "risk_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "static_no_migration"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "adaptive_ewma_residual_exploratory",
+          "opportunities": 181,
+          "policy": "uncertainty_without_carbon_or_risk"
+        },
+        {
+          "commit_recommendations": 180,
+          "contiguous_commit_episodes": 2,
+          "episode_start_indices": [
+            0,
+            64
+          ],
+          "longest_commit_episode_seconds": 117,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "carbon_unaware"
+        },
+        {
+          "commit_recommendations": 180,
+          "contiguous_commit_episodes": 2,
+          "episode_start_indices": [
+            0,
+            64
+          ],
+          "longest_commit_episode_seconds": 117,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "cold_migration"
+        },
+        {
+          "commit_recommendations": 180,
+          "contiguous_commit_episodes": 2,
+          "episode_start_indices": [
+            0,
+            64
+          ],
+          "longest_commit_episode_seconds": 117,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "fixed_benefit_threshold"
+        },
+        {
+          "commit_recommendations": 180,
+          "contiguous_commit_episodes": 2,
+          "episode_start_indices": [
+            0,
+            64
+          ],
+          "longest_commit_episode_seconds": 117,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "full_proposed_controller"
+        },
+        {
+          "commit_recommendations": 133,
+          "contiguous_commit_episodes": 6,
+          "episode_start_indices": [
+            1,
+            40,
+            50,
+            78,
+            143,
+            150
+          ],
+          "longest_commit_episode_seconds": 64,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "prediction_only"
+        },
+        {
+          "commit_recommendations": 133,
+          "contiguous_commit_episodes": 11,
+          "episode_start_indices": [
+            0,
+            26,
+            39,
+            50,
+            73,
+            75,
+            77,
+            112,
+            140,
+            143,
+            150
+          ],
+          "longest_commit_episode_seconds": 34,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "reactive_threshold"
+        },
+        {
+          "commit_recommendations": 180,
+          "contiguous_commit_episodes": 2,
+          "episode_start_indices": [
+            0,
+            64
+          ],
+          "longest_commit_episode_seconds": 117,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "risk_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "static_no_migration"
+        },
+        {
+          "commit_recommendations": 180,
+          "contiguous_commit_episodes": 2,
+          "episode_start_indices": [
+            0,
+            64
+          ],
+          "longest_commit_episode_seconds": 117,
+          "model": "ewma_conformal",
+          "opportunities": 181,
+          "policy": "uncertainty_without_carbon_or_risk"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "carbon_unaware"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "cold_migration"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "fixed_benefit_threshold"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "full_proposed_controller"
+        },
+        {
+          "commit_recommendations": 134,
+          "contiguous_commit_episodes": 5,
+          "episode_start_indices": [
+            1,
+            42,
+            50,
+            79,
+            143
+          ],
+          "longest_commit_episode_seconds": 63,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "prediction_only"
+        },
+        {
+          "commit_recommendations": 133,
+          "contiguous_commit_episodes": 11,
+          "episode_start_indices": [
+            0,
+            26,
+            39,
+            50,
+            73,
+            75,
+            77,
+            112,
+            140,
+            143,
+            150
+          ],
+          "longest_commit_episode_seconds": 34,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "reactive_threshold"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "risk_unaware"
+        },
+        {
+          "commit_recommendations": 0,
+          "contiguous_commit_episodes": 0,
+          "episode_start_indices": [],
+          "longest_commit_episode_seconds": 0,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "static_no_migration"
+        },
+        {
+          "commit_recommendations": 181,
+          "contiguous_commit_episodes": 1,
+          "episode_start_indices": [
+            0
+          ],
+          "longest_commit_episode_seconds": 181,
+          "model": "rolling_mean_conformal",
+          "opportunities": 181,
+          "policy": "uncertainty_without_carbon_or_risk"
+        }
+      ],
+      "sampling_interval_seconds": 1,
+      "traffic_csv_sha256": "891910016d63705c1e34c6207de9fc30f67c0b27b11d9e0ece94665a79c58179",
+      "traffic_source": "https://mawi.nezu.wide.ad.jp/mawi/samplepoint-B/2005/200501011400.dump.gz"
+    }
+  ]
+}

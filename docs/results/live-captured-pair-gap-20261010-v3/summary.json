@@ -1,0 +1,277 @@
+{
+  "evidence_class": "descriptive single-host live pilot; application-level measurements",
+  "policies": [
+    {
+      "policy": "full_proposed_controller",
+      "completed": 3,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 1.0930406760284872,
+          "median": 1.0825601823021607,
+          "sample_standard_deviation": 0.03027704749021248
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0,
+          "sample_standard_deviation": 0.0
+        },
+        "rtt_p95_ms": {
+          "mean": 76.98985033333845,
+          "median": 77.01276500000631,
+          "sample_standard_deviation": 0.4514793453986317
+        },
+        "route_commits": {
+          "mean": 1.0,
+          "median": 1,
+          "sample_standard_deviation": 0.0
+        }
+      }
+    },
+    {
+      "policy": "reactive_threshold",
+      "completed": 3,
+      "failed": 0,
+      "metrics": {
+        "goodput_mbps": {
+          "mean": 1.1605977504823473,
+          "median": 1.1657183352125846,
+          "sample_standard_deviation": 0.010318217706914339
+        },
+        "request_failure_fraction": {
+          "mean": 0.0,
+          "median": 0.0,
+          "sample_standard_deviation": 0.0
+        },
+        "rtt_p95_ms": {
+          "mean": 74.39039833333538,
+          "median": 73.82975299998407,
+          "sample_standard_deviation": 1.1518272137984418
+        },
+        "route_commits": {
+          "mean": 1.0,
+          "median": 1,
+          "sample_standard_deviation": 0.0
+        }
+      }
+    }
+  ],
+  "paired_goodput": [
+    {
+      "baseline": "reactive_threshold",
+      "paired_trials": 3,
+      "excluded_or_missing_pairs": 0,
+      "goodput_difference_full_minus_baseline_mbps": -0.0675570744538599,
+      "descriptive_paired_bootstrap_ci95": [
+        -0.08315815291042394,
+        -0.04018862305325288
+      ]
+    }
+  ],
+  "trials": [
+    {
+      "policy": "full_proposed_controller",
+      "seed": 47,
+      "goodput_mbps": 1.0693963414828105,
+      "requests": 654,
+      "successful_requests": 654,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.33182900000383597,
+      "rtt_p95_ms": 77.01276500000631,
+      "rtt_p99_ms": 100.08864299999232,
+      "maximum_success_gap_seconds_including_pacing": 0.11328177200000766,
+      "route_commits": 1,
+      "state_sync_seconds": 0.0574321409999925,
+      "state_snapshot_serialized_bytes": 910,
+      "controller_cpu_seconds": 0.083904145,
+      "controller_maxrss_kib": 33396,
+      "packet_loss_fraction": null,
+      "observed_forward_packet_deficit_fraction": 0.0,
+      "observed_reverse_packet_deficit_fraction": 0.004310344827586207,
+      "observed_forward_missing_instances": 0,
+      "observed_forward_sent_instances": 1973,
+      "observed_reverse_missing_instances": 8,
+      "observed_reverse_sent_instances": 1856,
+      "observed_output_queue_drops": 0,
+      "transition_bracketing_response_gap_seconds_including_pacing": 0.3733128410000006,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "reactive_threshold",
+      "seed": 47,
+      "goodput_mbps": 1.1487207888807134,
+      "requests": 695,
+      "successful_requests": 695,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.23900899999773628,
+      "rtt_p95_ms": 73.62622899999849,
+      "rtt_p99_ms": 100.02717599999755,
+      "maximum_success_gap_seconds_including_pacing": 0.11271653400000048,
+      "route_commits": 1,
+      "state_sync_seconds": 0.028974105999992616,
+      "state_snapshot_serialized_bytes": 455,
+      "controller_cpu_seconds": 0.08038258499999999,
+      "controller_maxrss_kib": 34412,
+      "packet_loss_fraction": null,
+      "observed_forward_packet_deficit_fraction": 0.0,
+      "observed_reverse_packet_deficit_fraction": 0.00398406374501992,
+      "observed_forward_missing_instances": 0,
+      "observed_forward_sent_instances": 2136,
+      "observed_reverse_missing_instances": 8,
+      "observed_reverse_sent_instances": 2008,
+      "observed_output_queue_drops": 0,
+      "transition_bracketing_response_gap_seconds_including_pacing": 0.4189472009999946,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "full_proposed_controller",
+      "seed": 53,
+      "goodput_mbps": 1.0825601823021607,
+      "requests": 653,
+      "successful_requests": 653,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.27453399999899375,
+      "rtt_p95_ms": 77.42943600001695,
+      "rtt_p99_ms": 101.25431800000229,
+      "maximum_success_gap_seconds_including_pacing": 0.11197951999997713,
+      "route_commits": 1,
+      "state_sync_seconds": 0.058291749000005666,
+      "state_snapshot_serialized_bytes": 910,
+      "controller_cpu_seconds": 0.08573184900000001,
+      "controller_maxrss_kib": 33592,
+      "packet_loss_fraction": null,
+      "observed_forward_packet_deficit_fraction": 0.0,
+      "observed_reverse_packet_deficit_fraction": 0.003872216844143272,
+      "observed_forward_missing_instances": 0,
+      "observed_forward_sent_instances": 2212,
+      "observed_reverse_missing_instances": 8,
+      "observed_reverse_sent_instances": 2066,
+      "observed_output_queue_drops": 0,
+      "transition_bracketing_response_gap_seconds_including_pacing": 0.38552952099999516,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "reactive_threshold",
+      "seed": 53,
+      "goodput_mbps": 1.1657183352125846,
+      "requests": 695,
+      "successful_requests": 695,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.23595399997589084,
+      "rtt_p95_ms": 73.82975299998407,
+      "rtt_p99_ms": 92.55538799999385,
+      "maximum_success_gap_seconds_including_pacing": 0.12312579199999618,
+      "route_commits": 1,
+      "state_sync_seconds": 0.027982525999988184,
+      "state_snapshot_serialized_bytes": 455,
+      "controller_cpu_seconds": 0.08422560700000001,
+      "controller_maxrss_kib": 34780,
+      "packet_loss_fraction": null,
+      "observed_forward_packet_deficit_fraction": 0.0,
+      "observed_reverse_packet_deficit_fraction": 0.0035938903863432167,
+      "observed_forward_missing_instances": 0,
+      "observed_forward_sent_instances": 2378,
+      "observed_reverse_missing_instances": 8,
+      "observed_reverse_sent_instances": 2226,
+      "observed_output_queue_drops": 0,
+      "transition_bracketing_response_gap_seconds_including_pacing": 0.503368451,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "full_proposed_controller",
+      "seed": 59,
+      "goodput_mbps": 1.1271655043004905,
+      "requests": 678,
+      "successful_requests": 678,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.24207399999909285,
+      "rtt_p95_ms": 76.52734999999211,
+      "rtt_p99_ms": 82.23830199997906,
+      "maximum_success_gap_seconds_including_pacing": 0.09541085899999757,
+      "route_commits": 1,
+      "state_sync_seconds": 0.05842309099998033,
+      "state_snapshot_serialized_bytes": 910,
+      "controller_cpu_seconds": 0.09301680699999999,
+      "controller_maxrss_kib": 33928,
+      "packet_loss_fraction": null,
+      "observed_forward_packet_deficit_fraction": 0.0,
+      "observed_reverse_packet_deficit_fraction": 0.0038077106139933364,
+      "observed_forward_missing_instances": 0,
+      "observed_forward_sent_instances": 2240,
+      "observed_reverse_missing_instances": 8,
+      "observed_reverse_sent_instances": 2101,
+      "observed_output_queue_drops": 0,
+      "transition_bracketing_response_gap_seconds_including_pacing": 0.38066963599999326,
+      "migration_interruption_seconds": null
+    },
+    {
+      "policy": "reactive_threshold",
+      "seed": 59,
+      "goodput_mbps": 1.1673541273537433,
+      "requests": 699,
+      "successful_requests": 699,
+      "request_failure_fraction": 0.0,
+      "disrupted_flows": 0,
+      "rtt_p50_ms": 0.22276299998225113,
+      "rtt_p95_ms": 75.7152130000236,
+      "rtt_p99_ms": 82.8633939999861,
+      "maximum_success_gap_seconds_including_pacing": 0.10333531999998513,
+      "route_commits": 1,
+      "state_sync_seconds": 0.029502804999992804,
+      "state_snapshot_serialized_bytes": 455,
+      "controller_cpu_seconds": 0.08860414,
+      "controller_maxrss_kib": 34320,
+      "packet_loss_fraction": null,
+      "observed_forward_packet_deficit_fraction": 0.0,
+      "observed_reverse_packet_deficit_fraction": 0.003656307129798903,
+      "observed_forward_missing_instances": 0,
+      "observed_forward_sent_instances": 2316,
+      "observed_reverse_missing_instances": 8,
+      "observed_reverse_sent_instances": 2188,
+      "observed_output_queue_drops": 0,
+      "transition_bracketing_response_gap_seconds_including_pacing": 0.41952628200002096,
+      "migration_interruption_seconds": null
+    }
+  ],
+  "limitations": [
+    "Observed packet-instance deficits are between two lab capture points, not a universal loss rate.",
+    "Response gaps include intentional pacing and are not downtime.",
+    "One alternate target cannot isolate placement-quality effects.",
+    "Carbon/risk are modeled and not physical observations."
+  ],
+  "provenance": {
+    "manifest": {
+      "phase": "exploratory_pilot",
+      "code_sha256": "99d607c23256cbae909bd524b124b36bef782c73f5599499e5f1493e8301b257",
+      "seeds": [
+        47,
+        53,
+        59
+      ],
+      "policies": [
+        "full_proposed_controller",
+        "reactive_threshold"
+      ],
+      "steps": 12,
+      "flows": 3,
+      "family": "step",
+      "capture": true,
+      "policy_order": "seeded shuffle per repetition",
+      "trace_sha256": null,
+      "provenance_sha256": null
+    },
+    "raw_record_sha256": {
+      "s47-full_proposed_controller\\record.json": "a79c059682730c6ed9c81b0019a959e9e74cd2f518bc7766f177cca87f3705b1",
+      "s47-reactive_threshold\\record.json": "596f387c44d601ac0dc2a254bba4eda6e9b626b09d67a003c6cba60aeab6e04c",
+      "s53-full_proposed_controller\\record.json": "692bfb6a9d47ea102f8a14c3390e68943a536ccd099e7079ed520189cda5e99c",
+      "s53-reactive_threshold\\record.json": "f543af686cd40136e232e3ffa527517197d67a99411014ebb6a2f71a3a7cf2b9",
+      "s59-full_proposed_controller\\record.json": "1bd74cc35a12e759766cf964f4e814bb7f0c8203edd37bbf314afd38d1d148b1",
+      "s59-reactive_threshold\\record.json": "24b7f8b036393e6aa9858cbc0dd89093aa199155aadc348a4f34be60da6c790b"
+    }
+  }
+}

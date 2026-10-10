@@ -52,6 +52,8 @@ Separate method controls checked the endpoint packet observation: two ordinary t
 
 A later captured three-seed full-versus-reactive development batch recorded a route commit in every trial and no request failures. Endpoint matching nevertheless found eight missing reverse packet instances in every trial. Reactive control again achieved higher mean goodput in the same synthetic schedule. The `results/live-captured-pair-20261010-v2/` tables are generated from complete raw batch records and verified captures. Neither the repeated deficit count nor this small paired difference establishes a general loss rate or policy ranking.
 
+A post-hoc timing diagnostic finds the last successful same-flow response before each recorded transition and the first after it. These brackets include pacing and synchronization, so they are not outage estimates. Their policy ordering reverses between the synthetic step and second historical rate-derived batches; see `results/live-captured-pair-gap-20261010-v3/` and `results/live-mawi2005-captured-pair-gap-20261010-v2/`. Exact interruption remains unmeasured.
+
 ## 6. Validity, ethics and reproducibility
 
 Short single-host experiments cannot represent production failure domains or multi-host timing. The synchronous client can censor offered demand under congestion. RTT includes only completed requests; failures must be reported alongside it. Local queue drops, request timeouts and end-to-end packet loss are different metrics. In-flight updates, complete TCP sequence/window consistency, packet-level disruption and independent reproduction remain open.

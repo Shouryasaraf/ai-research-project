@@ -2,7 +2,8 @@ import unittest
 import json
 import tempfile
 from pathlib import Path
-from vfw_research.live_analysis import summarize, trial_metrics, write_summary, render_report, qdisc_drop_delta
+from vfw_research.live_analysis import (summarize, trial_metrics, write_summary, render_report,
+                                        qdisc_drop_delta, transition_bracketing_response_gap)
 
 
 def fixture(policy="full_proposed_controller", seed=1):
@@ -32,6 +33,18 @@ class LiveAnalysisTests(unittest.TestCase):
         self.assertIsNone(qdisc_drop_delta(row))
         row["network"] = [snap(5), snap(0)]
         self.assertIsNone(qdisc_drop_delta(row))
+
+    def test_transition_response_gap_is_a_pacing_inclusive_bracket(self):
+        row = fixture()
+        row["transitions"] = [{"route_committed": True, "started_monotonic": 10.5,
+                                "finished_monotonic": 10.8}]
+        row["traffic_events"].append({"flow_id": 1, "finished_monotonic": 10.2,
+                                       "payload_bytes": 1000, "success": True, "rtt_ms": 2})
+        row["traffic_events"][-2]["success"] = True
+        row["traffic_events"][-2]["finished_monotonic"] = 11.0
+        self.assertEqual(transition_bracketing_response_gap(row), 1.0)
+        self.assertIsNone(trial_metrics(row)["migration_interruption_seconds"])
+        self.assertIn("not exact migration downtime", render_report(summarize([row])))
 
     def test_report_retains_negative_comparison(self):
         full, baseline = fixture(), fixture("reactive_threshold")

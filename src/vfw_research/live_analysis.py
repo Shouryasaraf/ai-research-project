@@ -38,6 +38,30 @@ def qdisc_drop_delta(record: dict) -> int | None:
     return total
 
 
+def transition_bracketing_response_gap(record: dict) -> float | None:
+    """Largest same-flow success gap enclosing a recorded transition window.
+
+    This includes deliberate request pacing and state synchronization. It is
+    an observed response-free bracket, never an estimate of exact downtime.
+    """
+    windows = [(row.get("started_monotonic"), row.get("finished_monotonic"))
+               for row in record.get("transitions", []) if row.get("route_committed")]
+    events = record.get("traffic_events", [])
+    gaps = []
+    for start, end in windows:
+        if (type(start) not in (int, float) or type(end) not in (int, float)
+                or not math.isfinite(start) or not math.isfinite(end) or end < start):
+            continue
+        for flow in {event["flow_id"] for event in events}:
+            finishes = [event["finished_monotonic"] for event in events
+                        if event["flow_id"] == flow and event["success"]]
+            before = [value for value in finishes if value < start]
+            after = [value for value in finishes if value > end]
+            if before and after:
+                gaps.append(min(after) - max(before))
+    return max(gaps) if gaps else None
+
+
 def trial_metrics(record: dict) -> dict:
     if record["status"] != "completed" or record.get("leftover_namespaces"):
         raise ValueError("only completed, cleaned-up trials have valid outcome metrics")
@@ -78,6 +102,7 @@ def trial_metrics(record: dict) -> dict:
         "observed_reverse_missing_instances": directions[1]["missing_receiver_instances"] if directions else None,
         "observed_reverse_sent_instances": directions[1]["sent_packet_instances"] if directions else None,
         "observed_output_queue_drops": qdisc_drop_delta(record),
+        "transition_bracketing_response_gap_seconds_including_pacing": transition_bracketing_response_gap(record),
         "migration_interruption_seconds": None,
     }
 
@@ -199,6 +224,17 @@ def render_report(summary: dict) -> str:
                          f'{row["observed_reverse_missing_instances"]}/{row["observed_reverse_sent_instances"]} |'
                          if forward is not None and reverse is not None
                          else f'| {row["policy"]} / {row["seed"]} | unmeasured | unmeasured |')
+    if any(row["transition_bracketing_response_gap_seconds_including_pacing"] is not None
+           for row in summary["trials"]):
+        lines.extend(["", "## Transition-bracketing response gaps", "",
+                      "Largest same-flow gap from the last successful response before transition start "
+                      "to the first after transition end. Includes deliberate pacing and synchronization; "
+                      "this is not exact migration downtime.", "",
+                      "| Policy / seed | Gap (s) |", "|---|---:|"])
+        for row in summary["trials"]:
+            value = row["transition_bracketing_response_gap_seconds_including_pacing"]
+            lines.append(f'| {row["policy"]} / {row["seed"]} | '
+                         + (f"{value:.6f}" if value is not None else "unmeasured") + " |")
     lines.extend(["", "## Limits", "", *["- " + item for item in summary["limitations"]],
                   "- RTT summarizes successful requests only; failures must be read alongside it.",
                   "- Repeated external-trace trials reuse one trace segment and are not independent workloads.", ""])
