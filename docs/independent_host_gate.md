@@ -20,6 +20,8 @@ approved artifact extraction on a **different physical computer or separately
 operated VM host**. WSL2 on a different computer is acceptable for a second
 host check if that fact is independently recorded, but it is still not a
 production multi-host deployment.
+The checkout check normalizes Windows CRLF files when read through WSL; it
+still flags substantive tracked or untracked changes.
 
 Minimum handoff for the owner: identify one authorized second host and how
 the private repository can be cloned there (normal GitHub authentication or
