@@ -20,6 +20,7 @@ vfw-forecast-batch = "vfw_research.forecast_batch:main"
 vfw-mawi-trace = "vfw_research.mawi_trace:main"
 vfw-trace-decisions = "vfw_research.trace_decision_eval:main"
 vfw-sequential-replay = "vfw_research.sequential_replay:main"
+vfw-zeroswarm-trace = "vfw_research.zeroswarm_trace:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
