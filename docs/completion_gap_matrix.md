@@ -1,8 +1,14 @@
 # Completion Gap Matrix
 
-This matrix was refreshed from the repository on 2026-10-08. “Implemented” means code exists; “verified” is used only when the listed evidence was actually observed.
+The historical table was refreshed from the repository on 2026-10-08; dated updates above it supersede older pending items. “Implemented” means code exists; “verified” is used only when the listed evidence was actually observed.
 
 ## Latest evidence update (supersedes pending items below where stated)
+
+2026-10-11 liveness and source-transfer update: the experimental high-uncertainty guard recovered one route commit per trial in a 15-trial **development** batch on an already-inspected Cyber4OT PLC-port member, but remained slower than reactive control on mean goodput and trial-wide p95 RTT. A protocol-frozen 15-trial check on a different Zero-SWARM normal PCAP had tiny mixed goodput differences and the guard escape never activated, so it tests normal-path non-regression rather than recovery generalization. The original controller's three negative PLC-port members remain decisive counterexamples to a general advantage claim. See `results/liveness-development-20261011/` and `results/zeroswarm-large-guard-20261011/`.
+
+2026-10-11 accepted-transmit update: the generator now separately timestamps payload accepted by the local TCP socket, distinct from scheduled input and completed goodput. A captured smoke record reproduced all six sample totals from 347 final events. A frozen ten-trial, 120-sample static-path diagnostic across five synthetic demand families produced identical fixed-trigger classifications for accepted rate and goodput (48 TP, 0 FN, 6 FP, 66 TN against **planned** overload); no guard tuning or wire-offered-load claim follows. See `accepted_tx_telemetry.md` and `results/accepted-tx-sensor-20261011/`.
+
+2026-10-11 direct novelty comparator update: Deng et al.'s [NDSS 2017 VFW elasticity controller](https://cse.buffalo.edu/~hongxinh/papers/NDSS2017.pdf) already addresses elastic scaling, coordinated rule/state movement, flow updates and semantic safety. General safe-vFW-elasticity and stateful migration are therefore not viable standalone novelty claims. The possible contribution is a narrower uncertainty/carbon/risk decision sequence with measured trade-offs; see `direct_vfw_comparator.md`. Full independent novelty review remains open.
 
 2026-10-10 independent-source transfer update: the protocol-frozen [Cyber4OT pilot](results/cyber4ot-transfer-20261010/results.md) used a 2024 simulated industrial-network trace from a different publisher, converted header-only to 906 one-second rate bins. Ten paired captured full/reactive trials (five seeds) completed on the same WSL2 host. Full mean goodput was slightly higher, but the descriptive interval spanned zero; both policies had some reverse packet-instance deficits. This narrows dependence on MAWI as the only external source but does **not** provide production Internet traffic, independent-host replication, actual attack replay, or a multi-workload confirmatory result.
 
