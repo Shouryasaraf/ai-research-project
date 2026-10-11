@@ -32,9 +32,9 @@ in the artifact. Preserve the exact revision, source fingerprint, kernel and
 package versions, raw batch records, captures and any failed attempts.
 
 After a clean preflight and explicit approval to run a disposable privileged
-lab there, run the non-privileged suite first. Then use a new, frozen seed and
-workload protocol for a captured full/reactive batch, analyze it from its
-records, and compare it with the current single-host evidence. Do not
+lab there, run the non-privileged suite first. The frozen
+`second_host_replication_protocol.md` now specifies the captured full/reactive
+batch and analysis. Compare it with the current single-host evidence. Do not
 retroactively label existing WSL runs “independent.” The current route lab
 still places client, firewalls and server inside namespaces on that second
 computer, so this would test *host reproducibility*, not a firewall migration
