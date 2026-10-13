@@ -1,6 +1,6 @@
 # Predeclared PDMFC independent-source transfer check
 
-Frozen on 2026-10-13 **before downloading or inspecting the selected capture**. This checks the unchanged controller on one newer, independently published traffic source and on the owner's separate native-Linux device. It is not a production firewall deployment, an attack-replay experiment, or a statistically representative sample of network sites. The existing controller, experimental liveness guard and full/reactive outcomes on other sources have already been inspected; this is therefore a predeclared *transfer check*, not a pristine blinded confirmation of the original research hypothesis.
+Frozen in commit `3b8d057` on 2026-10-13 **before downloading or inspecting the selected capture**. A later text-only addition gives evidence-packaging commands; it changes no source choice, workload, policy, seed, endpoint or stopping rule. This checks the unchanged controller on one newer, independently published traffic source and on the owner's separate native-Linux device. It is not a production firewall deployment, an attack-replay experiment, or a statistically representative sample of network sites. The existing controller, experimental liveness guard and full/reactive outcomes on other sources have already been inspected; this is therefore a predeclared *transfer check*, not a pristine blinded confirmation of the original research hypothesis.
 
 ## Source and immutable selection
 
@@ -32,4 +32,13 @@ sudo env PYTHONPATH=src python3 scripts/live_experiment_batch.py --output artifa
 PYTHONPATH=src python3 -m vfw_research.live_analysis artifacts/raw/pdmfc-2025-v1-captured-pair artifacts/processed/pdmfc-2025-v1-captured-pair
 ```
 
-Only after checking the output archive contains no original PCAP, derived CSV, secrets or unrelated files, transfer the raw batch, processed report, conversion sidecar, SHA-256 text, preflight/test output and Git revision back for independent reanalysis. Do not put the original capture or derived rates into a public repository.
+After a completed analysis, package only the trial evidence and sidecar (not the source capture or rate CSV):
+
+```sh
+tar -czf pdmfc-2025-v1-evidence.tar.gz artifacts/raw/pdmfc-2025-v1-captured-pair artifacts/processed/pdmfc-2025-v1-captured-pair artifacts/raw/pdmfc-2025-v1/rates-1s.provenance.json
+tar -tzf pdmfc-2025-v1-evidence.tar.gz
+sha256sum pdmfc-2025-v1-evidence.tar.gz
+git rev-parse HEAD
+```
+
+Inspect the `tar -tzf` list before transfer: it must contain no original PCAP, derived CSV, secrets or unrelated files. Send the archive privately with the preflight/test output and Git revision for independent reanalysis. Do not put the original capture or derived rates into a public repository.
