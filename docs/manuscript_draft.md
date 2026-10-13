@@ -20,6 +20,8 @@ The later primary-source screen adds [Patowary et al.](https://arxiv.org/html/24
 
 [Yuan et al.](https://discovery.ucl.ac.uk/10084175/1/nfvreplication_MR-R3.pdf) jointly consider active/standby stateful VNF placement, routing, state-transfer paths and failure recovery; [Xing et al.](https://www.cs.rice.edu/~eugeneng/papers/SPIN20.pdf) study authenticated data-plane state migration. Our modeled risk score and firewall-policy hash comparison are not evidence of attack reduction or authenticated state transport.
 
+[Carpio et al.](https://arxiv.org/abs/2105.04987) already compare observed-demand, historical-maximum and forecast-informed VNF migration/replication. Thus predictive migration and comparison with reactive control are prior art. A direct algorithmic comparator remains an open validity requirement; the current reactive threshold is not a reproduction of their solver.
+
 ## 3. Method
 
 Candidates first pass hard policy, health, capacity and security restrictions. Only eligible candidates are ranked using configured resource, latency, carbon, risk and uncertainty-headroom weights. Soft-score ablations retain hard safety constraints.

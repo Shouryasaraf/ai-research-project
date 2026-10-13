@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{url}
+\title{Uncertainty-Gated Predictive Warm Migration for Carbon- and Attack-Risk-Aware Stateful Virtual Firewall Placement}
+\author{Author names and affiliations to be inserted by the project owner}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Stateful virtual-firewall (vFW) control must trade workload accommodation against migration disruption while preserving security policy. We implement a software-only controller that combines forecast intervals, hard placement constraints, a contextual migration-benefit threshold, warm state synchronization, route readback, and fail-closed fallback. We evaluate the design in a six-namespace Linux testbed with persistent TCP echo flows and endpoint captures. External packet traces provide one-second demand-rate schedules; their original packets and attacks are never replayed. A preselected three-member normal-traffic subset from an industrial testbed exposed a fixed uncertainty-gate liveness failure: the full controller waited at every one of 435 decision opportunities, whereas a reactive comparator committed in all 15 paired trials. Full-controller mean goodput was lower on each member. An experimental observed-overload escape restored a migration on a development member but did not exceed reactive mean goodput; a separate-file check did not exercise the escape. An owner-attested second native-Linux device reproduced the pipeline over 18 captured synthetic trials and again found lower mean goodput for the full controller. Application requests completed, but endpoint packet-instance deficits and repeated payload sequences preclude lossless or full-TCP-state claims. Carbon and security-risk inputs remain modeled. These results characterize a concrete uncertainty-gate failure mode and a bounded recovery design, not general superiority, measured emissions reduction, or established novelty.
+\end{abstract}
+
+\noindent\textbf{Keywords:} network function virtualization; virtual firewall; stateful migration; uncertainty; placement; reproducibility.
+
+\section{Introduction}
+Virtualized firewalls can be scaled and moved in response to changing traffic, but a stateful move requires coordination of security rules, connection state and forwarding. A forecast can prepare a target before congestion; an uncertain forecast can also postpone a necessary transition. This paper asks: \emph{under what conditions does an uncertainty-gated warm-migration controller improve, or harm, service relative to reactive control?} We study the question as a bounded systems experiment rather than assume that adding prediction improves performance.
+
+The implemented system has seven functions: dynamic vFW-instance scaling, uncertainty/security-aware placement, traffic distribution, state-consistent warm transition with flow affinity, uncertainty-gated predictive action, an adaptive benefit threshold, and invariant-driven fallback. The integrated Linux route experiment exercises a warm target and therefore does not establish end-to-end scale-out latency; a separate proxy lifecycle probe connects scale-out and drain logic but is not the comparative benchmark. Similarly, carbon and risk are input terms rather than observed emissions or attacks.
+
+Our empirical contribution is an auditable comparison, including an adverse result. The original gate has a reproducible wait-state failure under several preselected rate schedules. We retain that result, evaluate a separately named development escape, and replicate the lab pipeline on a second reported device. We do not claim that the individual functions or their generic combination are new. In particular, prior work already addresses safe vFW elasticity, consistent network-function state movement and forecast-guided VNF migration~\cite{deng2017vfw,gemberjacobson2014opennf,carpio2021forecasting}.
+
+\section{Related work and claim boundary}
+Deng et al. design a virtual-firewall controller addressing semantic consistency, correct flow updates, buffer overflow and scaling~\cite{deng2017vfw}. OpenNF coordinates network-function state with forwarding updates and treats race conditions during state movement~\cite{gemberjacobson2014opennf}. Their safety models are stronger than equality checks on supported conntrack fields in our two-node fixed-rule lab. Forecast-based VNF migration and replication, including comparison against currently observed demand, were already studied by Carpio et al.~\cite{carpio2021forecasting}. Shang et al. incorporate prediction errors and migration cost in online service-chain placement~\cite{shang2020online}; Ibrahimpasic et al. analyze migration cost and outage loss~\cite{ibrahimpasic2021migration}. Carbon-aware orchestration and security-motivated movement also precede this system~\cite{bariesso,peretz2020mtd}. Consequently, the candidate contribution is the particular ordering of uncertainty, feasibility, benefit and safety gates together with measured failure modes, not a general novelty claim for predictive or secure migration. A direct reproduction of the strongest prior algorithms has not yet been performed.
+
+\section{System and decision rule}
+\subsection{Feasible placement and action sequence}
+For each candidate target, the controller checks rule compatibility, health, capacity and security restrictions before scoring eligible nodes. The score combines configured resource, latency, carbon, risk and uncertainty-headroom weights; the latter two environmental terms are modeled in the present live testbed. A missing feasible candidate causes a wait, while violated invariants or stale telemetry cause fallback. This hard/soft separation prevents an attractive numerical score from overriding a prohibition.
+
+Let $\hat d_t$, $u_t$ and $\ell_t$ denote next-interval point, upper and lower forecast demand and let $C_s$ be source capacity. The width ratio is $w_t=(u_t-\ell_t)/C_s$. When $u_t/C_s$ is below the overload trigger, the controller waits. When overload is plausible but $w_t$ exceeds the configured commit-width gate, it prewarms an unwarmed target or waits if already warm. Otherwise it requires a warm target, synchronizes supported state and commits only when expected net benefit exceeds a contextual threshold. The implementation logs the action, reason, candidate, benefit and threshold for every decision. These are engineering decision rules, not a proof of optimal control.
+
+The experimental liveness escape is a distinct policy. After three observed overload slots and three consecutive baseline uncertainty waits, it may advance synchronization or commit despite excessive forecast width. It retains invariant, candidate-feasibility, telemetry and benefit checks. The three-slot value was selected after development feedback and has not been calibrated on an independent high-uncertainty population; we do not attribute its results to the original controller.
+
+\subsection{State, routing and recovery boundary}
+The transparent lab copies supported conntrack tuple and selected established-status fields to a warm target, then updates both traffic directions. A durable journal records transition intent and route readback. The source-pinning proxy is a separate mechanism and must not be conflated with kernel conntrack movement. On uncertain restart, the controller contains traffic before attempting restoration. A supervised-process-exit probe recovered original flows when surviving target state could be copied back; deliberate target-state deletion instead preserved blocked routes. None of these mechanisms proves atomic state transfer, complete TCP sequence/window equivalence or recovery after arbitrary physical-host failure.
+
+\section{Experimental design}
+\subsection{Testbed and workloads}
+The six Linux namespaces model client, ingress, source vFW, target vFW, egress and server. Default-deny nftables enforces the path and \texttt{tc} shapes source and target links. Three persistent TCP echo flows send generated payload requests; connections are not silently reopened after migration. The primary throughput measure is completed-payload goodput. Successful-request round-trip times exclude failed requests, so failure counts are always reported alongside latency. Endpoint captures support packet-instance matching, sender-visible TCP-reset checks and repeated payload-sequence diagnostics. The capture method was separately tested using ordinary traffic and deliberate-drop controls.
+
+Imported packet captures are reduced to one-second timestamp/length rates, with no payload or endpoint replay. Each source is split chronologically into 60\% training, 20\% calibration and 20\% held-out test; scaling uses training data only. The first 30 held-out bins drive the generated TCP demand for each trace-derived live pair. Repeated seeds randomize execution order and process timing, but reuse the same segment, and therefore are not independent workload samples. The development host uses WSL2. The owner separately attested a native-Linux computer for the synthetic replication; this verifies a second lab execution path but not cross-physical-host migration.
+
+\subsection{Policies, endpoints and provenance}
+The primary comparison is the original full policy versus a warm reactive threshold policy. The latter acts on observed utilization without a forecast-width gate; both use the same topology and eligible target. The experimental liveness guard is a third, separately reported arm where relevant. We preserve source snapshots, trial records, event logs, endpoint PCAP hashes and captured-kernel-drop counters. The analyzer rejects missing trials, source mismatch, invalid captures and leftover lab namespaces. The measured goodput difference for a seed is $\Delta_i=G_{\mathrm{full},i}-G_{\mathrm{reactive},i}$. Small-seed bootstrap intervals are descriptive; repeated seeds on one schedule do not justify population-level inference. Packet-instance deficits denote unmatched observations at two capture points, not an estimated general packet-loss probability.
+
+The principal development corpus is Cyber4OT~\cite{cyber4ot2024}, with three normal PLC-port members selected under a committed protocol before their live outcomes were examined. A separate Zero-SWARM normal file provided a fixed transfer check; another normal file from the same record tested the guard without activation. The second-device check fixed three synthetic families and seeds before access to that device. The newly predeclared PDMFC transfer protocol is \emph{not} included in the results below until its source, complete raw batch and independent reanalysis are available; no anticipated outcome is counted as evidence.
+
+\section{Results}
+\subsection{Fixed-gate liveness failure}
+Table~\ref{tab:plc} reports the preselected Cyber4OT PLC-port comparisons. All 30 trials completed with valid endpoint captures and zero application-request failures. Across the 15 full-policy trials, 435 of 435 recorded decisions were uncertainty waits, and no full-policy route committed; reactive committed once per trial. The three fixed normalized interval widths (0.222692, 0.241013 and 0.229504) all exceeded the configured 0.20 commit gate. The result is a liveness failure of the tested rule, not evidence that prediction is generally harmful. These members share a simulated industrial corpus, and the same 30-second segment is reused across seeds.
+
+\begin{table}[t]
+\centering\small
+\caption{Cyber4OT normal PLC-port captured trials; five paired seeds per member. Means are descriptive. RTT is mean of trial-wide successful-request p95 values.}
+\label{tab:plc}
+\begin{tabular}{lrrrrr}
+\toprule
+Member & Full $G$ & Reactive $G$ & $\Delta G$ & Commits F/R & p95 RTT F/R \\
+ & \multicolumn{3}{c}{(Mbps)} & & (ms) \\
+\midrule
+069 & 0.885515 & 0.890776 & -0.005261 & 0/5 & 51.612/0.401 \\
+070 & 0.907403 & 0.952542 & -0.045139 & 0/5 & 57.923/0.407 \\
+071 & 0.906875 & 0.946482 & -0.039607 & 0/5 & 54.971/0.419 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On previously inspected member 070, the experimental guard committed once in each of five trials and raised mean goodput from 0.907485 Mbps (original full) to 0.946494 Mbps, but remained below reactive's 0.950008 Mbps. Its trial-wide p95 RTT remained 51.629 ms versus 0.743 ms for reactive, reflecting the delay before transition. This is development evidence, not a blinded confirmation. On a separately frozen Zero-SWARM normal file, all three policies committed once per seed, the guard never activated and mean goodput was 0.952592 (full), 0.952018 (guard) and 0.952738 Mbps (reactive). This checks for an obvious regression on that file but does not establish the escape's benefit on an unseen high-uncertainty workload.
+
+\subsection{Second-device reproducibility and packet observations}
+Before second-device access, step, bursts and flash demand families and seeds 191, 193 and 197 were fixed. The owner-provided native-Linux archive contained 18 completed captured trials. Independent local reanalysis verified source snapshots and capture hashes and regenerated all three processed reports byte-for-byte. Both policies committed once per trial, all application requests completed and all captures recorded zero kernel drops. Table~\ref{tab:second} shows that full mean goodput was lower than reactive in all three synthetic families, even when the uncertainty gate did not block a migration. The gap's mechanism has not been isolated.
+
+\begin{table}[t]
+\centering\small
+\caption{Owner-attested native-Linux synthetic replication; three paired seeds per family.}
+\label{tab:second}
+\begin{tabular}{lrrrr}
+\toprule
+Family & Full $G$ & Reactive $G$ & $\Delta G$ & p95 RTT F/R \\
+ & \multicolumn{3}{c}{(Mbps)} & (ms) \\
+\midrule
+Step & 1.087176 & 1.154560 & -0.067384 & 76.591/22.459 \\
+Bursts & 0.906415 & 0.966261 & -0.059846 & 76.586/18.115 \\
+Flash & 0.765021 & 0.830272 & -0.065251 & 90.980/2.828 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All 18 second-device trials exhibited nonzero endpoint packet-instance deficits and repeated payload-sequence instances despite zero application-request failures. A separate wire diagnostic found no observed sender TCP reset in 12 migration trials, but also found repeated identical payload-sequence instances. These observations support bounded application continuity and expose an integrity limit. They do not show zero packet loss, complete TCP state transfer or exact outage duration.
+
+\subsection{Carbon and risk sensitivity}
+In a 243-opportunity modeled placement grid, removing the carbon score changed 81 candidate choices and removing soft risk changed 27; hard-prohibited nodes stayed excluded. Choices may be logged even when the action is WAIT, so these are not actual deployments. A 48-slot replay of sourced regional carbon-intensity forecasts changed hypothetical target rankings when mapped to candidate locations. No site power, electricity consumption, physical emissions, attack frequency or avoided security loss was measured. The experiments therefore demonstrate software sensitivity to the inputs, not carbon reduction or security effectiveness.
+
+\section{Discussion and limitations}
+The fixed-width gate can form an absorbing wait condition when a calibrated interval remains above its threshold while overload persists. This motivates an observed-load escape or adaptive threshold, but the development escape is not a confirmed solution: it activates late, uses a response-gated load signal and has not been tested on an independent unseen workload that actually triggers it. Conversely, the second-host gap with both policies committing shows that the no-commit failure does not explain every unfavorable comparison. Transition overhead, scheduling, traffic pacing and other causes need isolation before claiming a mechanism.
+
+The testbed is small, short-running and single-host per trial, even on the second computer. A synchronous client can censor offered load during congestion. Packet matching gives capture-point deficits, not a general loss rate, and a lack of resets cannot prove state equivalence. The work lacks calibrated risk and power inputs, physical cross-host transition evidence, an exact service-outage measurement and reproduction of direct prior algorithms. Source terms differ across traces; original captures and derived rate files are not automatically redistributable. These limits preclude a claim of general superiority, production safety or established novelty.
+
+\section{Conclusion}
+An executable uncertainty-gated warm-migration vFW controller was integrated with a bounded Linux firewall path and an auditable analysis pipeline. Its clearest current finding is negative but informative: a fixed forecast-width gate stalled migration on three preselected industrial-testbed schedules and reduced service relative to reactive control. An experimental liveness escape restored a transition in development but did not yet demonstrate an independent benefit. A separate native-Linux device reproduced the laboratory pipeline and another unfavorable comparison. Further work must test the predeclared independent-source transfer, isolate transition overhead, calibrate carbon and risk, establish stronger state/recovery properties, and compare direct prior controllers before stronger claims are made.
+
+\section*{Data availability and ethics}
+The software, frozen protocols and derived result summaries are in the project repository. Raw capture-derived trial evidence is retained separately for verification. Original external PCAPs and derived rate schedules are not distributed without source-specific rights review. All generated traffic and faults remain in isolated local namespaces; no third-party endpoints or attacks are contacted. A target journal, author list, funding statement and conflict-of-interest declaration have not yet been supplied by the project owner and must be completed before submission.
+
+\begin{thebibliography}{99}
+\bibitem{deng2017vfw} J. Deng, H. Li, H. Hu, K.-C. Wang, G.-J. Ahn, Z. Zhao, and W. Han, ``On the Safety and Efficiency of Virtual Firewall Elasticity Control,'' \emph{NDSS}, 2017. \url{https://www.ndss-symposium.org/ndss2017/ndss-2017-programme/safety-and-efficiency-virtual-firewall-elasticity-control/}.
+\bibitem{gemberjacobson2014opennf} A. Gember-Jacobson et al., ``OpenNF: Enabling Innovation in Network Function Control,'' \emph{ACM SIGCOMM}, 2014, doi:10.1145/2619239.2626313.
+\bibitem{carpio2021forecasting} F. Carpio, W. Bziuk, and A. Jukan, ``Scaling Migrations and Replications of Virtual Network Functions based on Network Traffic Forecasting,'' \emph{Computer Networks}, 2021, doi:10.1016/j.comnet.2021.108582.
+\bibitem{shang2020online} X. Shang, Z. Liu, and Y. Yang, ``Online Service Function Chain Placement for Cost-Effectiveness and Network Congestion Control,'' \emph{IEEE Transactions on Computers}, 71(1):27--39, 2022, doi:10.1109/TC.2020.3035991.
+\bibitem{ibrahimpasic2021migration} A. L. Ibrahimpasic, B. Han, and H. D. Schotten, ``AI-Empowered VNF Migration as a Cost-Loss-Effective Solution for Network Resilience,'' \emph{IEEE WCNC Workshops}, 2021, doi:10.1109/WCNCW49093.2021.9420029.
+\bibitem{bariesso} M. F. Bari, S. R. Chowdhury, and R. Boutaba, ``ESSO: An Energy Smart Service Function Chain Orchestrator,'' author manuscript. \url{https://cs.uwaterloo.ca/~mfbari/files/j8.pdf}.
+\bibitem{peretz2020mtd} R. Peretz, S. Shenzis, and D. Hay, ``Moving Target Defense for Virtual Network Functions,'' \emph{IEEE/IFIP NOMS}, 2020, doi:10.1109/NOMS47738.2020.9110334.
+\bibitem{cyber4ot2024} K. Cabaj et al., ``Cyber4OT: ICS Network Traces Containing Normal Activity and Full Attack Traffic,'' Zenodo dataset, 2024, doi:10.5281/zenodo.13935639.
+\end{thebibliography}
+\end{document}
