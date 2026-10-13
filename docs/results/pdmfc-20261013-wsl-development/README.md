@@ -6,6 +6,8 @@ The exact selected file `packetcapture-em3-20250514160400.pcap` matched publishe
 
 The five-seed, three-policy, 30-step captured batch ran without outcome-based changes. The executed-source SHA-256 was `afa8c44215e4ce5a0a772c9e022b587d901913c217c2299d880655c0f30e948f`. All 15 records completed; endpoint capture hashes/matching and source/config digests validated, capture-kernel drops were zero and no owned namespaces remained. Windows reanalysis reproduced the 15 trial metrics byte-for-byte; JSON/Markdown presentations differed only in platform path separators and line endings. Both analyzers returned the same values. The ignored raw and processed directories are `artifacts/raw/pdmfc-2025-v1-wsl-development` and `artifacts/processed/pdmfc-2025-v1-wsl-development`.
 
+A private 10,609,131-byte generated-evidence archive is retained at `artifacts/processed/pdmfc-2025-v1-wsl-evidence.tar.gz` (SHA-256 `8308f83b50a330fb185c949ec2104be24cf87170b0e21c3c2526ba8abfe7434b`). Its 178 entries include 30 **lab-generated** endpoint PCAPs required for packet reanalysis, but no original PDMFC capture or derived rate CSV. It is Git-ignored and must not be confused with public-release authorization.
+
 ## Descriptive outcome
 
 | Policy | Mean completed goodput (Mbps) | Mean trial p95 successful RTT (ms) | Route commits / 5 | Request failures | Reverse endpoint missing instances |
