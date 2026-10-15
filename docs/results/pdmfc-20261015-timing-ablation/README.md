@@ -4,6 +4,8 @@ This **exploratory development-host** run followed the protocol frozen in commit
 
 The clean-checkout WSL preflight passed, and 156 unit tests passed before the experiment. All 20 trial records completed; `live_analysis` validated their captured endpoints and produced the metrics below. The separate `tcp_wire_diagnostic` validated all 20 raw trials. No owned namespace was left behind. The environment was Ubuntu WSL2 kernel `6.18.33.2-microsoft-standard-WSL2`, not the owner's separate native-Linux device.
 
+The private, Git-ignored generated-evidence bundle is `artifacts/processed/pdmfc-2025-v2-timing-evidence.tar.gz` (13,950,146 bytes; SHA-256 `2a14a57876553d215e1650cfb4a93447e6a800da2242cc9af30eaf22ed697a5a`; 246 archive entries). Its member list includes lab endpoint captures and the provenance sidecar, but not the original PDMFC PCAP or the derived rate CSV. Do not publish it before reviewing capture redistribution and privacy.
+
 | Policy | Mean completed-request goodput (Mbps) | Mean trial p95 successful RTT (ms) | Commits / 5 | Failed requests | Forward/reverse capture-point missing packet instances |
 |---|---:|---:|---:|---:|---:|
 | Original full controller | 0.929533 | 96.749 | 0 | 0 | 0/0 |
