@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from vfw_research.policies import PolicyVariant
 from vfw_research.liveness_guard import POLICY_NAME as LIVENESS_POLICY_NAME
+from vfw_research.timing_ablation import POLICY_NAME as TIMING_POLICY_NAME
 
 
 def code_digest() -> str:
@@ -56,13 +57,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seeds", type=int, nargs="+", default=[7, 11, 19])
-    parser.add_argument("--policies", choices=[p.value for p in PolicyVariant] + [LIVENESS_POLICY_NAME], nargs="+", default=[p.value for p in PolicyVariant])
+    parser.add_argument("--policies", choices=[p.value for p in PolicyVariant] + [LIVENESS_POLICY_NAME, TIMING_POLICY_NAME], nargs="+", default=[p.value for p in PolicyVariant])
     parser.add_argument("--steps", type=int, default=12)
     parser.add_argument("--flows", type=int, default=3)
     parser.add_argument("--family", choices=["step", "steady", "bursts", "trend", "flash"], default="step")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--trace-csv", type=Path)
     parser.add_argument("--provenance", type=Path)
+    parser.add_argument("--trace-test-offset", type=int, default=0)
     parser.add_argument("--capture", action="store_true", help="paired endpoint captures for isolated generated traffic")
     args = parser.parse_args()
     if len(args.seeds) != len(set(args.seeds)) or len(args.policies) != len(set(args.policies)):
@@ -71,10 +73,13 @@ def main() -> int:
         parser.error("invalid seed, steps, or flows")
     if bool(args.trace_csv) != bool(args.provenance):
         parser.error("trace CSV and provenance must be supplied together")
+    if args.trace_test_offset < 0 or (args.trace_test_offset and not args.trace_csv):
+        parser.error("trace test offset requires a traffic trace and must be nonnegative")
     manifest = {"phase": "exploratory_pilot", "code_sha256": code_digest(),
                 "seeds": args.seeds, "policies": args.policies, "steps": args.steps,
                 "flows": args.flows, "family": args.family, "capture": args.capture,
                 "policy_order": "seeded shuffle per repetition",
+                "trace_test_offset": args.trace_test_offset,
                 "trace_sha256": hashlib.sha256(args.trace_csv.read_bytes()).hexdigest() if args.trace_csv else None,
                 "provenance_sha256": hashlib.sha256(args.provenance.read_bytes()).hexdigest() if args.provenance else None}
     path = args.output / "manifest.json"
@@ -109,7 +114,8 @@ def main() -> int:
                        "--policy", policy, "--seed", str(seed), "--steps", str(args.steps), "--flows", str(args.flows),
                        "--family", args.family]
             if args.trace_csv:
-                command.extend(["--trace-csv", str(args.trace_csv.resolve()), "--provenance", str(args.provenance.resolve())])
+                command.extend(["--trace-csv", str(args.trace_csv.resolve()), "--provenance", str(args.provenance.resolve()),
+                                "--trace-test-offset", str(args.trace_test_offset)])
             if args.capture:
                 command.append("--capture")
             process = subprocess.Popen(command, start_new_session=True)

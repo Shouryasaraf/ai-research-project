@@ -28,7 +28,7 @@ from validate_conntrack import compare_entries, parse_entry
 from route_actuator import apply_route, verify_route
 from vfw_research.route_transaction import RouteTransaction
 from vfw_research.forecasting import EwmaConformalForecaster, time_ordered_split
-from vfw_research.models import NodeCandidate
+from vfw_research.models import GateAction, NodeCandidate
 from vfw_research.policies import PolicyVariant, run_policy
 from vfw_research.liveness_guard import (
     POLICY_NAME as LIVENESS_POLICY_NAME,
@@ -36,6 +36,7 @@ from vfw_research.liveness_guard import (
     run_liveness_guarded,
     suppress_after_route,
 )
+from vfw_research.timing_ablation import POLICY_NAME as TIMING_POLICY_NAME, scheduled_reactive_decision
 from vfw_research.scenarios import load_scenario
 from vfw_research.trace_adapter import TraceKind, load_trace
 from vfw_research.workloads import live_demand_schedule
@@ -113,7 +114,10 @@ def network_snapshot() -> dict:
     return result
 
 
-def workload(seed: int, steps: int, csv: Path | None, provenance: Path | None, family: str = "step") -> tuple:
+def workload(seed: int, steps: int, csv: Path | None, provenance: Path | None,
+             family: str = "step", trace_test_offset: int = 0) -> tuple:
+    if trace_test_offset < 0 or (csv is None and trace_test_offset):
+        raise ValueError("trace test offset requires a traffic trace and must be nonnegative")
     if csv is not None:
         if provenance is None:
             raise ValueError("trace provenance is required")
@@ -122,13 +126,14 @@ def workload(seed: int, steps: int, csv: Path | None, provenance: Path | None, f
             raise ValueError("traffic trace required")
         split = time_ordered_split([p.value for p in trace.points])
         reference = sorted(split.train)[int(0.9 * (len(split.train) - 1))]
-        if reference <= 0 or len(split.test) < steps:
+        if reference <= 0 or len(split.test) < trace_test_offset + steps:
             raise ValueError("trace cannot support requested pilot")
         scale = 1.0 / reference
         train, calibration = tuple(v * scale for v in split.train), tuple(v * scale for v in split.calibration)
-        rates = [v * scale for v in split.test[:steps]]
+        rates = [v * scale for v in split.test[trace_test_offset:trace_test_offset + steps]]
         source = {"kind": "scaled external trace", "csv_sha256": trace.csv_sha256,
-                  "source": trace.source, "scale": scale, "original_interval_seconds": trace.sampling_interval_seconds}
+                  "source": trace.source, "scale": scale, "original_interval_seconds": trace.sampling_interval_seconds,
+                  "test_offset": trace_test_offset}
     else:
         rates, train, calibration = live_demand_schedule(family, seed, steps)
         source = {"kind": "seeded synthetic demand", "family": family, "seed": seed}
@@ -137,16 +142,20 @@ def workload(seed: int, steps: int, csv: Path | None, provenance: Path | None, f
 
 def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, flows: int,
               trace_csv: Path | None = None, provenance: Path | None = None, family: str = "step",
-              capture: bool = False, liveness_guarded: bool = False) -> dict:
+              capture: bool = False, liveness_guarded: bool = False,
+              timing_reactive: bool = False, trace_test_offset: int = 0) -> dict:
     if os.geteuid() != 0 or not 6 <= steps <= 120 or not 1 <= flows <= 16:
         raise ValueError("requires Linux root, 6..120 steps and 1..16 flows")
     if liveness_guarded and variant is not PolicyVariant.FULL:
         raise ValueError("experimental liveness guard applies only to the full controller")
-    train, calibration, rates, source = workload(seed, steps, trace_csv, provenance, family)
+    if timing_reactive and (liveness_guarded or variant is not PolicyVariant.REACTIVE):
+        raise ValueError("fixed-timing arm applies only to reactive control")
+    train, calibration, rates, source = workload(seed, steps, trace_csv, provenance, family, trace_test_offset)
     output.mkdir(parents=True, exist_ok=False)
     plan = {"rates_mbps": rates, "interval_seconds": 1.0, "flows": flows}
     (output / "traffic-plan.json").write_text(json.dumps(plan, indent=2), encoding="utf-8")
-    record = {"status": "running", "policy": LIVENESS_POLICY_NAME if liveness_guarded else variant.value,
+    record = {"status": "running", "policy": (TIMING_POLICY_NAME if timing_reactive else
+              LIVENESS_POLICY_NAME if liveness_guarded else variant.value),
               "seed": seed, "source": source,
               "evidence_class": "single-host namespace live pilot; modeled carbon/risk; coarse TCP state copy",
               "plan_sha256": hashlib.sha256(json.dumps(plan, sort_keys=True).encode()).hexdigest(),
@@ -179,6 +188,7 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
     active, synced = "source", False
     observed_overload_streak = 0
     uncertainty_wait_streak = 0
+    reactive_triggered = False
     cpu_start = time.process_time()
     try:
         existing = command("ip", "netns", "list")
@@ -231,7 +241,12 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
             run = replace(base, current_utilization=min(1.0, sample["goodput_mbps"]), decision_input=inp,
                           candidates=[NodeCandidate("target", 3.0, 0.0, 0.8, 0.8, 5, 90, 0.18)])
             start = time.monotonic()
-            if liveness_guarded:
+            if timing_reactive:
+                baseline = run_policy(PolicyVariant.REACTIVE, run)
+                reactive_triggered = reactive_triggered or baseline.decision.action is GateAction.COMMIT
+                outcome = replace(baseline, decision=scheduled_reactive_decision(
+                    baseline.decision, step=sample["step"], triggered=reactive_triggered, synced=synced))
+            elif liveness_guarded:
                 baseline = run_policy(PolicyVariant.FULL, run)
                 observed_overload_streak = (observed_overload_streak + 1
                     if sample["goodput_mbps"] >= run.overload_trigger_fraction else 0)
@@ -320,21 +335,25 @@ def run_trial(output: Path, variant: PolicyVariant, *, seed: int, steps: int, fl
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--policy", choices=[v.value for v in PolicyVariant] + [LIVENESS_POLICY_NAME], required=True)
+    parser.add_argument("--policy", choices=[v.value for v in PolicyVariant] + [LIVENESS_POLICY_NAME, TIMING_POLICY_NAME], required=True)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--steps", type=int, default=12)
     parser.add_argument("--flows", type=int, default=3)
     parser.add_argument("--family", choices=["step", "steady", "bursts", "trend", "flash"], default="step")
     parser.add_argument("--trace-csv", type=Path)
     parser.add_argument("--provenance", type=Path)
+    parser.add_argument("--trace-test-offset", type=int, default=0)
     parser.add_argument("--capture", action="store_true", help="capture generated lab TCP at both endpoints")
     args = parser.parse_args()
     with open("/tmp/vfwlab-research.lock", "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         liveness_guarded = args.policy == LIVENESS_POLICY_NAME
-        result = run_trial(args.output, PolicyVariant.FULL if liveness_guarded else PolicyVariant(args.policy), seed=args.seed, steps=args.steps,
+        timing_reactive = args.policy == TIMING_POLICY_NAME
+        variant = PolicyVariant.FULL if liveness_guarded else PolicyVariant.REACTIVE if timing_reactive else PolicyVariant(args.policy)
+        result = run_trial(args.output, variant, seed=args.seed, steps=args.steps,
                            flows=args.flows, trace_csv=args.trace_csv, provenance=args.provenance, family=args.family,
-                           capture=args.capture, liveness_guarded=liveness_guarded)
+                           capture=args.capture, liveness_guarded=liveness_guarded,
+                           timing_reactive=timing_reactive, trace_test_offset=args.trace_test_offset)
     print(json.dumps({"status": result["status"], "output": str(args.output), "error": result.get("error")}))
     return 0 if result["status"] == "completed" else 1
 
